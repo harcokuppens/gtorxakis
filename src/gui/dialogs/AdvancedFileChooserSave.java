@@ -1,0 +1,64 @@
+package gui.dialogs;
+
+import io.file.FileType;
+import io.file.FileTypeAssociation;
+
+import core.Session;
+
+import java.awt.Frame;
+import java.io.File;
+import java.awt.Dialog;
+import java.awt.FlowLayout;
+
+import javax.swing.BoxLayout;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
+
+public abstract class AdvancedFileChooserSave extends AdvFileChooser {
+	
+	protected abstract void success(String path, FileType filetype);
+	
+	public AdvancedFileChooserSave(Frame parent, FileTypeAssociation association) {
+		super(parent, association, "Save", AdvFileChooser.SAVE);
+	}
+
+	public AdvancedFileChooserSave(Dialog parent, FileTypeAssociation association) {
+		super(parent, association, "Save", AdvFileChooser.SAVE);
+	}
+
+	protected void showSaveDialog() {
+		this.showSaveDialog(Session.getSession().getDefaultPath() + File.separator);
+	}
+
+	protected void showSaveDialog(String directory) {
+		setDirectory(directory);
+		super.setVisible(true);
+		String filename = super.getFullFile();
+		if(filename == null) {
+			// user chose to cancel
+			return;
+		}
+		File file = new File(filename);		
+		FileType filetype = association.getByFilename(filename);
+		if(filetype == null) {
+			// File type was not specified by user
+			filetype = association.getDefaultFileType();
+			filename += "." + filetype.getFileExtensions()[0];
+		}
+		final String filenameF = filename;
+		final FileType filetypeF = filetype;
+		(new Thread() {
+			@Override
+			public void run() {
+				WaitingDialog wd = new WaitingDialog("Saving", "Saving file...");
+				success(filenameF, filetypeF);
+				wd.dispose();
+			}
+		}).start();
+	}
+	
+}
