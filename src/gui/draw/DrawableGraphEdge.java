@@ -21,7 +21,7 @@ import core.Session;
 
 /**
  * 
- * @author Tobias Schröter, Moritz Neikes
+ * @author Tobias Schröter
  *
  */
 public class DrawableGraphEdge extends DrawableElement implements Drawable, Selectable{
@@ -47,6 +47,7 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	private Point start, end;
 	private boolean selected = false;
 	private GraphEdge graphEdge;
+//	TODO change result to constraint
 	private boolean hasResult = false,
 					hasName = false;
 	private String result = "",
