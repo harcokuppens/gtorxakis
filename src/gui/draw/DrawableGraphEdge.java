@@ -136,8 +136,10 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		int y = (start.y + end.y) / 2;
 		if(finalMove){
 			anchorPoints[1] = DrawableGrid.getPoint(new Point(x + anchorVector.x, y + anchorVector.y));
+//			anchorPoints[1] = new Point(x + anchorVector.x, y + anchorVector.y);
 		}else{
 			anchorPoints[1] = DrawableGrid.getPoint(new Point(x + anchorVector.x + offsetX, y + anchorVector.y + offsetY));
+//			anchorPoints[1] = new Point(x + anchorVector.x + offsetX, y + anchorVector.y + offsetY);
 		}
 	}
 
@@ -190,9 +192,7 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 			}else{
 				dest = this.getStartPoint();
 			}
-//			setEnd(graphEdge.getTo().getDrawable().getLineAnchor(dest, DrawableGraphEdge.STROKE_WIDTH));
 			setAnchor(finalMove);
-			
 			setEnd(graphEdge.getTo().getDrawable().getLineAnchor(anchorPoints[1], DrawableGraphEdge.STROKE_WIDTH));
 		}
 	}
