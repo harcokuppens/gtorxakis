@@ -220,6 +220,7 @@ public class GraphInterface extends Observable implements ClipboardOwner {
 //		GraphEdge newEdge = new GraphEdge(start.getNode(), end.getNode(),"");
 		ArrayList<DrawableGraphState> nodeList = new ArrayList<DrawableGraphState>();
 		ArrayList<DrawableGraphEdge> edgeList = new ArrayList<DrawableGraphEdge>();
+//		Point anchorPoint = new Point(end.getPosition().x - start.getPosition().x, end.getPosition().y - start.getPosition().y);
 		edgeList.add(new DrawableGraphEdge(doc, start, end));
 		ArrayList<DrawableComment> commentList = new ArrayList<DrawableComment>();
 		

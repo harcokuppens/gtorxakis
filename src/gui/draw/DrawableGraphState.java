@@ -35,25 +35,24 @@ public class DrawableGraphState extends DrawableElement implements Configurable,
 	private Element textTSpanElement, valueTSpanElement, superScriptElement;
 	private int offsetX, offsetY;
 	private Element[] elements;
-    private boolean selected = false; // True if this element is currently selected TODO: Wird diese Variable wirklich benoetigt? Steht indirekt auch im GI in der ArrayList von selektierten Elementen.
+    private boolean selected = false; 
 	
     private boolean viewIndicators = true;
     
 	private GraphState node;
 
-	public static final int WIDTH = 60; // Width of the ellipse
-	public static final int HEIGHT = 60; // Height of the ellipse
-	private static final String COLOR = "#FFDF00"; // Fill color of the ellipse
-	private static final String STROKE_COLOR = "black"; // Stroke color of the ellipse
-	private static final int STROKE_WIDTH = 1; // Stroke width of the ellipse
-	private static final String STROKE_COLOR_SELECTED = "red"; // Stroke color of the ellipse when selected
-	private static final int TEXT_SIZE = 11; // Size of the text
-	private static final String TEXT_FAMILY = "Arial"; // Family of the text
-	private static final String TEXT_WEIGHT = "bold"; // Weight of the text
-	private static final String TEXT_COLOR = "black"; // Color of the text
+	public static final int WIDTH = 60; 
+	public static final int HEIGHT = 60; 
+	private static final String COLOR = "#FFDF00"; 
+	private static final String STROKE_COLOR = "black";
+	private static final int STROKE_WIDTH = 1;
+	private static final String STROKE_COLOR_SELECTED = "red"; 
+	private static final int TEXT_SIZE = 11; 
+	private static final String TEXT_FAMILY = "Arial"; 
+	private static final String TEXT_WEIGHT = "bold"; 
+	private static final String TEXT_COLOR = "black"; 
 	
 	
-	//TODO: Maybe combine these constructors to reduce redundancy
 	public DrawableGraphState(SVGDocument doc, int posX, int posY) {
 		super(doc);
 		this.node = new GraphState();

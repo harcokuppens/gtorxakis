@@ -63,6 +63,7 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 		PAN, // Action: Panning the visual area of the graph
 		ARROW, // Action: Draw an edge, can only be started in state NONE
 		RESIZECOMMENT, //Action: Change size of DrawableComment
+		ARROW_ANCHOR,
 		SELECTIONBOX, // Action: Draw selection box
 		MOVE; // Action: Move edges, can only be started in state SELECTED
 	};
@@ -312,6 +313,7 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 				default:
 					ControlMethod temp = controlMethod;
 					controlMethod = ControlMethod.NONE;
+					System.err.println(beginState.name());
 					throw new InputMismatchException("mousePressed fired with controlMethod in action state. State was " + temp.name());
 				}
 				break;

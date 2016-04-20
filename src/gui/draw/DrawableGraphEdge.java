@@ -1,5 +1,6 @@
 package gui.draw;
 
+import gui.control.Movable;
 import gui.control.Selectable;
 
 import java.awt.Font;
@@ -8,10 +9,10 @@ import java.awt.Rectangle;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import model.graph.GraphEdge;
+import util.Vector;
 
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.w3c.dom.Element;
@@ -24,7 +25,7 @@ import core.Session;
  * @author Tobias Schröter
  *
  */
-public class DrawableGraphEdge extends DrawableElement implements Drawable, Selectable{
+public class DrawableGraphEdge extends DrawableElement implements Drawable, Selectable, Movable{
 	private static final int EL_INDEX_SHAPE = 0;
 	private static final int EL_INDEX_RESULT = 1;
 	private static final int EL_INDEX_BACKGROUND = 2;
@@ -44,7 +45,9 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	
 	private Element element;
 	private Element[] edge;
-	private Point start, end;
+	private Point[] anchorPoints;
+	private Point anchorVector;
+	private int offsetX = 0, offsetY = 0;
 	private boolean selected = false;
 	private GraphEdge graphEdge;
 //	TODO change result to constraint
@@ -57,16 +60,23 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	
 	public DrawableGraphEdge(SVGDocument doc, DrawableGraphState from, DrawableGraphState to) {
 		super(doc);
+		anchorPoints = new Point[3];
+		anchorVector = new Point(0,0);
 		graphEdge = new GraphEdge(from.getNode(), to.getNode(), "");
 		graphEdge.setDrawable(this);
+		setStart(from.getPosition());
+		setEnd(to.getPosition());
 		buildElement();
 	}
 	
 	public DrawableGraphEdge(SVGDocument doc, DrawableGraphState from, Point to) {
 		super(doc);
+		anchorPoints = new Point[3];
+		anchorVector = new Point(0,0);
 		graphEdge = new GraphEdge(from.getNode(), null, "");
 		graphEdge.setDrawable(this);
-		end = to;
+		setStart(from.getPosition());
+		setEnd(to);
 		buildElement();
 	}
 	
@@ -86,11 +96,11 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	}
 	
 	public Point getStartPoint(){
-		return start;
+		return anchorPoints[0];
 	}
 	
 	public Point getEndPoint(){
-		return end;
+		return anchorPoints[anchorPoints.length-1];
 	}
 	
 	@Override
@@ -103,13 +113,32 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	}
 	
 	public void setStartPoint(Point start) {
-		this.start = start;
-		invalidatePositions();
+		anchorPoints[0] = start;
+		invalidatePositions(true);
 	}
 	
 	public void setEndPoint(Point end) {
-		this.end = end;
-		invalidatePositions();
+		anchorPoints[anchorPoints.length-1] = end;
+		invalidatePositions(true);
+	}
+	
+	private void setStart(Point start){
+		anchorPoints[0] = start;
+	}
+	
+	private void setEnd(Point end){
+		anchorPoints[anchorPoints.length-1] = end;
+	}
+	
+	private void setAnchor(boolean finalMove){
+		Point start = getStartPoint(), end = getEndPoint();
+		int x = (start.x + end.x) / 2;
+		int y = (start.y + end.y) / 2;
+		if(finalMove){
+			anchorPoints[1] = DrawableGrid.getPoint(new Point(x + anchorVector.x, y + anchorVector.y));
+		}else{
+			anchorPoints[1] = DrawableGrid.getPoint(new Point(x + anchorVector.x + offsetX, y + anchorVector.y + offsetY));
+		}
 	}
 
 	/**
@@ -130,7 +159,7 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	protected void buildElement() {
 		element = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "g");
 		edge = new Element[4];
-		edge[EL_INDEX_SHAPE] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "line");
+		edge[EL_INDEX_SHAPE] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "polyline");
 		edge[EL_INDEX_RESULT] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "text");
 		edge[EL_INDEX_BACKGROUND] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "rect");
 		edge[EL_INDEX_NAME] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "text");
@@ -144,33 +173,52 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	/**
 	 * Calculates the positions of the edge.
 	 */
-	private void calculatePositions(){
+	private void calculatePositions(boolean finalMove){
 		if(graphEdge.getFrom() != null) {
 			Point2D dest; 
-			if(graphEdge.getTo() != null)
+			if(graphEdge.getTo() != null){
 				dest = graphEdge.getTo().getDrawable().getLocation(); 
-			else dest = end;
-			start = graphEdge.getFrom().getDrawable().getLineAnchor(dest);
+			}else{
+				dest = this.getEndPoint();
+			}
+			setStart(graphEdge.getFrom().getDrawable().getLineAnchor(dest));
 		}
 		if(graphEdge.getTo() != null) {
 			Point2D dest; 
-			if(graphEdge.getFrom() != null)
-				dest = graphEdge.getFrom().getDrawable().getLocation(); 
-			else dest = start;
-			end = graphEdge.getTo().getDrawable().getLineAnchor(dest, DrawableGraphEdge.STROKE_WIDTH);
+			if(graphEdge.getFrom() != null){
+				dest = graphEdge.getFrom().getDrawable().getLocation(); 				
+			}else{
+				dest = this.getStartPoint();
+			}
+//			setEnd(graphEdge.getTo().getDrawable().getLineAnchor(dest, DrawableGraphEdge.STROKE_WIDTH));
+			setAnchor(finalMove);
+			
+			setEnd(graphEdge.getTo().getDrawable().getLineAnchor(anchorPoints[1], DrawableGraphEdge.STROKE_WIDTH));
 		}
 	}
 	
 	/**
 	 * The positions will be (re-)calculated and set.
 	 */
-	public void invalidatePositions(){
-		calculatePositions();
+	public void invalidatePositions(boolean finalMove){
+		calculatePositions(finalMove);
 		
-		edge[EL_INDEX_SHAPE].setAttribute("x1", String.valueOf(start.x));
-		edge[EL_INDEX_SHAPE].setAttribute("y1", String.valueOf(start.y));
-		edge[EL_INDEX_SHAPE].setAttribute("x2", String.valueOf(end.x));
-		edge[EL_INDEX_SHAPE].setAttribute("y2", String.valueOf(end.y));
+//		Point start = this.getStartPoint(), end = this.getEndPoint();
+//		
+//		edge[EL_INDEX_SHAPE].setAttribute("x1", String.valueOf(start.x));
+//		edge[EL_INDEX_SHAPE].setAttribute("y1", String.valueOf(start.y));
+//		edge[EL_INDEX_SHAPE].setAttribute("x2", String.valueOf(end.x));
+//		edge[EL_INDEX_SHAPE].setAttribute("y2", String.valueOf(end.y));
+		StringBuilder lineAnchorPoints = new StringBuilder();
+		for (Point p : anchorPoints) {
+			if(p != null){
+				lineAnchorPoints.append(p.getX());
+				lineAnchorPoints.append(",");
+				lineAnchorPoints.append(p.getY());
+				lineAnchorPoints.append(" ");
+			}
+		}	
+		edge[EL_INDEX_SHAPE].setAttribute("points", lineAnchorPoints.toString());
 
 		Point2D p1 = graphEdge.getFrom().getDrawable().getLocation();
 		Point2D p2;
@@ -178,7 +226,7 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 			p2 = graphEdge.getTo().getDrawable().getLocation();			
 		}else{
 			//TempEdge!
-			p2 = end;
+			p2 = getEndPoint();
 		}
 
 		Point p = this.calculateStringSize(name, result);
@@ -214,11 +262,14 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	public void invalidate() {
 		name = (String) graphEdge.getAttribute(GraphEdge.ATTRIBUTE_NAME);
 		
-		invalidatePositions();
+		invalidatePositions(true);
 		
 		setSelected(selected);
 		
-		edge[EL_INDEX_SHAPE].setAttribute("stroke-width", String.valueOf(STROKE_WIDTH));		
+		edge[EL_INDEX_SHAPE].setAttribute("stroke-width", String.valueOf(STROKE_WIDTH));
+		edge[EL_INDEX_SHAPE].setAttribute("fill", "none");
+		edge[EL_INDEX_SHAPE].setAttribute("stroke", "black");
+		
 		edge[EL_INDEX_NAME].setAttribute("font-size", String.valueOf(TEXT_SIZE));
 		edge[EL_INDEX_NAME].setAttribute("text-anchor", TEXT_ANCHOR);
 		edge[EL_INDEX_NAME].setAttribute("font-weight", TEXT_WEIGHT);
@@ -269,7 +320,7 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		this.name = name;
 		edge[EL_INDEX_NAME].setTextContent(name);
 		invalidateResultBackground();
-		invalidatePositions();
+		invalidatePositions(true);
 	}
 	
 	/**
@@ -280,7 +331,7 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		result = "";
 		edge[EL_INDEX_RESULT].setTextContent("");
 		invalidateResultBackground();
-		invalidatePositions();
+		invalidatePositions(true);
 	}
 	
 	@Override
@@ -306,6 +357,7 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 
 	@Override
 	public boolean isWithin(Rectangle r) {
+		Point start = this.getStartPoint(), end = this.getEndPoint();
 		int dx = start.x - end.x;
 		int dy = start.y - end.y;
 		Point p = new Point(start.x + dx, start.y + dy);
@@ -315,6 +367,21 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 
 	@Override
 	public boolean contains(Point p) {
+		ArrayList<Point> usedPoints = new ArrayList<Point>();
+		for(Point point : anchorPoints){
+			if(point != null){
+				usedPoints.add(point);
+			}
+		}
+		for(int i = 1; i < usedPoints.size(); i++){
+			if(contains(usedPoints.get(i-1), usedPoints.get(i), p)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean contains(Point start, Point end, Point p){
 		double p0x = start.getX(),
 			   p0y = start.getY(),
 			   px = p.getX(),
@@ -342,5 +409,26 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		if(dh < 0 || dh > h2 || l1 > h2 || l2 > h2) return false;
 		return true;
 	}
+	
+	@Override
+	public void moveTo(Point p) {
+		// not used
+	}
 
+	@Override
+	public void moveBy(Vector v) {
+		anchorVector.translate(v.getX(), v.getY());		
+		offsetX = 0;
+		offsetY = 0;
+//		System.err.println(anchorVector.x + ", " + anchorVector.y);
+		invalidatePositions(true);
+	}
+
+	@Override
+	public void setOffset(Vector v) {
+//		System.out.println(v.getX() + ", " + v.getY());
+		offsetX = v.getX();
+		offsetY = v.getY();
+		invalidatePositions(false);
+	}
 }

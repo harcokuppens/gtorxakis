@@ -38,32 +38,6 @@ public class DrawMoveAction extends Action {
 		};
 	}
 	
-	public DrawMoveAction(ArrayList<Movable> movableList, Point point) {
-		super(false);
-		Point[] tmp = new Point[movableList.size()];
-		Arrays.fill(tmp, point);
-		init(movableList, tmp);
-	}
-	
-	public DrawMoveAction(ArrayList<Movable> movableList, Point[] pointA) {
-		super(false);
-		init(movableList, pointA);
-	}
-	
-	private void init(ArrayList<Movable> movableList, Point[] pointA) {
-		final ArrayList<Movable> movables = new ArrayList<Movable>(movableList);
-		final Point[] pA = pointA;
-		svgAction = new Runnable(){
-			@Override
-			public void run(){
-				for (int i = 0; i < movables.size(); i++) {
-					movables.get(i).moveTo(pA[i]);
-				}
-			}
-		};
-	}
-	
-	
 	@Override
 	public void run(DrawController dc) {
 		dc.addToQueue(svgAction);
