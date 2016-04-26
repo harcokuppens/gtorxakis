@@ -134,11 +134,8 @@ public class GraphContextMenu {
 							copy, 
 							paste, 
 							properties, 
-							delete, 
-							indicatorPositionLeft, 
-							indicatorPositionRight;
-		protected JCheckBoxMenuItem viewIndicators, dominantIndicator;
-		protected JMenu indicatorMenu;
+							delete;
+		protected JCheckBoxMenuItem startState;
 		
 		public static final String ADD_COMMENT = "Add comment",
 				   ADD_HEADLINE = "Add title",
@@ -151,12 +148,9 @@ public class GraphContextMenu {
 				   COPY = "Copy",
 				   PASTE = "Paste",
 				   DELETE = "Delete",
-				   VIEW_INDICATORS = "Show indicators",
-				   INDICATORPOSITION = "Indicator position",
-				   INDICATORPOSITION_LEFT = "Left",
-				   INDICATORPOSITION_RIGHT = "Right",
 				   PROPERTIES = "Properties",
-				   DOMINANT_INDICATOR = "Select as dominant indicator";
+				   START_STATE = "Set start state"
+				   ;
 		
 		public ContextMenu(){
 			init();
@@ -252,23 +246,37 @@ public class GraphContextMenu {
 //				GraphStatePropertyDialog gnpd = new GraphStatePropertyDialog(nodes, Session.getSession().getWindow(), model);
 //				gnpd.setVisible(true);
 				break;
-			case VIEW_INDICATORS:
-				DrawableGraphState[] objects1 = castSelectableToDrawableGraphState(selectable);
-				String[] command1 = new String[]{DrawableGraphState.ATTRIBUTE_VIEW_INDICATORS};
-				Object[][] oldValues1 = new String[1][objects1.length];
-				for(int i = 0; i < objects1.length; i++) {
-					oldValues1[0][i] = objects1[i].getAttribute(DrawableGraphState.ATTRIBUTE_VIEW_INDICATORS);
-				}
-				Object[][] newValues1 = new String[1][objects1.length];
-				for(int i = 0; i < objects1.length; i++) {
-					newValues1[0][i] = String.valueOf(viewIndicators.getState());
-				}
-				Action a5 = new SetConfigAction(objects1, command1, oldValues1);
-				Action a6 = new SetConfigAction(objects1, command1, newValues1);
-				model.performAction(a6, a5);	
+			case START_STATE:
+				startStateAction();
 				break;
 			}
 		}
+	}
+	
+	private void startStateAction(){
+		GraphState newState = ((DrawableGraphState) selectable.get(0)).getNode();
+		GraphState oldState = model.getGraph().getStartState();
+		
+		if(newState.equals(oldState)){
+			return;
+		}
+		
+		GraphState[] objects1 = new GraphState[]{newState, oldState};
+		boolean[] values = new boolean[]{true, false};
+		
+		String[] command1 = new String[]{GraphState.ATTRIBUTE_START_STATE};
+		Object[][] oldValues1 = new Object[1][objects1.length];
+		for(int i = 0; i < objects1.length; i++) {
+			System.out.println(objects1[i].getAttribute(GraphState.ATTRIBUTE_START_STATE));
+			oldValues1[0][i] = objects1[i].getAttribute(GraphState.ATTRIBUTE_START_STATE);
+		}
+		Object[][] newValues1 = new Object[1][objects1.length];
+		for(int i = 0; i < objects1.length; i++) {
+			newValues1[0][i] = values[i];
+		}
+		Action a5 = new SetConfigAction(objects1, command1, oldValues1);
+		Action a6 = new SetConfigAction(objects1, command1, newValues1);
+		model.performAction(a6, a5);
 	}
 		
 	public void show(Component component, int x, int y) {
@@ -288,34 +296,21 @@ public class GraphContextMenu {
 			copy = createMenuEntry(copy, COPY, "/icons/page_copy.png");
 			paste = createMenuEntry(paste, PASTE, "/icons/page_paste.png");
 			delete = createMenuEntry(delete, DELETE, "/icons/cross.png");
-			
-			boolean viewIndicatorsState = false;
-			for(Selectable s : selectable) {
-				if(s instanceof DrawableGraphState){
-					DrawableGraphState n = (DrawableGraphState) s;
-					if(Boolean.valueOf(n.getAttribute(DrawableGraphState.ATTRIBUTE_VIEW_INDICATORS))) {
-						viewIndicatorsState = true;
-						break;
-					}
-				}
-			}
-			viewIndicators = new JCheckBoxMenuItem(VIEW_INDICATORS);
-			viewIndicators.setActionCommand(VIEW_INDICATORS);
-			viewIndicators.addActionListener(this);
-			viewIndicators.setState(viewIndicatorsState);
-			
-			indicatorPositionLeft = createMenuEntry(indicatorPositionLeft, INDICATORPOSITION_LEFT, "/icons/arrow_left.png");
-			indicatorPositionRight = createMenuEntry(indicatorPositionRight, INDICATORPOSITION_RIGHT, "/icons/arrow_right.png");
 			properties = createMenuEntry(properties, PROPERTIES, "/icons/cog_edit.png");
+			
+			boolean isStartState = false;
+			if(selectable.size() == 1){
+				isStartState = (boolean) castSelectableToGraphState(selectable).get(0).getAttribute(GraphState.ATTRIBUTE_START_STATE); 
+			}
 
-			indicatorMenu = new JMenu(INDICATORPOSITION);
-			indicatorMenu.add(indicatorPositionLeft);
-			indicatorMenu.add(indicatorPositionRight);
+			startState = new JCheckBoxMenuItem(START_STATE);
+			startState.setActionCommand(START_STATE);
+			startState.addActionListener(this);
+			startState.setState(isStartState);
 			
 			add(changeName);
 			addSeparator();
-			add(viewIndicators);
-			add(indicatorMenu);
+			add(startState);
 			addSeparator();
 			add(cut);
 			add(copy);
@@ -328,6 +323,7 @@ public class GraphContextMenu {
 		@Override
 		public void initializeMenuEntries() {
 			changeName.setEnabled(selectable.size() == 1);
+			startState.setEnabled(selectable.size() == 1);
 			final DataFlavor df = TransferableGraphElements.df;
 			final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 			paste.setEnabled(clipboard.isDataFlavorAvailable(df));

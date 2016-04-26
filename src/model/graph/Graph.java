@@ -31,6 +31,14 @@ public class Graph {
 		return true;
 	}
 	
+	public GraphState getStartState(){
+		for(GraphState s : states){
+			boolean isStart = (boolean)s.getAttribute(GraphState.ATTRIBUTE_START_STATE);
+			if(isStart) return s;
+		}
+		return null;
+	}
+	
 	public void addState(GraphState state) {
 		String validName = this.getValidName(state.getName(), null);
 		state.setGraph(this);

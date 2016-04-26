@@ -12,9 +12,11 @@ public class GraphState implements Configurable {
 	private ArrayList<GraphEdge> outgoingEdges, incomingEdges;
 	private String name;
 	private static final String DEFAULT_NAME = "State_0";
+	private boolean startState = false;
 	
 	public static final String 
-			ATTRIBUTE_NAME = "name";
+			ATTRIBUTE_NAME = "name",
+			ATTRIBUTE_START_STATE = "startState";
 	;
 	
 	private DrawableGraphState drawable;
@@ -85,7 +87,12 @@ public class GraphState implements Configurable {
 				name = g.getValidName(candidateName, name);
 			}
 			break;
+		case ATTRIBUTE_START_STATE:
+			startState = (boolean) value;
+			System.err.println(this.name + ": " + startState);
+			break;
 		default :
+			System.out.println("Set attribute failed");
 			System.err.println("Tried to set invalid attribute " + cmd);			
 		}
 
@@ -95,6 +102,8 @@ public class GraphState implements Configurable {
 		switch(cmd) {
 		case GraphState.ATTRIBUTE_NAME:
 			return getName();
+		case ATTRIBUTE_START_STATE:
+			return startState;
 		default:
 			System.err.println("Tried to get non existing attribute of GraphNode (" + cmd + ")!");
 			return null;

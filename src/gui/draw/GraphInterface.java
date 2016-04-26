@@ -209,7 +209,11 @@ public class GraphInterface extends Observable implements ClipboardOwner {
 	public void addNode(int x, int y) {
 		ArrayList<DrawableGraphState> nodes = new ArrayList<DrawableGraphState>();
 		DrawableGraphState dn = new DrawableGraphState(doc, x, y);
+		if(this.getGraph().getStartState() == null){
+			dn.getNode().setAttribute(GraphState.ATTRIBUTE_START_STATE, true);
+		}
 		nodes.add(dn);
+		
 		Action a1 = new DrawCreateAction(nodes, new ArrayList<DrawableGraphEdge>(), new ArrayList<DrawableComment>());
 		Action a2 = new DrawDeleteAction(nodes, new ArrayList<DrawableGraphEdge>(), new ArrayList<DrawableComment>());
 		model.performAction(a1, a2);
