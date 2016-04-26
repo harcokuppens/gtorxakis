@@ -24,7 +24,7 @@ import core.Session;
 
 public class DrawableGraphState extends DrawableElement implements Configurable, Selectable, Movable {
 	private enum Elements {
-		WRAPPER, GROUP, ELLIPSE, TEXT;
+		WRAPPER, GROUP, ELLIPSE, START_STATE, TEXT;
 	}
 	
 	public static final String ATTRIBUTE_POSITION_X = "xPosition";
@@ -151,6 +151,11 @@ public class DrawableGraphState extends DrawableElement implements Configurable,
 	
 	public void setSelected(boolean selected) {
 		this.selected = selected;
+		if (this.isSelected()) {
+			elements[Elements.ELLIPSE.ordinal()].setAttribute("stroke", STROKE_COLOR_SELECTED);
+		} else {
+			elements[Elements.ELLIPSE.ordinal()].setAttribute("stroke", STROKE_COLOR);
+		}
 		this.invalidate();
 	}
 
@@ -163,17 +168,36 @@ public class DrawableGraphState extends DrawableElement implements Configurable,
 		elements[Elements.WRAPPER.ordinal()].setAttribute("transform", "translate(" + (int) this.getPosition().getX() + ", " + (int) this.getPosition().getY() + ")");
 		elements[Elements.GROUP.ordinal()].setAttribute("render-order", "-1");
 		
+		//Set start_state properties
+		boolean isStartState = (boolean) this.getNode().getAttribute(GraphState.ATTRIBUTE_START_STATE);
+		if(isStartState){
+			elements[Elements.START_STATE.ordinal()].setAttribute("x1", "-50");
+			elements[Elements.START_STATE.ordinal()].setAttribute("y1", "-50");
+			Point p = this.getLineAnchor(new Point(-50 + position.x, -50 + position.y), 2);
+			System.err.println("Position:"+this.position.toString());
+			System.err.println("LineStart:"+p.toString());
+			elements[Elements.START_STATE.ordinal()].setAttribute("x2", (p.x-position.x)+"");
+			elements[Elements.START_STATE.ordinal()].setAttribute("y2", (p.y-position.y)+"");
+			elements[Elements.START_STATE.ordinal()].setAttribute("stroke-width", "2");
+			elements[Elements.START_STATE.ordinal()].setAttribute("fill", "none");
+			if(selected){
+				elements[Elements.START_STATE.ordinal()].setAttribute("stroke", String.valueOf("red"));
+				elements[Elements.START_STATE.ordinal()].setAttribute("marker-end", "url(#pf1red)");
+			}else{
+				elements[Elements.START_STATE.ordinal()].setAttribute("stroke", String.valueOf("black"));
+				elements[Elements.START_STATE.ordinal()].setAttribute("marker-end", "url(#pf1)");
+			}
+		}else{
+			elements[Elements.START_STATE.ordinal()].setAttribute("stroke", "none");
+			elements[Elements.START_STATE.ordinal()].removeAttribute("marker-end");
+		}
+		
 		// Set ellipse properties
 		elements[Elements.ELLIPSE.ordinal()].setAttribute("cx", "0");
 		elements[Elements.ELLIPSE.ordinal()].setAttribute("cy", "0");
 		elements[Elements.ELLIPSE.ordinal()].setAttribute("rx", String.valueOf(WIDTH / 2));
 		elements[Elements.ELLIPSE.ordinal()].setAttribute("ry", String.valueOf(HEIGHT / 2));
 		elements[Elements.ELLIPSE.ordinal()].setAttribute("fill", COLOR);
-		if (this.isSelected()) {
-			elements[Elements.ELLIPSE.ordinal()].setAttribute("stroke", STROKE_COLOR_SELECTED);
-		} else {
-			elements[Elements.ELLIPSE.ordinal()].setAttribute("stroke", STROKE_COLOR);
-		}
 		elements[Elements.ELLIPSE.ordinal()].setAttribute("stroke-width", String.valueOf(STROKE_WIDTH));
 
 		// Set text properties
@@ -199,13 +223,15 @@ public class DrawableGraphState extends DrawableElement implements Configurable,
 		elements[Elements.WRAPPER.ordinal()] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "g");
 		elements[Elements.GROUP.ordinal()] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "g");
 		elements[Elements.ELLIPSE.ordinal()] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "ellipse");
+		elements[Elements.START_STATE.ordinal()] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "line");
 		elements[Elements.TEXT.ordinal()] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "text");
 
 		elements[Elements.GROUP.ordinal()].appendChild(elements[Elements.ELLIPSE.ordinal()]);
 		elements[Elements.GROUP.ordinal()].appendChild(elements[Elements.TEXT.ordinal()]);
-		
+		elements[Elements.GROUP.ordinal()].appendChild(elements[Elements.START_STATE.ordinal()]);		
 		elements[Elements.WRAPPER.ordinal()].appendChild(elements[Elements.GROUP.ordinal()]);
 		invalidate();
+		setSelected(false);
 	}
 
 	public Element getElement() {
