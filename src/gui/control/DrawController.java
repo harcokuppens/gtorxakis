@@ -317,6 +317,10 @@ public class DrawController {
 			if(!s.equals(dragStartNode)) {
 				DrawableGraphState n = (DrawableGraphState) s;
 				adaptedPos = n.getLineAnchor(tempEdge.getStartPoint().getLocation(), DrawableGraphEdge.STROKE_WIDTH);
+			}else{
+				//Create lines back to original
+				DrawableGraphState n = (DrawableGraphState) s;
+				adaptedPos = new Point(n.getPosition().x + 50, n.getPosition().y);
 			}
 		} else {
 			adaptedPos = mouseLineAnchor(tempEdge.getStartPoint().getLocation(), pos);

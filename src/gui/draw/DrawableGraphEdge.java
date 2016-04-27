@@ -30,6 +30,7 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	private static final int EL_INDEX_RESULT = 1;
 	private static final int EL_INDEX_BACKGROUND = 2;
 	private static final int EL_INDEX_NAME = 3;
+	private static final int EL_INDEX_ANCHOR = 4;
 	
 	public static final int STROKE_WIDTH = 2,
 							TEXT_SIZE = 14;
@@ -69,6 +70,12 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		buildElement();
 	}
 	
+	/**
+	 * Only for temp edges!
+	 * @param doc
+	 * @param from
+	 * @param to
+	 */
 	public DrawableGraphEdge(SVGDocument doc, DrawableGraphState from, Point to) {
 		super(doc);
 		anchorPoints = new Point[3];
@@ -135,12 +142,17 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		int x = (start.x + end.x) / 2;
 		int y = (start.y + end.y) / 2;
 		if(finalMove){
-			anchorPoints[1] = DrawableGrid.getPoint(new Point(x + anchorVector.x, y + anchorVector.y));
+			Point p = new Point(x + anchorVector.x, y + anchorVector.y);
+			anchorPoints[1] = DrawableGrid.getPoint(p);
+			System.err.println("p:"+p.toString());
+			System.err.println("anchor:"+anchorPoints[1].toString());
 //			anchorPoints[1] = new Point(x + anchorVector.x, y + anchorVector.y);
 		}else{
 			anchorPoints[1] = DrawableGrid.getPoint(new Point(x + anchorVector.x + offsetX, y + anchorVector.y + offsetY));
 //			anchorPoints[1] = new Point(x + anchorVector.x + offsetX, y + anchorVector.y + offsetY);
 		}
+		edge[EL_INDEX_ANCHOR].setAttribute("cx", String.valueOf(anchorPoints[1].x));
+		edge[EL_INDEX_ANCHOR].setAttribute("cy", String.valueOf(anchorPoints[1].y));
 	}
 
 	/**
@@ -152,23 +164,27 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		if(selected){
 			edge[EL_INDEX_SHAPE].setAttribute("stroke", String.valueOf("red"));
 			edge[EL_INDEX_SHAPE].setAttribute("marker-end", "url(#pf1red)");
+			edge[EL_INDEX_ANCHOR].setAttribute("fill", "red");
 		}else{
 			edge[EL_INDEX_SHAPE].setAttribute("stroke", String.valueOf("black"));
 			edge[EL_INDEX_SHAPE].setAttribute("marker-end", "url(#pf1)");
+			edge[EL_INDEX_ANCHOR].setAttribute("fill", "none");
 		}
 	}
 	
 	protected void buildElement() {
 		element = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "g");
-		edge = new Element[4];
+		edge = new Element[5];
 		edge[EL_INDEX_SHAPE] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "polyline");
 		edge[EL_INDEX_RESULT] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "text");
 		edge[EL_INDEX_BACKGROUND] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "rect");
 		edge[EL_INDEX_NAME] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "text");
+		edge[EL_INDEX_ANCHOR] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "ellipse");
 		element.appendChild(edge[EL_INDEX_SHAPE]);
 		element.appendChild(edge[EL_INDEX_BACKGROUND]);
 		element.appendChild(edge[EL_INDEX_RESULT]);
 		element.appendChild(edge[EL_INDEX_NAME]);
+		element.appendChild(edge[EL_INDEX_ANCHOR]);
 		invalidate();
 	}
 	
@@ -263,7 +279,11 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		name = (String) graphEdge.getAttribute(GraphEdge.ATTRIBUTE_NAME);
 		
 		invalidatePositions(true);
-		
+	
+		edge[EL_INDEX_ANCHOR].setAttribute("rx", "4");
+		edge[EL_INDEX_ANCHOR].setAttribute("ry", "4");
+//		edge[EL_INDEX_ANCHOR].setAttribute("fill", "none");
+
 		setSelected(selected);
 		
 		edge[EL_INDEX_SHAPE].setAttribute("stroke-width", String.valueOf(STROKE_WIDTH));
