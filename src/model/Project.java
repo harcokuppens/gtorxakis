@@ -19,12 +19,12 @@ public class Project {
 
 	private String path;
 
-	private ArrayList<Model> models;
+	private ArrayList<Definition> definitions;
 	
 
 	public Project(String name) {
 		this.name = name;
-		this.models = new ArrayList<Model>();
+		this.definitions = new ArrayList<Definition>();
 	}
 
 	public void setPath(String path) {
@@ -32,8 +32,8 @@ public class Project {
 	}
 	
 	public void setSaved() {
-		for (Model m: models) {
-			m.setSaved();
+		for (Definition d : definitions) {
+			d.setSaved();
 		}
 		settingsChanged = false;
 		modelsChanged = false;

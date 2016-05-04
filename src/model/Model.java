@@ -23,7 +23,7 @@ import java.util.ArrayList;
 /**
  * A model holding a graph. 
  */
-public class Model {
+public class Model extends Definition {
 	private String name;
 
 	private DoubleLinkedList<Action> actionHistory;
