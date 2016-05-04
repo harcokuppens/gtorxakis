@@ -67,7 +67,10 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		graphEdge.setDrawable(this);
 		setStart(from.getPosition());
 		setEnd(to.getPosition());
-		buildElement();
+		buildElement();			
+		if(from.equals(to)){
+			anchorPoints[1] = new Point(from.getPosition().x, from.getPosition().y-500);
+		}
 	}
 	
 	/**
@@ -141,16 +144,19 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		Point start = getStartPoint(), end = getEndPoint();
 		int x = (start.x + end.x) / 2;
 		int y = (start.y + end.y) / 2;
+		Point p;
 		if(finalMove){
-			Point p = new Point(x + anchorVector.x, y + anchorVector.y);
-			anchorPoints[1] = DrawableGrid.getPoint(p);
-			System.err.println("p:"+p.toString());
-			System.err.println("anchor:"+anchorPoints[1].toString());
+			p = new Point(x + anchorVector.x, y + anchorVector.y);
+//			anchorPoints[1] = DrawableGrid.getPoint(p);
 //			anchorPoints[1] = new Point(x + anchorVector.x, y + anchorVector.y);
 		}else{
-			anchorPoints[1] = DrawableGrid.getPoint(new Point(x + anchorVector.x + offsetX, y + anchorVector.y + offsetY));
+			p = new Point(x + anchorVector.x + offsetX, y + anchorVector.y + offsetY);
+//			anchorPoints[1] = DrawableGrid.getPoint(p);
 //			anchorPoints[1] = new Point(x + anchorVector.x + offsetX, y + anchorVector.y + offsetY);
 		}
+		anchorPoints[1] = p;
+//		System.err.println("p:"+p.toString());
+//		System.err.println("anchor:"+anchorPoints[1].toString());
 		edge[EL_INDEX_ANCHOR].setAttribute("cx", String.valueOf(anchorPoints[1].x));
 		edge[EL_INDEX_ANCHOR].setAttribute("cy", String.valueOf(anchorPoints[1].y));
 	}
@@ -219,12 +225,6 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	public void invalidatePositions(boolean finalMove){
 		calculatePositions(finalMove);
 		
-//		Point start = this.getStartPoint(), end = this.getEndPoint();
-//		
-//		edge[EL_INDEX_SHAPE].setAttribute("x1", String.valueOf(start.x));
-//		edge[EL_INDEX_SHAPE].setAttribute("y1", String.valueOf(start.y));
-//		edge[EL_INDEX_SHAPE].setAttribute("x2", String.valueOf(end.x));
-//		edge[EL_INDEX_SHAPE].setAttribute("y2", String.valueOf(end.y));
 		StringBuilder lineAnchorPoints = new StringBuilder();
 		for (Point p : anchorPoints) {
 			if(p != null){
@@ -282,7 +282,6 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	
 		edge[EL_INDEX_ANCHOR].setAttribute("rx", "4");
 		edge[EL_INDEX_ANCHOR].setAttribute("ry", "4");
-//		edge[EL_INDEX_ANCHOR].setAttribute("fill", "none");
 
 		setSelected(selected);
 		

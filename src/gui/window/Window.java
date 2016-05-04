@@ -198,7 +198,7 @@ public class Window extends JFrame implements Observer {
 			});
 			modelPane.setSelectedIndex(this.modelPane.getTabCount()-1);
 			updateModel(currentModel, m);
-//			menuBar.updateModels(currentProject);
+			menuBar.updateModels(currentProject);
 		}
 	}
 
@@ -368,12 +368,12 @@ public class Window extends JFrame implements Observer {
 		removeAllModels();
 		this.currentProject = newProject;
 		if(newProject != null) {
-//			menuBar.setItemEnabled(WindowActionListener.ADD_MODEL, true);
+			menuBar.setItemEnabled(WindowActionListener.ADD_MODEL, true);
 			for(Model m: newProject.getModels()) {
 				showModel(m);
 			}
 		} else {
-//			menuBar.setItemEnabled(WindowActionListener.ADD_MODEL, false);
+			menuBar.setItemEnabled(WindowActionListener.ADD_MODEL, false);
 		}
 	}
 	
@@ -432,7 +432,7 @@ public class Window extends JFrame implements Observer {
 		if(observable instanceof Session) {
 			if(obj instanceof Project) {
 				System.out.println("[SEVERE] No update defined for projects");
-				// updateProject(((Session) observable).getProject());				
+//				 updateProject(((Session) observable).getProject());				
 			} else if(obj == null) {
 				setTitle(Session.getSession().getProject());
 			}

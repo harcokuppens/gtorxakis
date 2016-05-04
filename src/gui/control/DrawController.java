@@ -293,6 +293,7 @@ public class DrawController {
 	public void removeTempEdge() {
 		if(dragEndNode != null){
 			if (!dragEndNode.equals(dragStartNode) && !dragStartNode.getNode().hasEdgetoNode(dragEndNode.getNode())) {
+//			if (!dragStartNode.getNode().hasEdgetoNode(dragEndNode.getNode())) {
 				gi.addEdge(dragStartNode, dragEndNode);
 			}
 		}

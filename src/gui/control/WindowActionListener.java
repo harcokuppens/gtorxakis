@@ -107,7 +107,7 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 //			runAction(window, window.getCurrentProject());
 			break;
 		case ADD_MODEL:
-//			window.addModel();
+			window.addModel();
 			break;
 		case SHOW_RESULTS:
 //			showResultsAction(window.getCurrentModel());

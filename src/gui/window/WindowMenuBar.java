@@ -47,11 +47,9 @@ public class WindowMenuBar extends JMenuBar{
 		addMenuItem("Exit", file, true, KeyEvent.VK_W, false, "exit", "/icons/door_in.png", wat);
 		
 		//Project menu
-//		projectMenu = addMenu("Project");
-//		importData = generateMenuItem("Import data...", false, KeyEvent.VK_I , false, WindowActionListener.IMPORT_DATA, null , wat);
-//		clearData = generateMenuItem("Clear data...",false, -1, false, WindowActionListener.CLEAR_DATA, null, wat);
-//		addModel = generateMenuItem("New Model...", false, -1, false, WindowActionListener.ADD_MODEL, null, wat);
-//		fillProjectMenu(projectMenu, null);
+		projectMenu = addMenu("Project");
+		addModel = generateMenuItem("New Model...", false, -1, false, WindowActionListener.ADD_MODEL, null, wat);
+		fillProjectMenu(projectMenu, null);
 		
 		//Edit menu
 		JMenu edit = addMenu("Edit");
@@ -92,7 +90,7 @@ public class WindowMenuBar extends JMenuBar{
 		addMenuItem("Zoom In", view, true, KeyEvent.VK_ADD, false, WindowActionListener.ZOOM_IN, "/icons/magnifier_zoom_in.png", wat);
 		addMenuItem("Reset Zoom", view, true, KeyEvent.VK_NUMPAD0, false, WindowActionListener.ZOOM_RESET, "/icons/magnifier.png", wat);
 		addMenuItem("Zoom Out", view, true, KeyEvent.VK_MINUS, false, WindowActionListener.ZOOM_OUT, "/icons/magnifier_zoom_out.png", wat);
-		showGrid = addCheckBoxMenuItem("Show Grid", view, true,WindowActionListener.SHOW_GRID,wat);
+//		showGrid = addCheckBoxMenuItem("Show Grid", view, true,WindowActionListener.SHOW_GRID,wat);
 	
 		//Help menu
 //		JMenu help = addMenu("Help");
@@ -142,12 +140,11 @@ public class WindowMenuBar extends JMenuBar{
 
 	private void fillProjectMenu(JMenu projectMenu, Project project) {
 		projectMenu.removeAll();
-		projectMenu.add(importData);
-		projectMenu.add(clearData);
 		
 		if(project != null) {
 			projectMenu.addSeparator();
 
+			System.err.println("Size:"+project.getModels().size());
 			for(Model m: project.getModels()) {
 				JMenu modelMenu = new JMenu();
 				modelMenu.setText(m.getName());
@@ -204,7 +201,7 @@ public class WindowMenuBar extends JMenuBar{
 			exportEXCEL.setEnabled(b);
 			break;
 		case WindowActionListener.SHOW_GRID:
-			showGrid.setState(true);
+//			showGrid.setState(true);
 			break;
 		case WindowActionListener.EXPORT_GRAPH_PNG: // intended fall-through
 		case WindowActionListener.EXPORT_GRAPH_SVG: // intended fall-through
