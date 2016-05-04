@@ -25,15 +25,13 @@ import java.util.ArrayList;
  */
 public class Model extends Definition {
 	private String name;
-
-	private DoubleLinkedList<Action> actionHistory;
-	private ActionHandler actionHandler;
 	
 	private Graph graph;
 	private DrawableGraph drawableGraph;
 	private DrawController drawController;
 	private GraphInterface graphInterface;
-		
+	
+	private ActionHandler actionHandler;
 
 	private final Project project;
 	
@@ -42,13 +40,11 @@ public class Model extends Definition {
 		this.name = name;
 		this.graph = graph;
 		this.drawableGraph = drawableGraph;
-		actionHistory = new DoubleLinkedList<Action>();
 		this.graphInterface = new GraphInterface(this, graph, drawableGraph);
 		this.drawController = new DrawController(graphInterface);
 
 		actionHandler = new ActionHandler(this);
 		actionHandler.start();
-
 	}
 
 	public Model clone(Project p, String name, Graph graph, DrawableGraph drawableGraph) {
@@ -127,13 +123,7 @@ public class Model extends Definition {
 		Session.getSession().invalidate();
 	}
 
-	public boolean isSaved() {
-		return actionHistory.isMarked();
-	}
 
-	public void setSaved() {
-		actionHistory.mark();
-	}
 
 	public Project getProject() {
 		return this.project;

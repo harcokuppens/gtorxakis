@@ -41,8 +41,8 @@ public class Project {
 
 	public boolean isSaved() {
 		boolean isSaved = true;
-		for(Model m: models) {
-			isSaved &= m.isSaved();
+		for(Definition d: definitions) {
+			isSaved &= d.isSaved();
 		}
 		return isSaved && !settingsChanged && !modelsChanged;
 	}
@@ -98,16 +98,22 @@ public class Project {
 	}
 
 	public void addModel(Model m) {
-		models.add(m);
+		definitions.add(m);
 		modelsChanged = true;
 	}
 
 	public void removeModel(Model m) {
-		models.remove(m);
+		definitions.remove(m);
 		modelsChanged = true;
 	}
 
 	public ArrayList<Model> getModels() {
+		ArrayList<Model> models = new ArrayList<Model>();
+		for(Definition d : definitions){
+			if( d instanceof Model){
+				models.add((Model)d);
+			}
+		}
 		return models;
 	}
 
