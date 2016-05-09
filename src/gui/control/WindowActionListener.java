@@ -119,13 +119,13 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 //			ResultExportDialogExcel rede = new ResultExportDialogExcel(window, window.getCurrentModel());
 			break;
 		case EXPORT_GRAPH_PNG:
-			new GraphExportDialog(window, FileTypeAssociation.PngExport, window.getCurrentModel());
+			new GraphExportDialog(window, FileTypeAssociation.PngExport, (Model) window.getCurrentDefinition());
 			break;
 		case EXPORT_GRAPH_SVG:
-			new GraphExportDialog(window, FileTypeAssociation.SvgExport, window.getCurrentModel());
+			new GraphExportDialog(window, FileTypeAssociation.SvgExport, (Model) window.getCurrentDefinition());
 			break;
 		case EXPORT_GRAPH_JPG:
-			new GraphExportDialog(window, FileTypeAssociation.JpgExport, window.getCurrentModel());
+			new GraphExportDialog(window, FileTypeAssociation.JpgExport, (Model) window.getCurrentDefinition());
 			break;
 		case ZOOM_IN:
 			dc.zoomIn();
@@ -158,7 +158,7 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 		return new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				w.showModel(m);
+				w.showDefinition(m);
 			}
 		};
 	}

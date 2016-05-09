@@ -13,8 +13,6 @@ import model.graph.GraphState;
 import model.graph.GraphEdge;
 import util.DoubleLinkedList;
 import action.Action;
-import action.DrawCreateAction;
-import action.DrawDeleteAction;
 import action.ActionHandler;
 
 
@@ -25,17 +23,17 @@ import java.util.ArrayList;
  */
 public class Model extends Definition {
 	private String name;
-	
+	private final Project project;
 	private Graph graph;
 	private DrawableGraph drawableGraph;
 	private DrawController drawController;
 	private GraphInterface graphInterface;
 	
 	private ActionHandler actionHandler;
-
-	private final Project project;
+	private DoubleLinkedList<Action> actionHistory;
 	
 	public Model(Project project, String name, Graph graph, DrawableGraph drawableGraph) {
+		super(name);
 		this.project = project;
 		this.name = name;
 		this.graph = graph;
@@ -43,6 +41,8 @@ public class Model extends Definition {
 		this.graphInterface = new GraphInterface(this, graph, drawableGraph);
 		this.drawController = new DrawController(graphInterface);
 
+		actionHistory = new DoubleLinkedList<Action>();
+		
 		actionHandler = new ActionHandler(this);
 		actionHandler.start();
 	}
@@ -123,12 +123,6 @@ public class Model extends Definition {
 		Session.getSession().invalidate();
 	}
 
-
-
-	public Project getProject() {
-		return this.project;
-	}
-
 	public static Model newModel(Project project, String name) {
 		Graph graph = new Graph();
 		DrawableGraph drawableGraph = new DrawableGraph();
@@ -141,5 +135,17 @@ public class Model extends Definition {
 //			Edition.showLimitMessage();
 //		}
 		return new Model(project, name, graph, drawableGraph);
+	}
+	
+	public Project getProject(){
+		return project;
+	}
+	
+	public boolean isSaved() {
+		return actionHistory.isMarked();
+	}
+
+	public void setSaved() {
+		actionHistory.mark();
 	}
 }

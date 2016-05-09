@@ -57,7 +57,7 @@ public class ProjectImporterGTorx extends ProjectImporter {
 			Element modelsElement = projectElement.getChild("models");
 			for(Element modelElement: modelsElement.getChildren("model")) {
 				Model m = importModel(modelElement, project, version);
-				project.addModel(m);
+				project.addDefinition(m);
 			}
 
 			project.setSaved();

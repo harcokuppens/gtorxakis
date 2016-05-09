@@ -4,6 +4,7 @@ import gui.control.DrawController;
 import gui.control.InputListener;
 import gui.control.WindowActionListener;
 import gui.draw.GraphPanel;
+import gui.draw.GUITextualDefinition;
 import gui.draw.DrawableGraph;
 
 import gui.window.StatusBarMessageHandler;
@@ -26,15 +27,17 @@ import javax.swing.JFrame;
 import javax.swing.JRootPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JOptionPane;
-
+import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
 import util.Environment;
 import util.CalculationDispatcher;
+import model.Definition;
 import model.Model;
 import model.Project;
 import model.graph.Graph;
+import model.TextualDefinition;
 import core.Session;
 
 import javax.swing.SwingUtilities;
@@ -43,11 +46,10 @@ public class Window extends JFrame implements Observer {
 	private Window window;
 	
 	// Bi-directional map
-	private HashMap<Model, GraphPanel> panels;
-	private HashMap<GraphPanel, Model> models;
-	
+	private HashMap<Model, Object> panels;
+	private HashMap<Object, Model> definitions;
 	// The model that is currently visible
-	private Model currentModel;
+	private Definition currentDefinition;
 	private Project currentProject;
 	
 	private WindowMenuBar menuBar;
@@ -55,7 +57,7 @@ public class Window extends JFrame implements Observer {
 	private final StatusBarMessageHandler statusBarMessageHandler;
 	private WindowToolBar toolBar;
 	
-	private JTabbedPane modelPane;
+	private JTabbedPane definitionPane;
 
 	private final WindowActionListener wat;
 	private final InputListener inputListener;
@@ -68,8 +70,8 @@ public class Window extends JFrame implements Observer {
 	public Window(Session session) {
 		window = this;
 		this.session = session;
-		this.panels = new HashMap<Model, GraphPanel>();
-		this.models = new HashMap<GraphPanel, Model>();
+		this.panels = new HashMap<Model, Object>();
+		this.definitions = new HashMap<Object, Model>();
 		window.addWindowListener(new WindowAdapter(){
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -108,16 +110,16 @@ public class Window extends JFrame implements Observer {
 		toolBar.setFloatable(false);
 //		getContentPane().add(toolBar, BorderLayout.NORTH);
 		
-		modelPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
-		modelPane.addChangeListener(new ChangeListener() {
+		definitionPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+		definitionPane.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				JTabbedPane pane = (JTabbedPane) e.getSource();
-				Model newModel = models.get(pane.getSelectedComponent());
-				Window.this.updateModel(currentModel, newModel);
+				Definition newDefinition = definitions.get(pane.getSelectedComponent());
+				Window.this.updateDefinition(currentDefinition, newDefinition);
 			}
 		});
-		this.getContentPane().add(modelPane, BorderLayout.CENTER);
+		this.getContentPane().add(definitionPane, BorderLayout.CENTER);
 
 
 		//StatusBar
@@ -169,35 +171,51 @@ public class Window extends JFrame implements Observer {
 		}
 		String newModelName = modelBaseName + count;
 		Model m = new Model(currentProject, newModelName, g, dg);
-		currentProject.addModel(m);
+		currentProject.addDefinition(m);
 		setTitle(currentProject);
 		showModel(m);
 	}
 
-	public void showModel(Model m) {
+	public void showDefinition(Definition d){
+		if(d instanceof Model){
+			showModel((Model) d);
+		}else{
+			showTextualDefinition(d);
+		}
+		
+	}
+	
+	private void showTextualDefinition(Definition d){
+		GUITextualDefinition gui = new GUITextualDefinition(d);
+		((TextualDefinition) d).setDrawable(gui);
+		definitionPane.add(d.getTitle(), gui);
+	}
+	
+	private void showModel(Model m) {
 		if(panels.containsKey(m)) {
 			// then the model is currently being displayed
-			modelPane.setSelectedComponent(panels.get(m));
-			updateModel(currentModel, m);
+			GraphPanel panel = (GraphPanel) panels.get(m);
+			definitionPane.setSelectedComponent(panel);
+			updateDefinition(currentDefinition, m);
 		} else {
 			GraphPanel g = new GraphPanel();
 			g.setAlignmentX(CENTER_ALIGNMENT);
 			g.setAlignmentY(CENTER_ALIGNMENT);
 
 			panels.put(m, g);
-			models.put(g,  m);
+			definitions.put(g,  m);
 			g.setModel(m);
 			m.getDrawController().attach(g);
 
-			this.modelPane.addTab(m.getName(), null, g, null);
-			modelPane.setTabComponentAt(this.modelPane.getTabCount()-1, new ButtonTabComponent(modelPane) {
+			this.definitionPane.addTab(m.getName(), null, g, null);
+			definitionPane.setTabComponentAt(this.definitionPane.getTabCount()-1, new ButtonTabComponent(definitionPane) {
 				@Override
 				public void onButtonPressed(JTabbedPane pane, int index) {
 					hideModel(index);
 				}
 			});
-			modelPane.setSelectedIndex(this.modelPane.getTabCount()-1);
-			updateModel(currentModel, m);
+			definitionPane.setSelectedIndex(this.definitionPane.getTabCount()-1);
+			updateDefinition(currentDefinition, m);
 			menuBar.updateModels(currentProject);
 		}
 	}
@@ -234,14 +252,15 @@ public class Window extends JFrame implements Observer {
 				if(!retry) {
 					m.setName(s);
 					// Check if the tab title needs to be changed:
-					final int index = modelPane.indexOfComponent(panels.get(m));
+					GraphPanel panel = (GraphPanel) panels.get(m);
+					final int index = definitionPane.indexOfComponent(panel);
 					if(index != -1) {
 						final String finalName = s;
 						SwingUtilities.invokeLater(new Runnable() {
 							@Override
 							public void run() {
-								modelPane.setTitleAt(index, finalName);
-								modelPane.updateUI();
+								definitionPane.setTitleAt(index, finalName);
+								definitionPane.updateUI();
 							}
 						});
 					}
@@ -261,10 +280,11 @@ public class Window extends JFrame implements Observer {
 			JOptionPane.PLAIN_MESSAGE, //messageType
 			null); //icon
 		if(choice == JOptionPane.YES_OPTION) {
-			currentProject.removeModel(m);
+			currentProject.removeDefinition(m);
 			// Check if deleted model is currently being displayed,
 			// in which case the corresponding panel needs to be closed
-			int index = modelPane.indexOfComponent(panels.get(m));
+			GraphPanel panel = (GraphPanel) panels.get(m);
+			int index = definitionPane.indexOfComponent(panel);
 			if(index != -1) {
 				hideModel(index);
 			}
@@ -278,13 +298,13 @@ public class Window extends JFrame implements Observer {
 		Graph g = new Graph();
 		DrawableGraph dg = new DrawableGraph();
 		Model mClone = m.clone(p, "Copy of " + m.getName(), g, dg);
-		p.addModel(mClone);
+		p.addDefinition(mClone);
 		showModel(mClone);
 		setTitle(currentProject);
 	}
 
-	public Model getCurrentModel() {
-		return currentModel;
+	public Definition getCurrentDefinition() {
+		return currentDefinition;
 	}
 
 	public Project getCurrentProject() {
@@ -292,24 +312,25 @@ public class Window extends JFrame implements Observer {
 	}
 
 	private void removeAllModels() {
-		updateModel(currentModel, null);
-		modelPane.removeAll();
+		updateDefinition(currentDefinition, null);
+		definitionPane.removeAll();
+//		definitionPane.addTab("SUT definition", new TextualDefinition(null));
 	}
 
 	public void hideModel(int index) {
-		boolean isVisible = this.modelPane.getSelectedIndex() == index;
-		Model oldModel = models.get((GraphPanel) modelPane.getComponentAt(index));
+		boolean isVisible = this.definitionPane.getSelectedIndex() == index;
+		Model oldModel = definitions.get((GraphPanel) definitionPane.getComponentAt(index));
 		Model newModel = null;
-		if(modelPane.getTabCount() > 1 && isVisible) {
+		if(definitionPane.getTabCount() > 1 && isVisible) {
 			int newIndex = index - 1 < 0? 1:index-1;
-			newModel = models.get((GraphPanel) modelPane.getComponentAt(newIndex));
+			newModel = definitions.get((GraphPanel) definitionPane.getComponentAt(newIndex));
 		} 
-		modelPane.remove(index);
-		updateModel(oldModel, newModel);
-		GraphPanel oldPanel = panels.remove(oldModel);
+		definitionPane.remove(index);
+		updateDefinition(oldModel, newModel);
+		GraphPanel oldPanel = (GraphPanel) panels.remove(oldModel);
 		oldPanel.stopProcessing();
 		oldModel.getDrawController().detach();
-		models.remove(oldPanel);
+		definitions.remove(oldPanel);
 	}
 
 	public StatusBar getStatusBar() {
@@ -328,26 +349,29 @@ public class Window extends JFrame implements Observer {
 		return returnValOptionPaneModifyModel == JOptionPane.YES_OPTION;
 	}
 	
-	private void updateGraphView(Model oldModel, Model newModel) {
-		if(newModel != null) {
+	private void updateGraphView(Definition oldDefinition, Definition newDefinition) {
+		if(newDefinition != null && newDefinition instanceof Model) {
+			Model newModel = (Model) newDefinition;
 			DrawController dc = newModel.getDrawController();
 			wat.setDrawController(dc);
 			inputListener.setModel(newModel);
 		}
 		// unbind existing associations if appropriate
-		if(oldModel != null) {
-			GraphPanel oldPanel = panels.get(oldModel);
+		if(oldDefinition != null) {
+			GraphPanel oldPanel = (GraphPanel) panels.get(oldDefinition);
 			oldPanel.removeComponentListener(wat);
 			oldPanel.removeMouseListener(inputListener);
 			oldPanel.removeMouseMotionListener(inputListener);
 			oldPanel.removeKeyListener(inputListener);
 			oldPanel.removeMouseWheelListener(inputListener);
 			oldPanel.setFocusTraversalKeysEnabled(false);
-			oldModel.getDrawController().getGraphInterface().deleteObserver(inputListener);			
+			if(oldDefinition instanceof Model){
+				((Model) oldDefinition).getDrawController().getGraphInterface().deleteObserver(inputListener);			
+			}
 		}
 		// bind new Model if appropriate
-		if(newModel != null) {
-			GraphPanel newPanel = panels.get(newModel);
+		if(newDefinition != null) {
+			GraphPanel newPanel = (GraphPanel) panels.get(newDefinition);
 			newPanel.addComponentListener(wat);
 			newPanel.addMouseListener(inputListener);
 			newPanel.addMouseMotionListener(inputListener);
@@ -355,8 +379,10 @@ public class Window extends JFrame implements Observer {
 			newPanel.addMouseWheelListener(inputListener);
 			newPanel.setFocusTraversalKeysEnabled(false);
 			newPanel.requestFocus();
-			newModel.getDrawController().getGraphInterface().addObserver(inputListener);
-			this.dc = dc;
+			if(newDefinition instanceof Model){
+				((Model)newDefinition).getDrawController().getGraphInterface().addObserver(inputListener);
+				this.dc = dc;				
+			}
 		} else {
 			this.dc = null;
 		}
@@ -369,22 +395,25 @@ public class Window extends JFrame implements Observer {
 		this.currentProject = newProject;
 		if(newProject != null) {
 			menuBar.setItemEnabled(WindowActionListener.ADD_MODEL, true);
-			for(Model m: newProject.getModels()) {
-				showModel(m);
+			for(Definition d: newProject.getDefinitions()) {
+				showDefinition(d);
 			}
 		} else {
 			menuBar.setItemEnabled(WindowActionListener.ADD_MODEL, false);
 		}
 	}
 	
-	private void updateModel(Model oldModel, Model newModel) {
-		updateGraphView(oldModel, newModel);
-		updateButtons(newModel);
-		boolean canExport = newModel != null && !(newModel.getGraph().getStates().isEmpty() && newModel.getGraph().getComments().isEmpty());
-		menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_PNG, canExport);
-		menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_SVG, canExport);
-		menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_JPG, canExport);
-		this.currentModel = newModel;
+	private void updateDefinition(Definition oldDefinition, Definition newDefinition) {
+		updateGraphView(oldDefinition, newDefinition);
+		updateButtons(newDefinition);
+		if(newDefinition instanceof Model){
+			Model newModel = (Model) newDefinition;
+			boolean canExport = newModel != null && !(newModel.getGraph().getStates().isEmpty() && newModel.getGraph().getComments().isEmpty());
+			menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_PNG, canExport);
+			menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_SVG, canExport);
+			menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_JPG, canExport);
+		}
+		this.currentDefinition = newDefinition;
 	}
 	
 	public void setTitle(Project project) {
@@ -398,26 +427,29 @@ public class Window extends JFrame implements Observer {
 		super.setTitle(title);
 	}
 	
-	private void updateButtons(Model m) {
+	private void updateButtons(Definition d) {
 		menuBar.setItemEnabled(WindowActionListener.SHOW_GRID, true);
-		if(m != null) {
-			boolean canExport = !(m.getGraph().getStates().isEmpty() && m.getGraph().getComments().isEmpty());
-			menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_PNG, canExport);
-			menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_SVG, canExport);
-			menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_JPG, canExport);
-			menuBar.setItemEnabled(WindowActionListener.REDO, m.canRedo());
-			menuBar.setItemEnabled(WindowActionListener.UNDO, m.canUndo());
-			toolBar.setItemEnabled(WindowActionListener.UNDO, m.canUndo());
-			toolBar.setItemEnabled(WindowActionListener.REDO, m.canRedo());
-		} else {
-			menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_PNG, false);
-			menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_SVG, false);
-			menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_JPG, false);
-			menuBar.setItemEnabled(WindowActionListener.REDO, false);
-			menuBar.setItemEnabled(WindowActionListener.UNDO, false);
-			toolBar.setItemEnabled(WindowActionListener.UNDO, false);
-			toolBar.setItemEnabled(WindowActionListener.REDO, false);
-		}
+			if(d != null) {
+				if(d instanceof Model){
+					Model m = (Model) d;
+					boolean canExport = !(m.getGraph().getStates().isEmpty() && m.getGraph().getComments().isEmpty());
+					menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_PNG, canExport);
+					menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_SVG, canExport);
+					menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_JPG, canExport);
+				}
+				menuBar.setItemEnabled(WindowActionListener.REDO, d.canRedo());
+				menuBar.setItemEnabled(WindowActionListener.UNDO, d.canUndo());
+				toolBar.setItemEnabled(WindowActionListener.UNDO, d.canUndo());
+				toolBar.setItemEnabled(WindowActionListener.REDO, d.canRedo());
+			} else {
+				menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_PNG, false);
+				menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_SVG, false);
+				menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_JPG, false);
+				menuBar.setItemEnabled(WindowActionListener.REDO, false);
+				menuBar.setItemEnabled(WindowActionListener.UNDO, false);
+				toolBar.setItemEnabled(WindowActionListener.UNDO, false);
+				toolBar.setItemEnabled(WindowActionListener.REDO, false);
+			}
 	}
 	
 	public void hasResults(boolean hasResults) {
@@ -437,7 +469,7 @@ public class Window extends JFrame implements Observer {
 				setTitle(Session.getSession().getProject());
 			}
 		}
-		updateButtons(currentModel);		
+		updateButtons(currentDefinition);		
 	}
 	
 	public Collection<Integer> castToCollection(int[] varNames){

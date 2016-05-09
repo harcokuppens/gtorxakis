@@ -11,6 +11,7 @@ import io.file.FileType;
 import io.file.FileTypeAssociation;
 import io.file.project.exporter.ProjectExport;
 
+
 public class Project {
 	private String name;
 	
@@ -21,7 +22,6 @@ public class Project {
 
 	private ArrayList<Definition> definitions;
 	
-
 	public Project(String name) {
 		this.name = name;
 		this.definitions = new ArrayList<Definition>();
@@ -85,7 +85,15 @@ public class Project {
 	public static Project newProject() {
 		Project p = new Project("Unnamed");
 		Model m = Model.newModel(p, "Model 1");
-		p.addModel(m);
+		TextualDefinition sut = TextualDefinition.newDefinition(p, "SUT Definition");
+		TextualDefinition adap = TextualDefinition.newDefinition(p, "ADAP Definition");
+		TextualDefinition spec = TextualDefinition.newDefinition(p, "SPEC Definition");
+		TextualDefinition type = TextualDefinition.newDefinition(p, "TYPE Definition");
+		p.addDefinition(type);
+		p.addDefinition(spec);
+		p.addDefinition(adap);
+		p.addDefinition(sut);
+		p.addDefinition(m);
 		return p;
 	}
 	
@@ -97,24 +105,36 @@ public class Project {
 		}
 	}
 
-	public void addModel(Model m) {
-		definitions.add(m);
+	public void addDefinition(Definition d) {
+		definitions.add(d);
 		modelsChanged = true;
 	}
 
-	public void removeModel(Model m) {
-		definitions.remove(m);
+	public void removeDefinition(Definition d) {
+		definitions.remove(d);
 		modelsChanged = true;
 	}
+	
+	public ArrayList<Definition> getDefinitions(){
+		return definitions;
+	}
 
-	public ArrayList<Model> getModels() {
+	public ArrayList<Model> getModels(){
 		ArrayList<Model> models = new ArrayList<Model>();
-		for(Definition d : definitions){
-			if( d instanceof Model){
-				models.add((Model)d);
-			}
+		for(Definition d : getDefinitionsByClass(Model.class)){
+			models.add((Model) d);
 		}
 		return models;
+	}
+	
+	public ArrayList<Definition> getDefinitionsByClass(Class<?> c) {
+		ArrayList<Definition> def = new ArrayList<Definition>();
+		for(Definition d : definitions){
+			if(c.isInstance(d)){
+				def.add(d);
+			}
+		}
+		return def;
 	}
 
 }

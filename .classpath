@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="/ADANCO/lib/batik-1.7/batik-squiggle.jar"/>
 	<classpathentry kind="lib" path="/ADANCO/lib/batik-1.7/batik.jar"/>
 	<classpathentry kind="lib" path="/ADANCO/lib/jdom-2.0.5/jdom-2.0.5.jar"/>
+	<classpathentry kind="lib" path="libs/rsyntaxtextarea-2.6.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
