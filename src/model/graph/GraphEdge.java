@@ -1,22 +1,32 @@
 package model.graph;
 
+import java.util.ArrayList;
+
 import action.Configurable;
 import gui.control.DrawController;
 import gui.draw.DrawableGraphEdge;
+import model.Transition;
 
 
 public class GraphEdge implements Configurable{
 	private GraphState from, to;
-	private String name;
+//	private String name;
+	private ArrayList<Transition> transitions;
 	
 	private DrawableGraphEdge drawable;
 	
 	public static final String ATTRIBUTE_NAME = "name";
+	public static final String ATTRIBUTE_TRANSITIONS = "transitions";
 	
-	public GraphEdge(GraphState from, GraphState to, String name) {
+	public GraphEdge(GraphState from, GraphState to) {
+		this(from, to, new ArrayList<Transition>());
+	}
+	
+	public GraphEdge(GraphState from, GraphState to, ArrayList<Transition> transitions){
 		this.from = from;
 		this.to = to;
-		this.name = name;
+		this.transitions = transitions;
+		this.transitions.add(Transition.getDefaultTransition());
 	}
 	
 	/**
@@ -26,7 +36,7 @@ public class GraphEdge implements Configurable{
 	protected GraphEdge(GraphEdge draft) {
 		this.from = draft.from;
 		this.to = draft.to;
-		this.name = draft.name;
+		this.transitions = new ArrayList<Transition>(draft.transitions);
 	}
 	
 	public GraphState getFrom() {
@@ -62,8 +72,8 @@ public class GraphEdge implements Configurable{
 	
 	public void setAttribute(String cmd, Object value){
 		switch (cmd){
-		case (GraphEdge.ATTRIBUTE_NAME) :
-			name = (String) value;
+		case (GraphEdge.ATTRIBUTE_TRANSITIONS) :
+			transitions = new ArrayList<Transition>((ArrayList<Transition>) value);
 		break;
 		default :
 			System.err.println("Tried to set invalid attribute " + cmd);			
@@ -73,8 +83,8 @@ public class GraphEdge implements Configurable{
 	
 	public Object getAttribute(String cmd){
 		switch(cmd) {
-		case GraphEdge.ATTRIBUTE_NAME:
-			return name;
+		case GraphEdge.ATTRIBUTE_TRANSITIONS:
+			return transitions;
 		default:
 			System.err.println("Tried to get non existing attribute of GraphEdge (" + cmd + ")!");
 			return null;
@@ -87,6 +97,23 @@ public class GraphEdge implements Configurable{
 	}
 
 	public boolean hasName() {
-		return !name.equals("");
+		return transitions.size() > 0;
+	}
+	
+	public String getTransitionText(){
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		for(Transition t : transitions){
+			System.out.println(t);
+			if(!t.getCondition().equals("")){
+				sb.append("if("+t.getCondition()+")");
+			}
+			sb.append("\t"+t.getChannel() + " {" + t.getAction() + "}");
+			i++;
+			if(i < transitions.size()){
+				sb.append("\n");
+			}
+		}
+		return sb.toString();
 	}
 }

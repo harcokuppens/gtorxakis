@@ -442,6 +442,15 @@ public class GraphInterface extends Observable implements ClipboardOwner {
 				return c.getDrawable();
 			}
 		}
+		
+		for(GraphState state : graph.getStates()){
+			for(GraphEdge e : state.getOutgoingEdges()){
+				if(e.getDrawable().getComment().contains(p)){
+					return e.getDrawable().getComment();
+				}
+			}
+		}
+		
 		return null;
 	}
 	
@@ -500,6 +509,13 @@ public class GraphInterface extends Observable implements ClipboardOwner {
 				DrawableComment c = comment.getDrawable();
 				if(c.isWithin(rect)){
 					comments.add(c);
+				}
+			}
+			for(GraphState state : graph.getStates()){
+				for(GraphEdge edge : state.getOutgoingEdges()){
+					if(edge.getDrawable().getComment().isWithin(rect)){
+						comments.add(edge.getDrawable().getComment());
+					}
 				}
 			}
 			return comments;

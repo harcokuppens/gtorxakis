@@ -180,12 +180,12 @@ public class Window extends JFrame implements Observer {
 		if(d instanceof Model){
 			showModel((Model) d);
 		}else{
-			showTextualDefinition(d);
+			showTextualDefinition((TextualDefinition) d);
 		}
 		
 	}
 	
-	private void showTextualDefinition(Definition d){
+	private void showTextualDefinition(TextualDefinition d){
 		GUITextualDefinition gui = new GUITextualDefinition(d);
 		((TextualDefinition) d).setDrawable(gui);
 		definitionPane.add(d.getTitle(), gui);

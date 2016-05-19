@@ -15,6 +15,7 @@ import java.util.List;
 
 import model.Model;
 import model.Project;
+import model.TextualDefinition;
 import model.graph.Graph;
 import model.graph.GraphComment;
 import model.graph.GraphEdge;
@@ -44,35 +45,45 @@ public class ProjectImporterGTorx extends ProjectImporter {
 			Element projectElement = document.getRootElement();
 			String name = projectElement.getChild("name").getText();
 			Element versionElement = projectElement.getChild("version");
-			if(versionElement == null) {
-				version = new Version(1, 0, 2); // Last version without version tag in project files
-			} else {
-				version = new Version(versionElement.getText());
-			}
+			version = new Version(versionElement.getText());
 
+			System.err.println(name);
 			Project project = new Project(name);
 			project.setPath(file.getPath());
 
 			// import multiple models
-			Element modelsElement = projectElement.getChild("models");
+			Element modelsElement = projectElement.getChild("definitions");
+			for(Element textualElement : modelsElement.getChildren("textual")){
+				TextualDefinition t = importTextualDefinition(textualElement, project, version);
+				project.addDefinition(t);
+			}
+			
+			
 			for(Element modelElement: modelsElement.getChildren("model")) {
 				Model m = importModel(modelElement, project, version);
 				project.addDefinition(m);
 			}
-
 			project.setSaved();
 			return project;
 		} catch (JDOMException e) {
-				throw new IOException(e.getMessage());
+			throw new IOException(e.getMessage());
 		} catch (NumberFormatException e){
-				throw new IOException(NUMBER_FORMAT_EXCEPTION);
+			throw new IOException(NUMBER_FORMAT_EXCEPTION);
 		} catch (Exception e){
 			if(version != null && version.isNewerThan(Session.getSession().PROGRAM_VERSION)){
 				throw new IOException(VERSION_TOO_OLD);
 			}else{
+				e.printStackTrace();
 				throw new IOException(e.getMessage());
 			}
 		}
+	}
+
+	private TextualDefinition importTextualDefinition(Element textualElement, Project project, Version version) {
+		System.out.println("Import textual definition");
+		String title = textualElement.getAttributeValue("title");
+		String definition = textualElement.getText();
+		return new TextualDefinition(project, definition, title);
 	}
 
 	private Model importModel(Element modelElement, Project project, Version version) throws DataConversionException {

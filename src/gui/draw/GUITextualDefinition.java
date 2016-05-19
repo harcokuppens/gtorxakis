@@ -16,14 +16,15 @@ import org.fife.ui.rsyntaxtextarea.TokenMap;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 import model.Definition;
+import model.TextualDefinition;
 import util.MyTokenMaker;
 
 public class GUITextualDefinition extends JPanel{
 
-	private Definition definition;
+	private TextualDefinition definition;
 	private RSyntaxTextArea textArea;
 	
-	public GUITextualDefinition(Definition definition){
+	public GUITextualDefinition(TextualDefinition definition){
 		super(new BorderLayout());
 		this.definition = definition;
 		
@@ -33,6 +34,7 @@ public class GUITextualDefinition extends JPanel{
 		textArea = new RSyntaxTextArea(20, 60);
 		textArea.setSyntaxEditingStyle("text/TorXakis");
 	    textArea.setCodeFoldingEnabled(true);
+	    textArea.setText(definition.getDefinitionText(false));
 	    RTextScrollPane sp = new RTextScrollPane(textArea);
 	    this.add(sp);
 	    
@@ -44,6 +46,10 @@ public class GUITextualDefinition extends JPanel{
 	
 	public boolean canUndo(){
 		return textArea.canUndo();
+	}
+	
+	public String getText(){
+		return textArea.getText();
 	}
 	
 }

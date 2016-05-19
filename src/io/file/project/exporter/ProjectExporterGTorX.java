@@ -20,8 +20,10 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.bind.DatatypeConverter;
 
+import model.Definition;
 import model.Model;
 import model.Project;
+import model.TextualDefinition;
 import model.graph.GraphComment;
 import model.graph.GraphEdge;
 import model.graph.GraphState;
@@ -190,14 +192,30 @@ public class ProjectExporterGTorX implements ProjectExporter {
 			//End model
 		streamWriter.writeEndElement();
 	}
+
+	private void createTextualDefinition(StAXStreamOutputter streamOutputter, XMLStreamWriter streamWriter,
+			TextualDefinition t) throws XMLStreamException {
+		streamWriter.writeStartElement("textual");
+		//Start model
+			streamWriter.writeAttribute("title", t.getTitle());
+			streamOutputter.output(new Text(t.getDefinitionText(true)), streamWriter);
+		//End model
+		streamWriter.writeEndElement();
+	}
 	
 	private void createModels(StAXStreamOutputter streamOutputter, XMLStreamWriter streamWriter, Project project) throws XMLStreamException{
-		streamWriter.writeStartElement("models");
-			//Start models
-			for(Model m: project.getModels()) {
-				createModel(streamOutputter, streamWriter, m);
+		streamWriter.writeStartElement("definitions");
+			//Start definitions
+			for(Definition d: project.getDefinitions()) {
+				if(d instanceof Model){
+					Model m = (Model) d;
+					createModel(streamOutputter, streamWriter, m);
+				}else{
+					TextualDefinition t = (TextualDefinition) d;
+					createTextualDefinition(streamOutputter, streamWriter, t);
+				}
 			}
-			//End models
+			//End definitions
 		streamWriter.writeEndElement();
 	}
 	

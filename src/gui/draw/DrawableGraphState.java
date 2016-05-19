@@ -301,6 +301,7 @@ public class DrawableGraphState extends DrawableElement implements Configurable,
 	}
 
 	private void updateLocation() {
+		Point oldPosition = this.position;
 		int x = (int) this.position.getX() + offsetX;
 		int y = (int) this.position.getY() + offsetY;
 		Point p = DrawableGrid.getPoint(new Point(x, y));

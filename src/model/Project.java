@@ -85,11 +85,16 @@ public class Project {
 	public static Project newProject() {
 		Project p = new Project("Unnamed");
 		Model m = Model.newModel(p, "Model 1");
-		TextualDefinition sut = TextualDefinition.newDefinition(p, "SUT Definition");
-		TextualDefinition adap = TextualDefinition.newDefinition(p, "ADAP Definition");
-		TextualDefinition spec = TextualDefinition.newDefinition(p, "SPEC Definition");
-		TextualDefinition type = TextualDefinition.newDefinition(p, "TYPE Definition");
+		TextualDefinition sut = new TextualDefinition(p, TextualDefinition.DefType.SUT);
+		TextualDefinition adap = new TextualDefinition(p, TextualDefinition.DefType.ADAP);
+		TextualDefinition spec = new TextualDefinition(p, TextualDefinition.DefType.SPEC);
+		TextualDefinition type = new TextualDefinition(p, TextualDefinition.DefType.TYPE);
+		TextualDefinition constDef = new TextualDefinition(p, TextualDefinition.DefType.CONST);
+		TextualDefinition func = new TextualDefinition(p, TextualDefinition.DefType.FUNC);
+		
 		p.addDefinition(type);
+		p.addDefinition(constDef);
+		p.addDefinition(func);
 		p.addDefinition(spec);
 		p.addDefinition(adap);
 		p.addDefinition(sut);

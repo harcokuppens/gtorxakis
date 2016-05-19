@@ -49,6 +49,7 @@ public class DrawableComment extends DrawableElement implements Drawable, Select
 	
 	public static final String POSITION_X = "x";
 	public static final String POSITION_Y = "y";
+	public static final String POSITION = "pos";
 	
 	
 	public static final String TEXT = "text";
@@ -519,6 +520,9 @@ public class DrawableComment extends DrawableElement implements Drawable, Select
 			break;
 		case POSITION_Y:
 			this.position = new Point(position.x, (int) value);
+			break;
+		case POSITION:
+			this.position = (Point) value;
 			break;
 		default:
 			System.err.println("Unrecognized command " + cmd);
