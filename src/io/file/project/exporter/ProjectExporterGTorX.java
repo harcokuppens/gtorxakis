@@ -183,7 +183,7 @@ public class ProjectExporterGTorX implements ProjectExporter {
 	private void createModel(StAXStreamOutputter streamOutputter, XMLStreamWriter streamWriter, Model model) throws XMLStreamException {
 		streamWriter.writeStartElement("model");
 			//Start model
-			streamOutputter.output(new Element("name").addContent(model.getName()), streamWriter);
+			streamOutputter.output(new Element("name").addContent(model.getName()).setAttribute("startState", model.getGraph().getStartState().getName()), streamWriter);
 
 			for (GraphState s : model.getGraphInterface().getGraph().getStates()) {
 				//Create nodeElement

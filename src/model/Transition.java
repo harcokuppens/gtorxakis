@@ -60,4 +60,20 @@ public class Transition {
 		return channel + ", " + condition + ", " + action;
 	}
 
+	public String getConditionText() {
+		if(!this.getCondition().equals("")){
+			return "[[ " + condition + " ]]";
+		}else{
+			return "\t";
+		}
+	}
+	
+	public String getActionText() {
+		if(!this.getAction().equals("")){
+			return "{ " + action + " }";
+		}else{
+			return "\t";
+		}
+	}
+
 }

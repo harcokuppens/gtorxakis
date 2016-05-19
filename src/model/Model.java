@@ -173,10 +173,13 @@ public class Model extends Definition {
 	
 	private String getTransitions(){
 		StringBuilder sb = new StringBuilder();
+		int i = 0;
 		for(GraphState s : graph.getStates()){
 			for(GraphEdge e : s.getOutgoingEdges()){ 
 				for(Transition t : e.getTransitions()){
-					sb.append(e.getFrom().getName() + "\t -> " + t.getChannel() + " [[ " + t.getCondition() + " ]] { " + t.getAction() + " } -> " + e.getTo().getName() + "\n");					
+					if(i > 0) sb.append("\t\t");
+					sb.append("\t" + e.getFrom().getName() + "\t->\t" + t.getChannel() + t.getConditionText() + "\t" + t.getActionText() + "\t->\t" + e.getTo().getName() + "\n");					
+					i++;
 				}
 			}
 		}
@@ -186,12 +189,12 @@ public class Model extends Definition {
 	@Override
 	public String getDefinitionAsText() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("STAUTDEF " + this.name + " " + getGates() + "()\n");
+		sb.append("STAUTDEF\t" + this.name + " " + getGates() + "()\n");
 		sb.append(" ::=\n");
-		sb.append("STATE " + getStates() + "\n");
-		sb.append("VAR " + getVariables() + "\n");
-		sb.append("INIT " + graph.getStartState().getName() + " { " + getInitVariables() + " }\n");
-		sb.append("TRANS ");
+		sb.append("\tSTATE\t" + getStates() + "\n");
+		sb.append("\tVAR\t" + getVariables() + "\n");
+		sb.append("\tINIT\t" + graph.getStartState().getName() + "\t{ " + getInitVariables() + " }\n");
+		sb.append("\tTRANS");
 		sb.append(getTransitions()+"\n");
 		sb.append("ENDDEF");
 		return sb.toString();

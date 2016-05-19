@@ -94,7 +94,10 @@ public class ProjectImporterGTorx extends ProjectImporter {
 		DrawableGraph drawableGraph = new DrawableGraph();
 		SVGDocument svgDoc = drawableGraph.getDocument();
 
-		String name = modelElement.getChild("name").getText();
+		Element nameElement = modelElement.getChild("name");
+		String name = nameElement.getText();
+		String startState = nameElement.getAttributeValue("startState");
+		System.out.println("startState:"+startState);
 
 		//Get comments
 		Element commentsElement = modelElement.getChild("comments");
@@ -123,6 +126,10 @@ public class ProjectImporterGTorx extends ProjectImporter {
 			String nodeName = n.getChild(GraphState.ATTRIBUTE_NAME).getText();
 			//GraphState
 			DrawableGraphState dgn = new DrawableGraphState(svgDoc, posX, posY, nodeName);
+			if(nodeName.equals(startState)){
+				System.out.println("Found start state");
+				dgn.getNode().setAttribute(GraphState.ATTRIBUTE_START_STATE, true);
+			}
 			graph.addState(dgn.getNode());
 		}
 
@@ -143,6 +150,7 @@ public class ProjectImporterGTorx extends ProjectImporter {
 			fromNode.getNode().addOutgoingEdge(e.getEdge());
 			toNode.getNode().addIncomingEdge(e.getEdge());
 		}
+		
 		return new Model(project, name, graph, drawableGraph);
 	}
 
