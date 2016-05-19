@@ -30,7 +30,7 @@ public class DrawableComment extends DrawableElement implements Drawable, Select
 	private Rectangle left, right;
 	private int offsetX, offsetY;
 	private int resizeOffsetX, resizeWidth;
-	private static final int borderSize = 5, anchorRectSize = 8;
+	private static final int borderSize = 7, anchorRectSize = 8;
 	private Element element, frame, textGroup;
 	private Element anchorRectLeft, anchorRectRight;
 	private Element[] textElements;
@@ -281,7 +281,7 @@ public class DrawableComment extends DrawableElement implements Drawable, Select
 		textElements = new Element[list.size()];
 		int y = borderSize;
 		for(int i = 0; i < textElements.length; i++) {
-			y+= this.commentType.fontSize;
+			y+= this.commentType.fontSize + 5;
 			textElements[i] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "text");
 			SVGOMTextElement e = (SVGOMTextElement) textElements[i];
 			textElements[i].setAttribute("x", String.valueOf(borderSize));
@@ -395,7 +395,6 @@ public class DrawableComment extends DrawableElement implements Drawable, Select
 		selected = b;
 		this.invalidate();
 		if(this.getGraphComment().getEdge() != null) {
-			System.out.println("huhu");
 			this.getGraphComment().getEdge().getDrawable().setSelected(b, false);
 		}
 	}
@@ -403,10 +402,6 @@ public class DrawableComment extends DrawableElement implements Drawable, Select
 	private void updateLocation() {
 		int x = (int) position.getX() + offsetX;
 		int y = (int) position.getY() + offsetY;
-//		Point p = DrawableGrid.getPoint(new Point(x, y));
-//		//adjust offsets:
-//		offsetX = p.x - (int) position.getX();
-//		offsetY = p.y - (int) position.getY();
 		
 		element.setAttribute("transform", "translate(" + x + ", " + y + ")");
 	}

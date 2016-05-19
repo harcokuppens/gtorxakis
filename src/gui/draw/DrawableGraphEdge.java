@@ -230,8 +230,13 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	/**
 	 * The positions will be (re-)calculated and set.
 	 */
+	
+	
+	
 	public void invalidatePositions(boolean finalMove){
 		calculatePositions(finalMove);
+		String transitionText = this.getEdge().getTransitionText();
+		if(transitionComment != null) transitionComment.setAttribute(DrawableComment.TEXT, transitionText);
 		
 		StringBuilder lineAnchorPoints = new StringBuilder();
 		for (Point p : anchorPoints) {
