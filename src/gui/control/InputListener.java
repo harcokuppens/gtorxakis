@@ -116,8 +116,14 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 					ChangeNameDialogState cnd = new ChangeNameDialogState(model, (DrawableGraphState)selectedItem, this.window);
 					cnd.setVisible(true);
 				}else if(selectedItem instanceof DrawableComment){
-					ChangeCommentParagraphsDialog ccpd = new ChangeCommentParagraphsDialog(model, (DrawableComment) selectedItem, this.window);
-					ccpd.setVisible(true);
+					DrawableComment c = (DrawableComment) selectedItem;
+					if(c.getGraphComment().getEdge() != null){
+						ChangeNameDialogEdge cnd = new ChangeNameDialogEdge(model, c.getGraphComment().getEdge().getDrawable(), this.window);
+						cnd.setVisible(true);
+					}else{
+						ChangeCommentParagraphsDialog ccpd = new ChangeCommentParagraphsDialog(model, (DrawableComment) selectedItem, this.window);
+						ccpd.setVisible(true);
+					}
 				}else if(selectedItem instanceof DrawableGraphEdge){
 					ChangeNameDialogEdge cnd = new ChangeNameDialogEdge(model, (DrawableGraphEdge)selectedItem, this.window);
 					cnd.setVisible(true);
