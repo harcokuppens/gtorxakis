@@ -176,7 +176,7 @@ public class Model extends Definition {
 		for(GraphState s : graph.getStates()){
 			for(GraphEdge e : s.getOutgoingEdges()){ 
 				for(Transition t : e.getTransitions()){
-					sb.append(e.getFrom().getName() + " -> " + t.getChannel() + " [[ " + t.getCondition() + " ]] { " + t.getAction() + " } -> " + e.getTo().getName() + "\n");					
+					sb.append(e.getFrom().getName() + "\t -> " + t.getChannel() + " [[ " + t.getCondition() + " ]] { " + t.getAction() + " } -> " + e.getTo().getName() + "\n");					
 				}
 			}
 		}
