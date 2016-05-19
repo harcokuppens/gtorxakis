@@ -13,6 +13,8 @@ public abstract class Definition {
 	public abstract boolean canRedo();
 	public abstract boolean canUndo();
 	
+	public abstract String getDefinitionAsText();
+	
 	
 	public String getTitle(){
 		return title;

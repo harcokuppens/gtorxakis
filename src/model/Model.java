@@ -131,9 +131,6 @@ public class Model extends Definition {
 		int docH = Integer.valueOf(doc.getRootElement().getAttribute("height"));
 		DrawableGraphState dgn = new DrawableGraphState(doc, docW/2, docH/2);
 		dgn.getNode().setAttribute(GraphState.ATTRIBUTE_NAME, "First construct");
-//		if(graph.addNode(dgn.getNode())) {
-//			Edition.showLimitMessage();
-//		}
 		return new Model(project, name, graph, drawableGraph);
 	}
 	
@@ -147,5 +144,56 @@ public class Model extends Definition {
 
 	public void setSaved() {
 		actionHistory.mark();
+	}
+	
+	private String getGates(){
+		return "[ " + " ]";
+	}
+	
+	private String getStates(){
+		String states = "";
+		int i = 0;
+		for(GraphState s : this.getGraph().getStates()){
+			states += s.getName();
+			i++;
+			if(i < graph.getStates().size()){
+				states += ", ";
+			}
+		}
+		return states;
+	}
+	
+	private String getVariables(){
+		return "";
+	}
+	
+	private String getInitVariables(){
+		return "";
+	}
+	
+	private String getTransitions(){
+		StringBuilder sb = new StringBuilder();
+		for(GraphState s : graph.getStates()){
+			for(GraphEdge e : s.getOutgoingEdges()){ 
+				for(Transition t : e.getTransitions()){
+					sb.append(e.getFrom().getName() + " -> " + t.getChannel() + " [[ " + t.getCondition() + " ]] { " + t.getAction() + " } -> " + e.getTo().getName() + "\n");					
+				}
+			}
+		}
+		return sb.toString();
+	}
+	
+	@Override
+	public String getDefinitionAsText() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("STAUTDEF " + this.name + " " + getGates() + "()\n");
+		sb.append(" ::=\n");
+		sb.append("STATE " + getStates() + "\n");
+		sb.append("VAR " + getVariables() + "\n");
+		sb.append("INIT " + graph.getStartState().getName() + " { " + getInitVariables() + " }\n");
+		sb.append("TRANS ");
+		sb.append(getTransitions()+"\n");
+		sb.append("ENDDEF");
+		return sb.toString();
 	}
 }

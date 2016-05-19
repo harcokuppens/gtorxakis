@@ -4,6 +4,7 @@ import io.file.graph.exporter.GraphExporterJPEG;
 import io.file.graph.exporter.GraphExporterPNG;
 import io.file.graph.exporter.GraphExporterSVG;
 import io.file.project.exporter.ProjectExporterGTorX;
+import io.file.project.exporter.ProjectExporterTorXakis;
 import io.file.project.importer.ProjectImporterGTorx;
 
 public enum FileTypeAssociation {
@@ -13,6 +14,9 @@ public enum FileTypeAssociation {
 	ProjectExport(new FileType[] {
 			new FileType("TorXakis Project (.gtxs)", new String[] {"gtxs"}, ProjectExporterGTorX.class)
 		}), 
+	TorXakisExport(new FileType[] {
+			new FileType("TorXakis (.txs)", new String[] {"txs"}, ProjectExporterTorXakis.class)
+		}),
 	PngExport(new FileType[] {
 			new FileType("Portable Network Graphics (.png)", new String[] {"png"}, GraphExporterPNG.class),
 		}),

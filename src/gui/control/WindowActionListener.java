@@ -4,6 +4,7 @@ import gui.dialogs.GraphExportDialog;
 import gui.dialogs.NewFileDialog;
 import gui.dialogs.OpenDialog;
 import gui.dialogs.SaveAsDialog;
+import gui.dialogs.TorXakisExportDialog;
 import gui.draw.GraphInterface;
 import gui.window.Window;
 import io.file.FileTypeAssociation;
@@ -52,6 +53,7 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 			EXPORT_GRAPH_PNG = "exportgraphpng",
 			EXPORT_GRAPH_SVG = "exportgraphsvg",
 			EXPORT_GRAPH_JPG = "exportgraphjpg",
+			EXPORT_TORXAKIS = "exporttorxakis",
 			CHECK_UPDATES = "checkUpdates",
 			HELP = "help",
 			UPGRADE_LICENSE = "upgradeLicense",
@@ -127,6 +129,8 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 		case EXPORT_GRAPH_JPG:
 			new GraphExportDialog(window, FileTypeAssociation.JpgExport, (Model) window.getCurrentDefinition());
 			break;
+		case EXPORT_TORXAKIS:
+			new TorXakisExportDialog(window, FileTypeAssociation.TorXakisExport, window.getCurrentProject());
 		case ZOOM_IN:
 			dc.zoomIn();
 			w.getStatusBar().setZoomFactor(dc.getZoom());

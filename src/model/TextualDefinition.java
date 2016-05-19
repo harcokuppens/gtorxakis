@@ -99,5 +99,10 @@ public class TextualDefinition extends Definition{
 	public GUITextualDefinition getDrawable(){
 		return drawable;
 	}
+
+	@Override
+	public String getDefinitionAsText() {
+		return getDefinitionText(true);
+	}
 	
 }

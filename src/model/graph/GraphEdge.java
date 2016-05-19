@@ -47,6 +47,10 @@ public class GraphEdge implements Configurable{
 		return to;
 	}
 	
+	public ArrayList<Transition> getTransitions(){
+		return transitions;
+	}
+	
 	public void setFrom(GraphState from) {
 		this.from = from;
 		drawable.invalidate();
