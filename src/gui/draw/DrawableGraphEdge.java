@@ -61,13 +61,15 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	
 	public DrawableGraphEdge(SVGDocument doc, DrawableGraphState from, DrawableGraphState to) {
 		super(doc);
-		transitionComment = new DrawableComment(doc, from.getPosition().x + 50, from.getPosition().y, DrawableComment.CommentType.COMMENT);
 		anchorPoints = new Point[3];
 		anchorVector = new Point(0,0);
 		graphEdge = new GraphEdge(from.getNode(), to.getNode());
+		Point lineAnchor = to.getLineAnchor(from.getLocation(),DrawableGraphEdge.STROKE_WIDTH);
+		Point comment = new Point((from.getPosition().x + lineAnchor.x)/2, (from.getPosition().y + lineAnchor.y)/2);
+		transitionComment = new DrawableComment(doc, comment.x, comment.y, DrawableComment.CommentType.COMMENT,this.graphEdge);
 		graphEdge.setDrawable(this);
 		setStart(from.getPosition());
-		setEnd(to.getPosition());
+		setEnd(lineAnchor);
 		buildElement();			
 		if(from.equals(to)){
 			anchorPoints[1] = new Point(from.getPosition().x, from.getPosition().y-500);
@@ -163,11 +165,17 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		edge[EL_INDEX_ANCHOR].setAttribute("cy", String.valueOf(anchorPoints[1].y));
 	}
 
+	@Override
+	public void setSelected(boolean b) {
+		setSelected(b, true);
+	}
+	
 	/**
 	 * Sets the edge selected or not-selected.
 	 * @param selected - true if the edge is selected, otherwise false.
+	 * @param comment - true if the comment should also be setSelected
 	 */
-	public void setSelected(boolean selected){
+	public void setSelected(boolean selected, boolean comment){
 		this.selected = selected;
 		if(selected){
 			edge[EL_INDEX_SHAPE].setAttribute("stroke", String.valueOf("red"));
@@ -178,7 +186,7 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 			edge[EL_INDEX_SHAPE].setAttribute("marker-end", "url(#pf1)");
 			edge[EL_INDEX_ANCHOR].setAttribute("fill", "none");
 		}
-		if(transitionComment != null)transitionComment.setSelected(selected);
+		if(transitionComment != null && comment)transitionComment.setSelected(selected);
 	}
 	
 	protected void buildElement() {
@@ -359,4 +367,5 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		invalidatePositions(false);
 		transitionComment.setOffset(v);
 	}
+
 }

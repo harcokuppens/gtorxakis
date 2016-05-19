@@ -10,6 +10,7 @@ import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import model.graph.GraphEdge;
 import model.graph.GraphState;
@@ -312,7 +313,7 @@ public class DrawableGraphState extends DrawableElement implements Configurable,
 		elements[Elements.WRAPPER.ordinal()].setAttribute("transform", "translate(" + p.x + ", " + p.y + ")");
 		updateEdges();
 	}
-
+	
 	@Override
 	public DrawableGraphState clone() {
 		return clone(doc);

@@ -530,7 +530,7 @@ public class GraphInterface extends Observable implements ClipboardOwner {
 
 	public void addCommentEvent(int x, int y, CommentType commentType) {
 		ArrayList<DrawableComment> comments = new ArrayList<DrawableComment>();
-		DrawableComment dc = new DrawableComment(doc,x,y, commentType);
+		DrawableComment dc = new DrawableComment(doc,x,y, commentType, null);
 		comments.add(dc);
 		Action a1 = new DrawCreateAction(new ArrayList<DrawableGraphState>(), new ArrayList<DrawableGraphEdge>(), comments);
 		Action a2 = new DrawDeleteAction(new ArrayList<DrawableGraphState>(), new ArrayList<DrawableGraphEdge>(), comments);

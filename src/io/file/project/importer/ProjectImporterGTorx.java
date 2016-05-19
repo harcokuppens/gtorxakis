@@ -105,8 +105,8 @@ public class ProjectImporterGTorx extends ProjectImporter {
 				String text = c.getAttributeValue("text");
 				CommentType type = CommentType.getType(c.getAttributeValue("type"));
 				int width = Integer.valueOf(c.getAttributeValue("width"));
-				DrawableComment dc = new DrawableComment(svgDoc,posX,posY, width, type, text.split("\n"));
-				GraphComment gc = new GraphComment(dc);
+				DrawableComment dc = new DrawableComment(svgDoc,posX,posY, width, type, text.split("\n"),null);
+				GraphComment gc = new GraphComment(dc, null);
 				commentList.add(gc);
 			}
 			graph.addComments(commentList);

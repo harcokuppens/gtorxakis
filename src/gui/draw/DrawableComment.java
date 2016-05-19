@@ -13,6 +13,7 @@ import gui.control.Resizable;
 import gui.control.Selectable;
 import gui.control.DrawController;
 import model.graph.GraphComment;
+import model.graph.GraphEdge;
 
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.dom.svg.SVGOMTextElement;
@@ -96,33 +97,33 @@ public class DrawableComment extends DrawableElement implements Drawable, Select
 		selected = false;
 		this.width = draft.width;
 		this.minimalWidth = draft.minimalWidth;
-		graphComment = new GraphComment(this);
+		graphComment = new GraphComment(this, draft.getGraphComment().getEdge());
 		buildElement();
 	}
 	
-	public DrawableComment(SVGDocument doc, int posX, int posY, CommentType commentType){
-		this(doc, posX, posY, commentType, new String[]{new String(commentType.defaultContent)});
+	public DrawableComment(SVGDocument doc, int posX, int posY, CommentType commentType, GraphEdge edge){
+		this(doc, posX, posY, commentType, new String[]{new String(commentType.defaultContent)},edge);
 	}
 	
-	public DrawableComment(SVGDocument doc, int posX, int posY, CommentType commentType, String[] paragraphs) {
+	public DrawableComment(SVGDocument doc, int posX, int posY, CommentType commentType, String[] paragraphs, GraphEdge edge) {
 		super(doc);
 		position = new Point(posX,posY);
 		this.paragraphs = paragraphs;
 		this.commentType = commentType;
 		selected = false;
-		graphComment = new GraphComment(this);
+		graphComment = new GraphComment(this,edge);
 		this.graphComment.setDrawable(this);
 		setWidths();
 		buildElement();
 	}
 	
-	public DrawableComment(SVGDocument doc, int posX, int posY, int width, CommentType commentType, String[] paragraphs){
+	public DrawableComment(SVGDocument doc, int posX, int posY, int width, CommentType commentType, String[] paragraphs, GraphEdge edge){
 		super(doc);
 		position = new Point(posX,posY);
 		this.paragraphs = paragraphs;
 		this.commentType = commentType;
 		selected = false;
-		graphComment = new GraphComment(this);
+		graphComment = new GraphComment(this,edge);
 		this.graphComment.setDrawable(this);
 		minimalWidth = this.calculateMinimalWidth();
 		this.width = width;
@@ -393,6 +394,10 @@ public class DrawableComment extends DrawableElement implements Drawable, Select
 	public void setSelected(boolean b) {
 		selected = b;
 		this.invalidate();
+		if(this.getGraphComment().getEdge() != null) {
+			System.out.println("huhu");
+			this.getGraphComment().getEdge().getDrawable().setSelected(b, false);
+		}
 	}
 
 	private void updateLocation() {
