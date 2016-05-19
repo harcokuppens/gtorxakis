@@ -11,6 +11,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import model.Transition;
 import model.graph.GraphComment;
 import model.graph.GraphEdge;
 import util.Vector;
@@ -105,6 +106,27 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		buildElement();
 	}
 	
+	public DrawableGraphEdge(SVGDocument svgDoc, DrawableGraphState from, DrawableGraphState to, Point anchorVector,
+			ArrayList<Transition> transitions, Point commentPosition, int commentWidth) {
+		super(svgDoc);
+		anchorPoints = new Point[3];
+		this.anchorVector = anchorVector;
+		graphEdge = new GraphEdge(from.getNode(), to.getNode(), transitions);
+		Point lineAnchor = to.getLineAnchor(from.getLocation(),DrawableGraphEdge.STROKE_WIDTH);
+		transitionComment = new DrawableComment(doc, commentPosition.x, commentPosition.y, commentWidth, DrawableComment.CommentType.COMMENT, new String[]{this.getEdge().getTransitionText()}, graphEdge);
+		graphEdge.setDrawable(this);
+		setStart(from.getPosition());
+		setEnd(lineAnchor);
+		buildElement();			
+		if(from.equals(to)){
+			anchorPoints[1] = new Point(from.getPosition().x, from.getPosition().y-500);
+		}
+	}
+	
+	public Point getAnchorVector(){
+		return anchorVector;
+	}
+
 	public DrawableComment getComment(){
 		return transitionComment;
 	}

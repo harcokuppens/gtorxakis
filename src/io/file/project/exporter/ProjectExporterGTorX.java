@@ -24,6 +24,7 @@ import model.Definition;
 import model.Model;
 import model.Project;
 import model.TextualDefinition;
+import model.Transition;
 import model.graph.GraphComment;
 import model.graph.GraphEdge;
 import model.graph.GraphState;
@@ -158,10 +159,22 @@ public class ProjectExporterGTorX implements ProjectExporter {
 		streamWriter.writeStartElement("outgoingEdges");
 			for(GraphState s : model.getGraphInterface().getGraph().getStates()){
 				for(GraphEdge edge : s.getOutgoingEdges()){
-					streamOutputter.output(new Element("edge")
-					.setAttribute("from", String.valueOf(edge.getFrom().getAttribute("name")))
-					.setAttribute("to", String.valueOf(edge.getTo().getAttribute("name")))
-					.setAttribute("name", String.valueOf(edge.getAttribute(GraphEdge.ATTRIBUTE_NAME))), streamWriter);
+					streamWriter.writeStartElement("edge");
+						streamWriter.writeAttribute("from", String.valueOf(edge.getFrom().getAttribute("name")));
+						streamWriter.writeAttribute("to", String.valueOf(edge.getTo().getAttribute("name")));
+						streamWriter.writeAttribute("cPosX", edge.getDrawable().getComment().getPosition().x+"");
+						streamWriter.writeAttribute("cPosY", edge.getDrawable().getComment().getPosition().y+"");
+						streamWriter.writeAttribute("cWidth", edge.getDrawable().getComment().getWidth()+"");
+						streamWriter.writeAttribute("ePosX", edge.getDrawable().getAnchorVector().x+"");
+						streamWriter.writeAttribute("ePosY", edge.getDrawable().getAnchorVector().y+"");
+						
+						for(Transition t : edge.getTransitions()){
+							streamOutputter.output(new Element("transition")
+							.setAttribute("channel", t.getChannel())
+							.setAttribute("condition", t.getCondition())
+							.setAttribute("action", t.getAction()),streamWriter);
+						}
+					streamWriter.writeEndElement();
 				}			
 			}
 		streamWriter.writeEndElement();

@@ -6,6 +6,7 @@ import gui.draw.DrawableGraph;
 import gui.draw.DrawableGraphEdge;
 import gui.draw.DrawableGraphState;
 
+import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -16,6 +17,7 @@ import java.util.List;
 import model.Model;
 import model.Project;
 import model.TextualDefinition;
+import model.Transition;
 import model.graph.Graph;
 import model.graph.GraphComment;
 import model.graph.GraphEdge;
@@ -128,11 +130,16 @@ public class ProjectImporterGTorx extends ProjectImporter {
 		for(Element t : modelElement.getChild("outgoingEdges").getChildren()){
 			String from = t.getAttributeValue("from");
 			String to = t.getAttributeValue("to");
-			String edgeName = t.getAttributeValue("name");
+			ArrayList<Transition> transitions = new ArrayList<Transition>();
+			for(Element transition : t.getChildren("transition")){
+				transitions.add(new Transition(transition.getAttribute("channel").getValue(), transition.getAttribute("condition").getValue(), transition.getAttribute("action").getValue()));
+			}
+			Point commentPosition = new Point(Integer.valueOf(t.getAttributeValue("cPosX")), Integer.valueOf(t.getAttributeValue("cPosY")));
+			Point anchorVector = new Point(Integer.valueOf(t.getAttributeValue("ePosX")), Integer.valueOf(t.getAttributeValue("ePosY")));
+			int commentWidth = (Integer.valueOf(t.getAttributeValue("cWidth")));
 			DrawableGraphState fromNode = graph.getStateWithName(from).getDrawable();
 			DrawableGraphState toNode = graph.getStateWithName(to).getDrawable();
-			DrawableGraphEdge e = new DrawableGraphEdge(svgDoc, fromNode, toNode);
-			e.getEdge().setAttribute(GraphEdge.ATTRIBUTE_NAME, edgeName);
+			DrawableGraphEdge e = new DrawableGraphEdge(svgDoc, fromNode, toNode, anchorVector, transitions, commentPosition, commentWidth);
 			fromNode.getNode().addOutgoingEdge(e.getEdge());
 			toNode.getNode().addIncomingEdge(e.getEdge());
 		}

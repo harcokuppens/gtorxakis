@@ -19,14 +19,16 @@ public class GraphEdge implements Configurable{
 	public static final String ATTRIBUTE_TRANSITIONS = "transitions";
 	
 	public GraphEdge(GraphState from, GraphState to) {
-		this(from, to, new ArrayList<Transition>());
+		this.from = from;
+		this.to = to;
+		this.transitions = new ArrayList<Transition>();
+		transitions.add(Transition.getDefaultTransition());
 	}
 	
 	public GraphEdge(GraphState from, GraphState to, ArrayList<Transition> transitions){
 		this.from = from;
 		this.to = to;
-		this.transitions = transitions;
-		this.transitions.add(Transition.getDefaultTransition());
+		this.transitions = new ArrayList<Transition>(transitions);
 	}
 	
 	/**
