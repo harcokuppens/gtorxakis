@@ -71,8 +71,7 @@ public class ChangeNameDialogEdge extends Dialog {
 		});
 		topPanel.add(addTransition);
 		
-		GridBagLayout gbl = new GridBagLayout();
-		centerPanel = new JPanel(gbl);
+		centerPanel = new JPanel(new BorderLayout());
 		
 		refreshList();
 		
@@ -90,7 +89,6 @@ public class ChangeNameDialogEdge extends Dialog {
 		save.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				TODO Gaat nog niet helemaal goed!
 				GraphEdge[] edges = new GraphEdge[]{drawableEdge.getEdge()};
 				String[] cmd = new String[]{GraphEdge.ATTRIBUTE_TRANSITIONS};
 				Object[][] oldValues = new Object[1][1];
@@ -140,7 +138,7 @@ public class ChangeNameDialogEdge extends Dialog {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 0.5;
 		gbc.weighty = 0.5;
-		
+		JPanel container = new JPanel(new GridBagLayout());
 		for(int i = 0; i < transitions.size(); i++){
 			Transition t = transitions.get(i);
 			final int index = i;
@@ -153,28 +151,29 @@ public class ChangeNameDialogEdge extends Dialog {
 					refreshList();
 				}
 			});
-			centerPanel.add(delete,gbc);
+			container.add(delete,gbc);
 			gbc.gridx++;
-			centerPanel.add(new JLabel("Gate:"), gbc);
+			container.add(new JLabel("Gate:"), gbc);
 			gbc.gridx++;
 			JTextField channelText = new JTextField(t.getChannel(), 13);
 			channelText.addFocusListener(new TextFocusListener(TextFieldType.CHANNEL, i));
-			centerPanel.add(channelText, gbc);
+			container.add(channelText, gbc);
 			gbc.gridx++;
-			centerPanel.add(new JLabel("Condition:"), gbc);
+			container.add(new JLabel("Condition:"), gbc);
 			gbc.gridx++;
 			JTextField conditionText = new JTextField(t.getCondition(), 13);
 			conditionText.addFocusListener(new TextFocusListener(TextFieldType.CONDITION, i));
-			centerPanel.add(conditionText, gbc);
+			container.add(conditionText, gbc);
 			gbc.gridx++;
-			centerPanel.add(new JLabel("Action:"), gbc);
+			container.add(new JLabel("Action:"), gbc);
 			gbc.gridx++;
 			JTextField actionText = new JTextField(t.getAction(), 13);
 			actionText.addFocusListener(new TextFocusListener(TextFieldType.ACTION, i));
-			centerPanel.add(actionText, gbc);
+			container.add(actionText, gbc);
 			gbc.gridy++;
 			gbc.gridx=0;
 		}
+		centerPanel.add(container, BorderLayout.NORTH);
 		centerPanel.revalidate();
 		centerPanel.repaint();
 	}

@@ -54,6 +54,7 @@ public class Window extends JFrame implements Observer {
 	
 	private WindowMenuBar menuBar;
 	private StatusBar statusBar;
+	private SiteBar siteBar;
 	private final StatusBarMessageHandler statusBarMessageHandler;
 	private WindowToolBar toolBar;
 	
@@ -117,11 +118,15 @@ public class Window extends JFrame implements Observer {
 				JTabbedPane pane = (JTabbedPane) e.getSource();
 				Definition newDefinition = definitions.get(pane.getSelectedComponent());
 				Window.this.updateDefinition(currentDefinition, newDefinition);
+				siteBar.changeView(newDefinition);
 			}
 		});
 		this.getContentPane().add(definitionPane, BorderLayout.CENTER);
 
-
+		//SiteBar
+		siteBar = new SiteBar(getCurrentProject());
+		getContentPane().add(siteBar, BorderLayout.WEST);
+		
 		//StatusBar
 		statusBar = new StatusBar(this);
 		getContentPane().add(statusBar, BorderLayout.SOUTH);

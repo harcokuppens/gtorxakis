@@ -8,6 +8,8 @@ import gui.draw.DrawableGraph;
 import gui.draw.DrawableGraphState;
 import gui.draw.DrawableGraphEdge;
 import gui.draw.GraphInterface;
+import model.Gates.Gate;
+import model.Variables.Variable;
 import model.graph.Graph;
 import model.graph.GraphState;
 import model.graph.GraphEdge;
@@ -32,7 +34,10 @@ public class Model extends Definition {
 	private ActionHandler actionHandler;
 	private DoubleLinkedList<Action> actionHistory;
 	
-	public Model(Project project, String name, Graph graph, DrawableGraph drawableGraph) {
+	private Gates gates;
+	private Variables variables;
+	
+	public Model(Project project, String name, Graph graph, DrawableGraph drawableGraph, ArrayList<Gate> gates, ArrayList<Variable> variables) {
 		super(name);
 		this.project = project;
 		this.name = name;
@@ -40,12 +45,19 @@ public class Model extends Definition {
 		this.drawableGraph = drawableGraph;
 		this.graphInterface = new GraphInterface(this, graph, drawableGraph);
 		this.drawController = new DrawController(graphInterface);
-
+		this.gates = new Gates(gates);
+		this.variables = new Variables(variables);
 		actionHistory = new DoubleLinkedList<Action>();
 		
 		actionHandler = new ActionHandler(this);
 		actionHandler.start();
 	}
+	
+	public Model(Project project, String name, Graph graph, DrawableGraph drawableGraph) {
+		this(project, name, graph, drawableGraph, new ArrayList<Gate>(), new ArrayList<Variable>());
+	}
+	
+	
 
 	public Model clone(Project p, String name, Graph graph, DrawableGraph drawableGraph) {
 		SVGDocument doc = drawableGraph.getDocument();
@@ -73,6 +85,16 @@ public class Model extends Definition {
 		return new Model(p, name, graph, drawableGraph);
 	}
 
+	public Gates getGates(){
+		return gates;
+	}
+	
+	public Variables getVariables(){
+		if(variables == null)
+			System.err.println("Model get variables is null");
+		return variables;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -146,8 +168,17 @@ public class Model extends Definition {
 		actionHistory.mark();
 	}
 	
-	private String getGates(){
-		return "[ " + " ]";
+	private String getGatesText(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("[ ");
+		for(int i = 0; i < gates.getGates().size(); i++){
+			Gate g = gates.getGates().get(i);
+			sb.append(g.getName() + " :: " + g.getType());
+			if(!((i+1) == gates.getGates().size()))
+				sb.append(", ");
+		}
+		sb.append(" ]");
+		return sb.toString();
 	}
 	
 	private String getStates(){
@@ -163,12 +194,26 @@ public class Model extends Definition {
 		return states;
 	}
 	
-	private String getVariables(){
-		return "";
+	private String getVariablesText(){
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < variables.getVariables().size(); i++){
+			Variable v = variables.getVariables().get(i);
+			sb.append(v.getName() + " :: " + v.getType());
+			if(!((i+1) == variables.getVariables().size()))
+				sb.append(", ");
+		}
+		return sb.toString();
 	}
 	
 	private String getInitVariables(){
-		return "";
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < variables.getVariables().size(); i++){
+			Variable v = variables.getVariables().get(i);
+			sb.append(v.getName() + " := " + v.getInitValue());
+			if(!((i+1) == variables.getVariables().size()))
+				sb.append(", ");
+		}
+		return sb.toString();
 	}
 	
 	private String getTransitions(){
@@ -189,10 +234,10 @@ public class Model extends Definition {
 	@Override
 	public String getDefinitionAsText() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("STAUTDEF\t" + this.name + " " + getGates() + "()\n");
+		sb.append("STAUTDEF\t" + this.name + " " + getGatesText() + "()\n");
 		sb.append(" ::=\n");
 		sb.append("\tSTATE\t" + getStates() + "\n");
-		sb.append("\tVAR\t" + getVariables() + "\n");
+		sb.append("\tVAR\t" + getVariablesText() + "\n");
 		sb.append("\tINIT\t" + graph.getStartState().getName() + "\t{ " + getInitVariables() + " }\n");
 		sb.append("\tTRANS");
 		sb.append(getTransitions()+"\n");
