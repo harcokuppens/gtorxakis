@@ -3,6 +3,7 @@ package gui.control;
 import gui.dialogs.GraphExportDialog;
 import gui.dialogs.NewFileDialog;
 import gui.dialogs.OpenDialog;
+import gui.dialogs.RunDialog;
 import gui.dialogs.SaveAsDialog;
 import gui.dialogs.TorXakisExportDialog;
 import gui.draw.GraphInterface;
@@ -106,7 +107,8 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 //			sd.setVisible(true);
 			break;
 		case RUN:
-//			runAction(window, window.getCurrentProject());
+			RunDialog rd = new RunDialog();
+			rd.setVisible(true);
 			break;
 		case ADD_MODEL:
 			window.addModel();

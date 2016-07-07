@@ -71,8 +71,8 @@ public class WindowMenuBar extends JMenuBar{
 		addMenuItem("Settings", edit, true, -1, false, WindowActionListener.SETTINGS, "/icons/cog_edit.png", wat);
 		
 		//Run menu
-//		JMenu run = addMenu("Run");
-//		addMenuItem("Run", run, true, KeyEvent.VK_R, false, WindowActionListener.RUN, "/icons/application_go.png", wat);
+		JMenu run = addMenu("Run");
+		addMenuItem("Run", run, true, KeyEvent.VK_R, false, WindowActionListener.RUN, "/icons/application_go.png", wat);
 
 		//Results menu 
 		JMenu results = addMenu("Results");
