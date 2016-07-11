@@ -20,7 +20,8 @@ public class TextualDefinition extends Definition{
 		FUNC("FUNC Definition", DEFAULT_FUNC_DEF),
 		SPEC("SPEC Definition", DEFAULT_SPEC_DEF),
 		ADAP("ADAP Definition", DEFAULT_ADAP_DEF),
-		SUT("SUT Definition", DEFAULT_SUT_DEF);
+		SUT("SUT Definition", DEFAULT_SUT_DEF),
+		PROC("PROC Definition", DEFAULT_PROC_DEF);
 		
 		private String name, defaultDef;
 		
@@ -43,9 +44,10 @@ public class TextualDefinition extends Definition{
 							   DEFAULT_FUNC_DEF = "FUNCDEF Func1 \n\t::=\n\t\t\n\nENDDEF",
 							   DEFAULT_SPEC_DEF = "SPECDEF Spec1 \n\t::=\n\t\t\n\nENDDEF",
 							   DEFAULT_ADAP_DEF = "ADAPDEF Adap1 \n\t::=\n\t\t\n\nENDDEF",
-							   DEFAULT_SUT_DEF = "SUTDEF Sut1 \n\t::=\n\t\t\n\nENDDEF";
+							   DEFAULT_SUT_DEF = "SUTDEF Sut1 \n\t::=\n\t\t\n\nENDDEF",
+							   DEFAULT_PROC_DEF = "PROCDEF Proc1 \n\t::=\n\t\t\n\nENDDEF";
 	
-	public TextualDefinition(Project project, String definition, String title){
+	private TextualDefinition(Project project, String definition, String title){
 		super(title);
 		this.project = project;
 		this.definition = definition;

@@ -6,8 +6,8 @@ import gui.control.WindowActionListener;
 import gui.draw.GraphPanel;
 import gui.draw.GUITextualDefinition;
 import gui.draw.DrawableGraph;
-
 import gui.window.StatusBarMessageHandler;
+
 
 
 import java.util.HashMap;
@@ -35,6 +35,7 @@ import util.Environment;
 import util.CalculationDispatcher;
 import model.Definition;
 import model.Model;
+import model.ProcDefinition;
 import model.Project;
 import model.graph.Graph;
 import model.TextualDefinition;
@@ -149,11 +150,41 @@ public class Window extends JFrame implements Observer {
 	public StatusBarMessageHandler getStatusBarMessageHandler() {
 		return this.statusBarMessageHandler;
 	}
+	
+	public void addProc() {
+		Graph g = new Graph();
+		DrawableGraph dg = new DrawableGraph();
+		String procBaseName = "Proc";
+		int count = 1;
+		for(Model m: currentProject.getModels()) {
+			String n = m.getName().trim();
+			if(n.startsWith(procBaseName)) {
+				try {
+					// cut off the modelBaseName at the beginning.
+					String rem = n.substring(procBaseName.length()).trim();
+					int modelIndex = Integer.valueOf(rem);
+					if(modelIndex >= count) {
+						count = modelIndex + 1;
+					}
+				} catch(NumberFormatException e) {
+					// This happens when we try to cast something like
+					// "Model A" or "Model 1_new". But we don't care about
+					// these anyway. -- Mo
+					continue;
+				}
+			}
+		}
+		String newProcName = procBaseName + count;
+		ProcDefinition pd = new ProcDefinition(currentProject);
+		currentProject.addDefinition(pd);
+		setTitle(currentProject);
+		this.showDefinition(pd);
+	}
 
 	public void addModel(){
 		Graph g = new Graph();
 		DrawableGraph dg = new DrawableGraph();
-		String modelBaseName = "Model "; // Note the included space.
+		String modelBaseName = "Model";
 		int count = 1;
 		ArrayList<String> otherModelNames = new ArrayList<String>();
 		for(Model m: currentProject.getModels()) {
@@ -184,10 +215,26 @@ public class Window extends JFrame implements Observer {
 	public void showDefinition(Definition d){
 		if(d instanceof Model){
 			showModel((Model) d);
+		}else if(d instanceof ProcDefinition){
+			showProc((ProcDefinition) d);
 		}else{
 			showTextualDefinition((TextualDefinition) d);
 		}
 		
+	}
+	
+	private void showProc(ProcDefinition d){
+		GUITextualDefinition gui = new GUITextualDefinition(d);
+		this.definitionPane.addTab(d.getTitle(), gui);
+		definitionPane.setTabComponentAt(this.definitionPane.getTabCount()-1, new ButtonTabComponent(definitionPane) {
+			@Override
+			public void onButtonPressed(JTabbedPane pane, int index) {
+//				hideModel(index);
+			}
+		});
+		definitionPane.setSelectedIndex(this.definitionPane.getTabCount()-1);
+		updateDefinition(currentDefinition, d);
+		menuBar.updateDefinitions(currentProject);
 	}
 	
 	private void showTextualDefinition(TextualDefinition d){
@@ -221,7 +268,7 @@ public class Window extends JFrame implements Observer {
 			});
 			definitionPane.setSelectedIndex(this.definitionPane.getTabCount()-1);
 			updateDefinition(currentDefinition, m);
-			menuBar.updateModels(currentProject);
+			menuBar.updateDefinitions(currentProject);
 		}
 	}
 
@@ -273,7 +320,7 @@ public class Window extends JFrame implements Observer {
 			}
 		} while(retry);
 		// update menu bar entries:
-		menuBar.updateModels(currentProject);
+		menuBar.updateDefinitions(currentProject);
 	}
 
 	public void deleteModel(Model m) {
@@ -293,7 +340,7 @@ public class Window extends JFrame implements Observer {
 			if(index != -1) {
 				hideModel(index);
 			}
-			menuBar.updateModels(currentProject);
+			menuBar.updateDefinitions(currentProject);
 			setTitle(currentProject);
 		}
 	}
@@ -326,6 +373,7 @@ public class Window extends JFrame implements Observer {
 		boolean isVisible = this.definitionPane.getSelectedIndex() == index;
 		Model oldModel = definitions.get((GraphPanel) definitionPane.getComponentAt(index));
 		Model newModel = null;
+//		TODO 
 		if(definitionPane.getTabCount() > 1 && isVisible) {
 			int newIndex = index - 1 < 0? 1:index-1;
 			newModel = definitions.get((GraphPanel) definitionPane.getComponentAt(newIndex));
@@ -400,11 +448,13 @@ public class Window extends JFrame implements Observer {
 		this.currentProject = newProject;
 		if(newProject != null) {
 			menuBar.setItemEnabled(WindowActionListener.ADD_MODEL, true);
+			menuBar.setItemEnabled(WindowActionListener.ADD_PROC, true);
 			for(Definition d: newProject.getDefinitions()) {
 				showDefinition(d);
 			}
 		} else {
 			menuBar.setItemEnabled(WindowActionListener.ADD_MODEL, false);
+			menuBar.setItemEnabled(WindowActionListener.ADD_PROC, false);
 		}
 	}
 	
@@ -502,44 +552,6 @@ public class Window extends JFrame implements Observer {
 		}
 		return !(returnValue == JOptionPane.CANCEL_OPTION);
 	}
-
-	/**
-	 * Shows a dialog that lets a user define how existing indicators should be
-	 * replaced by new indicators.
-	 * This dialog is shown when the user imports a new dataset, but not all
-	 * existing indicators can be mapped to corresponding indicators in the new dataset.
-	 * @param  oldIndicators The names of all existing indicators that cannot be mapped to new indicators
-	 * @param  newIndicators The names of all indicators in the new dataset that have not yet been mapped to other existing indicators
-	 * @return               A list {@code l} of integers that define the mapping between the two lists.
-	 *                       If {@code l[3] = 2}, then the old indicator at index 3 will be replaced by the new indicator at index 2.
-	 *                       If {@code l[2] = -1}, then the old indicator at index 2 will be deleted.
-	 */
-//	private int[] showIndicatorSubstitutionDialog(ArrayList<GraphIndicator> oldIndicators, ArrayList<GraphIndicator> newIndicators) {
-//		JLabel infoLabel = new JLabel(
-//			"<html><p>For some existing indicators, no corresponding data column could be found in the new data file. How would you like to proceed?</</html>");
-//
-//		IndicatorSubstitutionPanel indicatorSubstitutionPanel = new IndicatorSubstitutionPanel(oldIndicators, newIndicators, this);
-// 
-//        JOptionPane mappingOptionPane = new JOptionPane(
-//			new Object[] {infoLabel, indicatorSubstitutionPanel},
-//			JOptionPane.PLAIN_MESSAGE,
-//			JOptionPane.OK_CANCEL_OPTION);
-//		JDialog mappingDialog = mappingOptionPane.createDialog(this, "Replace Indicators");
-//		infoLabel.setSize(new Dimension(
-//			indicatorSubstitutionPanel.getPreferredSize().width,
-//			30));
-//		infoLabel.setPreferredSize(new Dimension(
-//			indicatorSubstitutionPanel.getPreferredSize().width,
-//			30));
-//		mappingDialog.pack();
-//		mappingDialog.show();
-//		Object value = mappingOptionPane.getValue();
-//		if(value == null || (int) value != JOptionPane.YES_OPTION) {
-//			return null;
-//		} else {
-//			return indicatorSubstitutionPanel.getMapping();
-//		}
-//	}
 
 	public Session getSession() {
 		return this.session;

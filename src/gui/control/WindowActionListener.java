@@ -47,6 +47,7 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 			SELECT_ALL = "selectall",
 			SETTINGS = "settings",
 			ADD_MODEL = "addModel",
+			ADD_PROC = "addProc",
 			RUN = "run",
 			SHOW_RESULTS = "showresults",
 			EXPORT_HTML = "exporthtml",
@@ -112,6 +113,9 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 			break;
 		case ADD_MODEL:
 			window.addModel();
+			break;
+		case ADD_PROC:
+			window.addProc();
 			break;
 		case SHOW_RESULTS:
 //			showResultsAction(window.getCurrentModel());

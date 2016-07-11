@@ -84,7 +84,7 @@ public class Project {
 
 	public static Project newProject() {
 		Project p = new Project("Unnamed");
-		Model m = Model.newModel(p, "Model 1");
+		Model m = Model.newModel(p, "Model1");
 		TextualDefinition sut = new TextualDefinition(p, TextualDefinition.DefType.SUT);
 		TextualDefinition adap = new TextualDefinition(p, TextualDefinition.DefType.ADAP);
 		TextualDefinition spec = new TextualDefinition(p, TextualDefinition.DefType.SPEC);

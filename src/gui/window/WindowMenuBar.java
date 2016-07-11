@@ -24,9 +24,19 @@ public class WindowMenuBar extends JMenuBar{
 
 	private WindowActionListener wat;
 	private InputListener inputListener;
-	private JMenuItem clearData, importData, addModel, undo, redo, showResults, 
-		exportHTML, exportEXCEL,
-		exportGraphPng, exportGraphSvg, exportGraphJpg, exportTorXakis;
+	private JMenuItem clearData, 
+					  importData, 
+					  addModel, 
+					  addProc,
+					  undo, 
+					  redo, 
+					  showResults, 
+					  exportHTML, 
+					  exportEXCEL,
+					  exportGraphPng, 
+					  exportGraphSvg, 
+					  exportGraphJpg, 
+					  exportTorXakis;
 	private JMenu projectMenu;
 	private JCheckBoxMenuItem showGrid;
 	
@@ -50,6 +60,7 @@ public class WindowMenuBar extends JMenuBar{
 		
 		//Project menu
 		projectMenu = addMenu("Project");
+		addProc = generateMenuItem("New proc definition...", false, -1, false, WindowActionListener.ADD_PROC, null, wat);
 		addModel = generateMenuItem("New Model...", false, -1, false, WindowActionListener.ADD_MODEL, null, wat);
 		fillProjectMenu(projectMenu, null);
 		
@@ -145,6 +156,8 @@ public class WindowMenuBar extends JMenuBar{
 		projectMenu.removeAll();
 		
 		if(project != null) {
+			projectMenu.add(addModel);
+			projectMenu.add(addProc);
 			projectMenu.addSeparator();
 
 			System.err.println("Size:"+project.getModels().size());
@@ -172,8 +185,7 @@ public class WindowMenuBar extends JMenuBar{
 			}
 
 		}	
-		
-		projectMenu.add(addModel);
+	
 	}
 
 	
@@ -187,6 +199,9 @@ public class WindowMenuBar extends JMenuBar{
 			break;
 		case WindowActionListener.ADD_MODEL:
 			addModel.setEnabled(b);
+			break;
+		case WindowActionListener.ADD_PROC:
+			addProc.setEnabled(b);
 			break;
 		case WindowActionListener.UNDO:
 			undo.setEnabled(b);
@@ -219,7 +234,7 @@ public class WindowMenuBar extends JMenuBar{
 		}
 	}
 
-	public void updateModels(Project p) {
+	public void updateDefinitions(Project p) {
 		fillProjectMenu(projectMenu, p);
 	}
 	
