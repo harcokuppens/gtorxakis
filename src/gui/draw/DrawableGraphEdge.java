@@ -103,6 +103,8 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		super(doc);
 		this.graphEdge = draft.graphEdge.clone();
 		graphEdge.setDrawable(this);
+		setStart(draft.anchorPoints[0]);
+		setEnd(draft.anchorPoints[2]);
 		buildElement();
 	}
 	

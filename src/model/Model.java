@@ -63,9 +63,11 @@ public class Model extends Definition {
 		SVGDocument doc = drawableGraph.getDocument();
 		ArrayList<GraphState> clonedNodes = new ArrayList<GraphState>();
 		ArrayList<DrawableGraphState> clonedDrawableNodes = new ArrayList<DrawableGraphState>();
+		GraphState start = this.graph.getStartState();
 		
 		for(DrawableGraphState n : this.drawableGraph.getNodes()){
 			DrawableGraphState dgn = n.clone(doc);
+			if(n.getNode().equals(start)) dgn.getNode().setAttribute(GraphState.ATTRIBUTE_START_STATE, true);
 			clonedDrawableNodes.add(dgn);
 			clonedNodes.add(dgn.getNode());
 		}

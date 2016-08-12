@@ -177,10 +177,10 @@ public class WindowMenuBar extends JMenuBar{
 				modelMenu.add(deleteModelItem);
 				deleteModelItem.setAction(wat.getDeleteModelAction(m));
 				deleteModelItem.setText("Delete");
-				JMenuItem duplicateModelItem = new JMenuItem();
-				modelMenu.add(duplicateModelItem);
-				duplicateModelItem.setAction(wat.getDuplicateModelAction(m));
-				duplicateModelItem.setText("Duplicate");
+//				JMenuItem duplicateModelItem = new JMenuItem();
+//				modelMenu.add(duplicateModelItem);
+//				duplicateModelItem.setAction(wat.getDuplicateModelAction(m));
+//				duplicateModelItem.setText("Duplicate");
 				projectMenu.add(modelMenu);
 			}
 
