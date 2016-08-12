@@ -393,6 +393,7 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 //		System.out.println(v.getX() + ", " + v.getY());
 		offsetX = v.getX();
 		offsetY = v.getY();
+		this.getComment().setOffset(v);
 		invalidatePositions(false);
 		transitionComment.setOffset(v);
 	}

@@ -500,6 +500,19 @@ public class GraphInterface extends Observable implements ClipboardOwner {
 			Point drawableNodePosition = n.getPosition();
 			translatedRect.translate((int) -drawableNodePosition.getX(), (int) -drawableNodePosition.getY());
 		}
+		for(GraphComment comment : graph.getComments()){
+			DrawableComment c = comment.getDrawable();
+			if(c.isWithin(rect)){
+				nodes.add(c);
+			}
+		}
+		for(GraphState state : graph.getStates()){
+			for(GraphEdge edge : state.getOutgoingEdges()){
+				if(edge.getDrawable().getComment().isWithin(rect)){
+					nodes.add(edge.getDrawable().getComment());
+				}
+			}
+		}
 		if(!nodes.isEmpty()) {
 			return nodes;
 		} else if(!indicators.isEmpty()) {
