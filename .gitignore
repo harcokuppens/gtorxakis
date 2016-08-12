@@ -2,7 +2,7 @@
 ## Arcos specific
 #################
 
-lib/
+libs/
 *.arcp
 *.cmq
 config.xml
