@@ -1,6 +1,7 @@
 package gui.dialogs;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -51,6 +52,8 @@ public class ChangeNameDialogEdge extends Dialog {
 		dialog = this;
 		this.drawableEdge = (DrawableGraphEdge) selectable;
 		transitions = new ArrayList<Transition>((ArrayList<Transition>) drawableEdge.getEdge().getAttribute(GraphEdge.ATTRIBUTE_TRANSITIONS));
+		this.setMinimumSize(new Dimension(700,300));
+		this.setPreferredSize(new Dimension(700,300));
 		init();
 	}
 	

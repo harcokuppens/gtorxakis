@@ -157,7 +157,7 @@ public class WindowMenuBar extends JMenuBar{
 		
 		if(project != null) {
 			projectMenu.add(addModel);
-			projectMenu.add(addProc);
+//			projectMenu.add(addProc);
 			projectMenu.addSeparator();
 
 			System.err.println("Size:"+project.getModels().size());
@@ -200,9 +200,9 @@ public class WindowMenuBar extends JMenuBar{
 		case WindowActionListener.ADD_MODEL:
 			addModel.setEnabled(b);
 			break;
-		case WindowActionListener.ADD_PROC:
-			addProc.setEnabled(b);
-			break;
+//		case WindowActionListener.ADD_PROC:
+//			addProc.setEnabled(b);
+//			break;
 		case WindowActionListener.UNDO:
 			undo.setEnabled(b);
 			break;

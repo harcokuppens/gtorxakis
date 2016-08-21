@@ -27,7 +27,6 @@ import javax.swing.JFrame;
 import javax.swing.JRootPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
@@ -35,7 +34,6 @@ import util.Environment;
 import util.CalculationDispatcher;
 import model.Definition;
 import model.Model;
-import model.ProcDefinition;
 import model.Project;
 import model.graph.Graph;
 import model.TextualDefinition;
@@ -151,36 +149,6 @@ public class Window extends JFrame implements Observer {
 		return this.statusBarMessageHandler;
 	}
 	
-	public void addProc() {
-		Graph g = new Graph();
-		DrawableGraph dg = new DrawableGraph();
-		String procBaseName = "Proc";
-		int count = 1;
-		for(Model m: currentProject.getModels()) {
-			String n = m.getName().trim();
-			if(n.startsWith(procBaseName)) {
-				try {
-					// cut off the modelBaseName at the beginning.
-					String rem = n.substring(procBaseName.length()).trim();
-					int modelIndex = Integer.valueOf(rem);
-					if(modelIndex >= count) {
-						count = modelIndex + 1;
-					}
-				} catch(NumberFormatException e) {
-					// This happens when we try to cast something like
-					// "Model A" or "Model 1_new". But we don't care about
-					// these anyway. -- Mo
-					continue;
-				}
-			}
-		}
-		String newProcName = procBaseName + count;
-		ProcDefinition pd = new ProcDefinition(currentProject);
-		currentProject.addDefinition(pd);
-		setTitle(currentProject);
-		this.showDefinition(pd);
-	}
-
 	public void addModel(){
 		Graph g = new Graph();
 		DrawableGraph dg = new DrawableGraph();
@@ -215,27 +183,25 @@ public class Window extends JFrame implements Observer {
 	public void showDefinition(Definition d){
 		if(d instanceof Model){
 			showModel((Model) d);
-		}else if(d instanceof ProcDefinition){
-			showProc((ProcDefinition) d);
 		}else{
 			showTextualDefinition((TextualDefinition) d);
 		}
 		
 	}
 	
-	private void showProc(ProcDefinition d){
-		GUITextualDefinition gui = new GUITextualDefinition(d);
-		this.definitionPane.addTab(d.getTitle(), gui);
-		definitionPane.setTabComponentAt(this.definitionPane.getTabCount()-1, new ButtonTabComponent(definitionPane) {
-			@Override
-			public void onButtonPressed(JTabbedPane pane, int index) {
-//				hideModel(index);
-			}
-		});
-		definitionPane.setSelectedIndex(this.definitionPane.getTabCount()-1);
-		updateDefinition(currentDefinition, d);
-		menuBar.updateDefinitions(currentProject);
-	}
+//	private void showProc(ProcDefinition d){
+//		GUITextualDefinition gui = new GUITextualDefinition(d);
+//		this.definitionPane.addTab(d.getTitle(), gui);
+//		definitionPane.setTabComponentAt(this.definitionPane.getTabCount()-1, new ButtonTabComponent(definitionPane) {
+//			@Override
+//			public void onButtonPressed(JTabbedPane pane, int index) {
+////				hideModel(index);
+//			}
+//		});
+//		definitionPane.setSelectedIndex(this.definitionPane.getTabCount()-1);
+//		updateDefinition(currentDefinition, d);
+//		menuBar.updateDefinitions(currentProject);
+//	}
 	
 	private void showTextualDefinition(TextualDefinition d){
 		GUITextualDefinition gui = new GUITextualDefinition(d);
@@ -369,13 +335,17 @@ public class Window extends JFrame implements Observer {
 //		definitionPane.addTab("SUT definition", new TextualDefinition(null));
 	}
 
-	public void hideModel(int index) {
+	public void hideModel(int i) {
+		System.out.println("i = " + i);
+		int index = i;
 		boolean isVisible = this.definitionPane.getSelectedIndex() == index;
 		Model oldModel = definitions.get((GraphPanel) definitionPane.getComponentAt(index));
 		Model newModel = null;
 //		TODO 
-		if(definitionPane.getTabCount() > 1 && isVisible) {
+		System.out.println("definitionPane tabs : "+definitionPane.getTabCount());
+		if(definitionPane.getTabCount() > 8 && isVisible) {
 			int newIndex = index - 1 < 0? 1:index-1;
+			System.out.println("NewIndex = "+newIndex);
 			newModel = definitions.get((GraphPanel) definitionPane.getComponentAt(newIndex));
 		} 
 		definitionPane.remove(index);

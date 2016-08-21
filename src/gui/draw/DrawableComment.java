@@ -410,7 +410,6 @@ public class DrawableComment extends DrawableElement implements Drawable, Select
 	@Override
 	public void moveBy(Vector v) {
 		position.translate(v.getX(), v.getY());
-//		position = DrawableGrid.getPoint(position);
 		offsetX = 0;
 		offsetY = 0;
 		updateLocation();

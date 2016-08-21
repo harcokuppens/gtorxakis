@@ -91,6 +91,7 @@ public class Project {
 		TextualDefinition type = new TextualDefinition(p, TextualDefinition.DefType.TYPE);
 		TextualDefinition constDef = new TextualDefinition(p, TextualDefinition.DefType.CONST);
 		TextualDefinition func = new TextualDefinition(p, TextualDefinition.DefType.FUNC);
+		TextualDefinition proc = new TextualDefinition(p, TextualDefinition.DefType.PROC);
 		
 		p.addDefinition(type);
 		p.addDefinition(constDef);
@@ -98,6 +99,7 @@ public class Project {
 		p.addDefinition(spec);
 		p.addDefinition(adap);
 		p.addDefinition(sut);
+		p.addDefinition(proc);
 		p.addDefinition(m);
 		return p;
 	}

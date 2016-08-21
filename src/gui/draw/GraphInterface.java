@@ -6,6 +6,7 @@ import gui.control.Selectable;
 import gui.control.DrawController;
 import gui.draw.DrawableComment.CommentType;
 import gui.draw.DrawableComment.ResizeType;
+import gui.draw.DrawableGraphEdge.*;
 
 import java.awt.HeadlessException;
 import java.awt.Point;
@@ -225,6 +226,7 @@ public class GraphInterface extends Observable implements ClipboardOwner {
 		ArrayList<DrawableGraphState> nodeList = new ArrayList<DrawableGraphState>();
 		ArrayList<DrawableGraphEdge> edgeList = new ArrayList<DrawableGraphEdge>();
 //		Point anchorPoint = new Point(end.getPosition().x - start.getPosition().x, end.getPosition().y - start.getPosition().y);
+		
 		edgeList.add(new DrawableGraphEdge(doc, start, end));
 		ArrayList<DrawableComment> commentList = new ArrayList<DrawableComment>();
 		
@@ -472,7 +474,7 @@ public class GraphInterface extends Observable implements ClipboardOwner {
 				double angleEdge = Math.tanh((end.getY()-start.getY())/(end.getX()-start.getX()));
 				double anglePoint = Math.tanh((newPoint.getY()-start.getY())/(newPoint.getX()-start.getX()));
 				double angle = Math.abs(anglePoint - angleEdge);
-				System.out.println(angle);
+//				System.out.println(angle);
 				
 				double distanceV =  Math.sin(angle) * pointLength;
 				double distanceH = Math.cos(angle) * pointLength;

@@ -24,15 +24,13 @@ import core.Session;
 
 /**
  * 
- * @author Tobias Schröter
+ * @author Tobias Schroeter
  *
  */
+
 public class DrawableGraphEdge extends DrawableElement implements Drawable, Selectable, Movable{
 	private static final int EL_INDEX_SHAPE = 0;
 	private static final int EL_INDEX_COMMENT = 1;
-//	private static final int EL_INDEX_RESULT = 1;
-//	private static final int EL_INDEX_BACKGROUND = 2;
-//	private static final int EL_INDEX_NAME = 3;
 	private static final int EL_INDEX_ANCHOR = 4;
 	
 	public static final int STROKE_WIDTH = 2,
@@ -47,21 +45,29 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	private static final int MARGIN = ((STROKE_WIDTH - 1) * GraphInterface.ARROW_MARKER_SIZE) / 2,
 							 RESULT_MARGIN = 3;
 	
+	private enum EdgeType{
+		NORMAL,
+		SAME_ROOT;
+	}
+	private EdgeType edgeType = EdgeType.NORMAL;
 	private Element element;
 	private Element[] edge;
-	private Point[] anchorPoints;
+	protected Point[] anchorPoints;
 	private Point anchorVector;
 	private int offsetX = 0, offsetY = 0;
 	private boolean selected = false;
 	private GraphEdge graphEdge;
 	
 	private DrawableComment transitionComment;
+	private DrawableGraphState from;
 
 	private int width = 0,
 				height = 0;
 	
 	public DrawableGraphEdge(SVGDocument doc, DrawableGraphState from, DrawableGraphState to) {
 		super(doc);
+		this.from = from;
+		System.err.println("Create edge");
 		anchorPoints = new Point[3];
 		anchorVector = new Point(0,0);
 		graphEdge = new GraphEdge(from.getNode(), to.getNode());
@@ -71,10 +77,12 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		graphEdge.setDrawable(this);
 		setStart(from.getPosition());
 		setEnd(lineAnchor);
-		buildElement();			
 		if(from.equals(to)){
-			anchorPoints[1] = new Point(from.getPosition().x, from.getPosition().y-500);
+			edgeType = EdgeType.SAME_ROOT;
+		}else{
+			edgeType = EdgeType.NORMAL;
 		}
+		buildElement();			
 	}
 	
 	/**
@@ -85,13 +93,24 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	 */
 	public DrawableGraphEdge(SVGDocument doc, DrawableGraphState from, Point to) {
 		super(doc);
-//		transitionComment = new DrawableComment(doc, from.getPosition().x + 50, from.getPosition().y, DrawableComment.CommentType.COMMENT);
+		this.from = from;
+		System.err.println("Create temp edge");
 		anchorPoints = new Point[3];
 		anchorVector = new Point(0,0);
 		graphEdge = new GraphEdge(from.getNode(), null);
 		graphEdge.setDrawable(this);
-		setStart(from.getPosition());
-		setEnd(to);
+		if(from.contains(to)){
+//			The point is on the same state
+//			System.err.println("On state");
+			edgeType = EdgeType.SAME_ROOT;
+//			this.initPointsSameRoot();
+//			setStart(new Point(from.getPosition().x+90, from.getPosition().y-90));
+//			setEnd(from.getLineAnchor(this.getStartPoint(), DrawableGraphEdge.STROKE_WIDTH));
+		}else{
+			edgeType = EdgeType.NORMAL;
+			setStart(from.getPosition());
+			setEnd(to);
+		}
 		buildElement();
 	}
 	
@@ -102,15 +121,17 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	protected DrawableGraphEdge(SVGDocument doc, DrawableGraphEdge draft) {
 		super(doc);
 		this.graphEdge = draft.graphEdge.clone();
+		this.edgeType = draft.edgeType;
+		this.from = draft.from;
 		graphEdge.setDrawable(this);
-		setStart(draft.anchorPoints[0]);
-		setEnd(draft.anchorPoints[2]);
 		buildElement();
 	}
 	
 	public DrawableGraphEdge(SVGDocument svgDoc, DrawableGraphState from, DrawableGraphState to, Point anchorVector,
 			ArrayList<Transition> transitions, Point commentPosition, int commentWidth) {
 		super(svgDoc);
+		this.from = from;
+		System.out.println("Create edge with commentPosition");
 		anchorPoints = new Point[3];
 		this.anchorVector = anchorVector;
 		graphEdge = new GraphEdge(from.getNode(), to.getNode(), transitions);
@@ -120,9 +141,6 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		setStart(from.getPosition());
 		setEnd(lineAnchor);
 		buildElement();			
-		if(from.equals(to)){
-			anchorPoints[1] = new Point(from.getPosition().x, from.getPosition().y-500);
-		}
 	}
 	
 	public Point getAnchorVector(){
@@ -160,6 +178,11 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	}
 	
 	public void setEndPoint(Point end) {
+		if(from.contains(end)){
+			this.edgeType = EdgeType.SAME_ROOT;
+		}else{
+			this.edgeType = EdgeType.NORMAL;
+		}
 		anchorPoints[anchorPoints.length-1] = end;
 		invalidatePositions(true);
 	}
@@ -172,12 +195,22 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		anchorPoints[anchorPoints.length-1] = end;
 	}
 	
+	private Point[] getSameRootPoints(){
+		Point start = anchorPoints[0];
+		Point temp1 = new Point(start.x+50, start.y);
+		Point temp2 = new Point(temp1.x, temp1.y - 50);
+		Point temp3 = new Point(start.x, temp2.y);
+		Point end = from.getLineAnchor(temp3, DrawableGraphEdge.STROKE_WIDTH);
+		return new Point[]{start, temp1, temp2,temp3, end};
+	}
+	
 	private void setAnchor(boolean finalMove){
+		Point anchorPoint;
 		Point start = getStartPoint(), end = getEndPoint();
+			
 		int x = (start.x + end.x) / 2;
 		int y = (start.y + end.y) / 2;
-		Point anchorPoint;
-
+		
 		if(finalMove){
 			anchorPoint = new Point(x + anchorVector.x, y + anchorVector.y);
 		}else{
@@ -230,57 +263,60 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	 * Calculates the positions of the edge.
 	 */
 	private void calculatePositions(boolean finalMove){
-		if(graphEdge.getFrom() != null) {
-			Point2D dest; 
-			if(graphEdge.getTo() != null){
-				dest = graphEdge.getTo().getDrawable().getLocation(); 
-			}else{
-				dest = this.getEndPoint();
+//		if(edgeType.equals(EdgeType.SAME_ROOT)){
+//			initPointsSameRoot();
+//		}else{
+			if(graphEdge.getFrom() != null) {
+				Point2D dest; 
+				if(graphEdge.getTo() != null){
+					dest = graphEdge.getTo().getDrawable().getLocation(); 
+				}else{
+					dest = this.getEndPoint();
+				}
+				setStart(graphEdge.getFrom().getDrawable().getLineAnchor(dest));
 			}
-			setStart(graphEdge.getFrom().getDrawable().getLineAnchor(dest));
-		}
-		if(graphEdge.getTo() != null) {
-			Point2D dest; 
-			if(graphEdge.getFrom() != null){
-				dest = graphEdge.getFrom().getDrawable().getLocation(); 				
-			}else{
-				dest = this.getStartPoint();
+			if(graphEdge.getTo() != null) {
+				Point2D dest; 
+				if(graphEdge.getFrom() != null){
+					dest = graphEdge.getFrom().getDrawable().getLocation(); 				
+				}else{
+					dest = this.getStartPoint();
+				}
+				setAnchor(finalMove);
+				setEnd(graphEdge.getTo().getDrawable().getLineAnchor(anchorPoints[1], DrawableGraphEdge.STROKE_WIDTH));
 			}
-			setAnchor(finalMove);
-			setEnd(graphEdge.getTo().getDrawable().getLineAnchor(anchorPoints[1], DrawableGraphEdge.STROKE_WIDTH));
-		}
+//		}
 	}
 	
 	/**
 	 * The positions will be (re-)calculated and set.
 	 */
-	
-	
-	
 	public void invalidatePositions(boolean finalMove){
 		calculatePositions(finalMove);
 		String transitionText = this.getEdge().getTransitionText();
 		if(transitionComment != null) transitionComment.setAttribute(DrawableComment.TEXT, transitionText);
 		
 		StringBuilder lineAnchorPoints = new StringBuilder();
-		for (Point p : anchorPoints) {
-			if(p != null){
-				lineAnchorPoints.append(p.getX());
-				lineAnchorPoints.append(",");
-				lineAnchorPoints.append(p.getY());
-				lineAnchorPoints.append(" ");
-			}
-		}	
-		edge[EL_INDEX_SHAPE].setAttribute("points", lineAnchorPoints.toString());
-		
-		Point2D p1 = graphEdge.getFrom().getDrawable().getLocation();
-		Point2D p2;
-		if(graphEdge.getTo() != null){
-			p2 = graphEdge.getTo().getDrawable().getLocation();			
+		if(edgeType.equals(EdgeType.NORMAL)){
+			for (Point p : anchorPoints) {
+				if(p != null){
+					lineAnchorPoints.append(p.getX());
+					lineAnchorPoints.append(",");
+					lineAnchorPoints.append(p.getY());
+					lineAnchorPoints.append(" ");
+				}
+			}	
 		}else{
-			//TempEdge!
-			p2 = getEndPoint();
+			for (Point p : this.getSameRootPoints()) {
+				if(p != null){
+					lineAnchorPoints.append(p.getX());
+					lineAnchorPoints.append(",");
+					lineAnchorPoints.append(p.getY());
+					lineAnchorPoints.append(" ");
+				}
+			}
 		}
+		edge[EL_INDEX_SHAPE].setAttribute("points", lineAnchorPoints.toString());
 	}
 	
 	@Override
@@ -331,14 +367,23 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	@Override
 	public boolean contains(Point p) {
 		ArrayList<Point> usedPoints = new ArrayList<Point>();
-		for(Point point : anchorPoints){
-			if(point != null){
-				usedPoints.add(point);
+		if(edgeType.equals(EdgeType.NORMAL)){
+			for(Point point : anchorPoints){
+				if(point != null){
+					usedPoints.add(point);
+				}
 			}
-		}
-		for(int i = 1; i < usedPoints.size(); i++){
-			if(contains(usedPoints.get(i-1), usedPoints.get(i), p)){
-				return true;
+			for(int i = 1; i < usedPoints.size(); i++){
+				if(contains(usedPoints.get(i-1), usedPoints.get(i), p)){
+					return true;
+				}
+			}
+		}else{
+			Point points[] = this.getSameRootPoints();
+			for(int i = 1; i < points.length; i++){
+				if(contains(points[i-1], points[i], p)){
+					return true;
+				}
 			}
 		}
 		return false;
@@ -380,22 +425,26 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 
 	@Override
 	public void moveBy(Vector v) {
-		anchorVector.translate(v.getX(), v.getY());		
-		offsetX = 0;
-		offsetY = 0;
+		if(edgeType.equals(EdgeType.NORMAL)){
+			anchorVector.translate(v.getX(), v.getY());		
+			offsetX = 0;
+			offsetY = 0;
 //		System.err.println(anchorVector.x + ", " + anchorVector.y);
-		invalidatePositions(true);
-		transitionComment.moveBy(v);
+			invalidatePositions(true);
+			transitionComment.moveBy(v);
+		}
 	}
 
 	@Override
 	public void setOffset(Vector v) {
+		if(edgeType.equals(EdgeType.NORMAL)){
 //		System.out.println(v.getX() + ", " + v.getY());
-		offsetX = v.getX();
-		offsetY = v.getY();
-		this.getComment().setOffset(v);
-		invalidatePositions(false);
-		transitionComment.setOffset(v);
+			offsetX = v.getX();
+			offsetY = v.getY();
+			this.getComment().setOffset(v);
+			invalidatePositions(false);
+			transitionComment.setOffset(v);
+		}
 	}
 
 }

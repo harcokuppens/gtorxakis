@@ -79,7 +79,8 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 	private int firedMouseButton = 0;
 	
 	// The most recent mouse position
-	private Point pos;
+	private Point pos,
+				  startPos;
 	
 	// The fired ResizeType
 	private ResizeType resizeType = ResizeType.NONE;
@@ -260,7 +261,7 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 			break;
 		default:
 			dc.removeSelectionBox(true);
-			dc.removeTempEdge();
+			dc.removeTempEdge(false);
 			controlMethod = ControlMethod.NONE;
 			throw new InputMismatchException("mouseDragged fired with controlMethod in state state. State was " + controlMethod.name());
 		}
@@ -309,8 +310,9 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 					break;
 				case NONE:
                     if (element != null && element instanceof DrawableGraphState) {
-                    		dc.setTempEdge();                  
-                    		controlMethod = ControlMethod.ARROW;
+                    	startPos = new Point(e.getPoint());
+                    	dc.setTempEdge();                  
+                    	controlMethod = ControlMethod.ARROW;
                     } else {                                   
                         dc.setSelectionBox();              
                         controlMethod = ControlMethod.SELECTIONBOX;
@@ -319,7 +321,7 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 				default:
 					ControlMethod temp = controlMethod;
 					controlMethod = ControlMethod.NONE;
-					System.err.println(beginState.name());
+//					System.err.println(beginState.name());
 					throw new InputMismatchException("mousePressed fired with controlMethod in action state. State was " + temp.name());
 				}
 				break;
@@ -347,7 +349,7 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 				dc.moveElements();
 				break;
 			case ARROW:
-				dc.removeTempEdge();
+				dc.removeTempEdge(startPos.equals(e.getPoint()));
 				break;
 			case RESIZECOMMENT:
 				dc.resizeElement(resizeType);
@@ -457,7 +459,6 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 				dc.setPastePosition(p);
 				
 				GraphPanel panel = (GraphPanel) e.getComponent();
-				
 				final GraphContextMenu gncm = new GraphContextMenu(gi.getSelection(), p, model);
 				gncm.show(e.getComponent(), e.getX(), e.getY());
 

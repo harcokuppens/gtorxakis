@@ -142,6 +142,7 @@ public class GraphContextMenu {
 				   RENAME = "Rename",
 				   CHANGE_LABEL = "Change label",
 				   EDIT_TEXT = "Edit text",
+				   EDIT_TRANSITIONS = "Edit transitions",
 				   ADD_NAME = "Assign label",
 				   REMOVE_NAME = "Remove label",
 				   CUT = "Cut",
@@ -355,7 +356,12 @@ public class GraphContextMenu {
 
 		@Override
 		public void initializeMenuEntries() {
-			changeName.setEnabled(selectable.size() == 1);
+			DrawableComment c = null;
+			if(selectable.size() > 0){
+				c = (DrawableComment) selectable.get(0);
+			}
+			boolean hasEdge = c != null && c.getGraphComment().getEdge() != null;
+			changeName.setEnabled(selectable.size() == 1 && !hasEdge);
 			final DataFlavor df = TransferableGraphElements.df;
 			final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 			paste.setEnabled(clipboard.isDataFlavorAvailable(df));
@@ -369,31 +375,19 @@ public class GraphContextMenu {
 			super();
 		}
 		
-		private boolean edgeHasName(){
-			return !((DrawableGraphEdge)selectable.get(0)).getEdge().getAttribute(GraphEdge.ATTRIBUTE_NAME).equals("");
-		}
-		
 		@Override
 		public void init(){
-			if(edgeHasName()){
-				changeName = createMenuEntry(changeName,CHANGE_LABEL, RENAME, "/icons/pencil.png");
-			}else{
-				changeName = createMenuEntry(changeName,ADD_NAME, RENAME, "/icons/pencil_add.png");
-			}
-			removeName = createMenuEntry(removeName, REMOVE_NAME, "/icons/pencil_delete.png");
+			changeName = createMenuEntry(changeName, EDIT_TRANSITIONS, RENAME, "/icons/pencil.png");
 			delete = createMenuEntry(delete, DELETE, "/icons/cross.png");
 			
 			add(changeName);
-			add(removeName);
 			addSeparator();
 			add(delete);
 		}
 
 		@Override
 		public void initializeMenuEntries() {
-			boolean hasName = edgeHasName();
 			changeName.setEnabled(selectable.size() == 1);
-			removeName.setEnabled(hasName);
 		}
 		
 	}

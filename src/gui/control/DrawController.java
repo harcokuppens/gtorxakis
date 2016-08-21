@@ -290,10 +290,10 @@ public class DrawController {
 		}
 	}
 	
-	public void removeTempEdge() {
+	public void removeTempEdge(boolean isSamePoint) {
 		if(dragEndNode != null){
-			if (!dragEndNode.equals(dragStartNode) && !dragStartNode.getNode().hasEdgetoNode(dragEndNode.getNode())) {
-//			if (!dragStartNode.getNode().hasEdgetoNode(dragEndNode.getNode())) {
+//			if (!dragEndNode.equals(dragStartNode) && !dragStartNode.getNode().hasEdgetoNode(dragEndNode.getNode())) {
+			if (!dragStartNode.getNode().hasEdgetoNode(dragEndNode.getNode()) && !isSamePoint) {
 				gi.addEdge(dragStartNode, dragEndNode);
 			}
 		}
@@ -315,14 +315,8 @@ public class DrawController {
 		Selectable s = gi.getElementAt(pos);
 		
 		if(s != null && s instanceof DrawableGraphState) {
-			if(!s.equals(dragStartNode)) {
-				DrawableGraphState n = (DrawableGraphState) s;
-				adaptedPos = n.getLineAnchor(tempEdge.getStartPoint().getLocation(), DrawableGraphEdge.STROKE_WIDTH);
-			}else{
-				//Create lines back to original
-				DrawableGraphState n = (DrawableGraphState) s;
-				adaptedPos = new Point(n.getPosition().x + 50, n.getPosition().y);
-			}
+			DrawableGraphState n = (DrawableGraphState) s;
+			adaptedPos = n.getLineAnchor(tempEdge.getStartPoint().getLocation(), DrawableGraphEdge.STROKE_WIDTH);
 		} else {
 			adaptedPos = mouseLineAnchor(tempEdge.getStartPoint().getLocation(), pos);
 		}
