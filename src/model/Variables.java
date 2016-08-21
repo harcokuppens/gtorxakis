@@ -77,7 +77,7 @@ public class Variables implements Configurable {
 		}
 		
 		public static Variable getDefaultVariable(){
-			return new Variable("variable", "Int # Int", "3");
+			return new Variable("variable", "Int", "3");
 		}
 		
 		public String getInitValue(){

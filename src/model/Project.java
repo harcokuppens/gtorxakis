@@ -22,6 +22,8 @@ public class Project {
 
 	private ArrayList<Definition> definitions;
 	
+	public static final int NR_TEXTUAL_DEFINITIONS = 8;
+	
 	public Project(String name) {
 		this.name = name;
 		this.definitions = new ArrayList<Definition>();

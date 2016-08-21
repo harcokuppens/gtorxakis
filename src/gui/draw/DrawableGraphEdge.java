@@ -140,6 +140,11 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		graphEdge.setDrawable(this);
 		setStart(from.getPosition());
 		setEnd(lineAnchor);
+		if(from.equals(to)){
+			edgeType = EdgeType.SAME_ROOT;
+		}else{
+			edgeType = EdgeType.NORMAL;
+		}
 		buildElement();			
 	}
 	

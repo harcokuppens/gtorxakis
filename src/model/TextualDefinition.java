@@ -47,7 +47,7 @@ public class TextualDefinition extends Definition{
 							   DEFAULT_SUT_DEF = "SUTDEF Sut1 \n\t::=\n\t\t\n\nENDDEF",
 							   DEFAULT_PROC_DEF = "PROCDEF Proc1 \n\t::=\n\t\t\n\nENDDEF";
 	
-	private TextualDefinition(Project project, String definition, String title){
+	public TextualDefinition(Project project, String definition, String title){
 		super(title);
 		this.project = project;
 		this.definition = definition;

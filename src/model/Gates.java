@@ -77,7 +77,7 @@ public class Gates implements Configurable {
 		}
 		
 		public static Gate getDefaultGate(){
-			return new Gate("Gate", "Int");
+			return new Gate("Gate", "Int # Int");
 		}
 
 		public void setAttribute(String command, String newValue) {

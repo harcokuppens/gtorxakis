@@ -392,8 +392,14 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 					if (element != null) {
 						if(clickCount == 2){
 							if(element instanceof DrawableComment){
-								ChangeCommentParagraphsDialog ccpd = new ChangeCommentParagraphsDialog(model, (DrawableComment) element, Session.getSession().getWindow());
-								ccpd.setVisible(true);
+								DrawableComment c = (DrawableComment) element;
+								if(c.getGraphComment().getEdge() != null){
+									ChangeNameDialogEdge cnd = new ChangeNameDialogEdge(model, c.getGraphComment().getEdge().getDrawable(), this.window);
+									cnd.setVisible(true);
+								}else{
+									ChangeCommentParagraphsDialog ccpd = new ChangeCommentParagraphsDialog(model, (DrawableComment) element, this.window);
+									ccpd.setVisible(true);
+								}
 							}else if(element instanceof DrawableGraphState){
 								ChangeNameDialogState cnd = new ChangeNameDialogState(model, (DrawableGraphState) element, Session.getSession().getWindow());
 								cnd.setVisible(true);
@@ -416,8 +422,14 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 							}
 							if(clickCount == 2){
 								if(element instanceof DrawableComment){
-									ChangeCommentParagraphsDialog ccpd = new ChangeCommentParagraphsDialog(model, (DrawableComment) element, Session.getSession().getWindow());
-									ccpd.setVisible(true);
+									DrawableComment c = (DrawableComment) element;
+									if(c.getGraphComment().getEdge() != null){
+										ChangeNameDialogEdge cnd = new ChangeNameDialogEdge(model, c.getGraphComment().getEdge().getDrawable(), this.window);
+										cnd.setVisible(true);
+									}else{
+										ChangeCommentParagraphsDialog ccpd = new ChangeCommentParagraphsDialog(model, (DrawableComment) element, this.window);
+										ccpd.setVisible(true);
+									}
 								}else if(element instanceof DrawableGraphState){
 									ChangeNameDialogState cnd = new ChangeNameDialogState(model, (DrawableGraphState) element, Session.getSession().getWindow());
 									cnd.setVisible(true);

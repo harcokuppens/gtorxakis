@@ -37,7 +37,7 @@ public class Transition {
 	}
 	
 	public static Transition getDefaultTransition(){
-		return new Transition("Gate ?x","", "x = x + 1");
+		return new Transition("Gate ?x ?y","", "x = x + y");
 	}
 	
 	@Override

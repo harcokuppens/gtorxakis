@@ -341,9 +341,8 @@ public class Window extends JFrame implements Observer {
 		boolean isVisible = this.definitionPane.getSelectedIndex() == index;
 		Model oldModel = definitions.get((GraphPanel) definitionPane.getComponentAt(index));
 		Model newModel = null;
-//		TODO 
 		System.out.println("definitionPane tabs : "+definitionPane.getTabCount());
-		if(definitionPane.getTabCount() > 8 && isVisible) {
+		if(definitionPane.getTabCount() > Project.NR_TEXTUAL_DEFINITIONS && isVisible) {
 			int newIndex = index - 1 < 0? 1:index-1;
 			System.out.println("NewIndex = "+newIndex);
 			newModel = definitions.get((GraphPanel) definitionPane.getComponentAt(newIndex));
