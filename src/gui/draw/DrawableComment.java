@@ -403,13 +403,14 @@ public class DrawableComment extends DrawableElement implements Drawable, Select
 	private void updateLocation() {
 		int x = (int) position.getX() + offsetX;
 		int y = (int) position.getY() + offsetY;
-		
-		element.setAttribute("transform", "translate(" + x + ", " + y + ")");
+		Point p = DrawableGrid.getPoint(new Point(x,y),true);
+		element.setAttribute("transform", "translate(" + p.x + ", " + p.y + ")");
 	}
 	
 	@Override
 	public void moveBy(Vector v) {
 		position.translate(v.getX(), v.getY());
+		position = DrawableGrid.getPoint(position,true);
 		offsetX = 0;
 		offsetY = 0;
 		updateLocation();

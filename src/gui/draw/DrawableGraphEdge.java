@@ -202,8 +202,9 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	
 	private Point[] getSameRootPoints(){
 		Point start = anchorPoints[0];
-		Point temp1 = new Point(start.x+50, start.y);
-		Point temp2 = new Point(temp1.x, temp1.y - 50);
+		int size = DrawableGrid.GRID_SIZE + DrawableGrid.GRID_SIZE/2;
+		Point temp1 = new Point(start.x + size, start.y);
+		Point temp2 = new Point(temp1.x, temp1.y - size);
 		Point temp3 = new Point(start.x, temp2.y);
 		Point end = from.getLineAnchor(temp3, DrawableGraphEdge.STROKE_WIDTH);
 		return new Point[]{start, temp1, temp2,temp3, end};

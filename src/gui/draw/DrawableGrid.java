@@ -110,22 +110,33 @@ public class DrawableGrid extends DrawableElement{
 		}
 	}
 	
+	public static Point getPoint(Point p){
+		return getPoint(p, false);
+	}
+	
 	/**
 	 * Calculates a point on the grid, belonging to a point possibly not on the grid
 	 * @param p a point
 	 * @return a the closest point on the grid
 	 */
-	public static Point getPoint(Point p) {
-		int modX = (int) (p.getX() % DrawableGrid.GRID_SIZE);
-		int modY = (int) (p.getY() % DrawableGrid.GRID_SIZE);
+	public static Point getPoint(Point p, boolean half) {
+		int modX,
+			modY;
+		if(!half){
+			modX = (int) (p.getX() % DrawableGrid.GRID_SIZE);
+			modY = (int) (p.getY() % DrawableGrid.GRID_SIZE);			
+		}else{
+			modX = (int) (p.getX() % (DrawableGrid.GRID_SIZE/2));
+			modY = (int) (p.getY() % (DrawableGrid.GRID_SIZE/2));
+		}
 		return new Point((int) (p.getX() + (modX < (DrawableGrid.GRID_SIZE / 2) ? -modX : DrawableGrid.GRID_SIZE - modX)), (int) (p.getY() + (modY < (DrawableGrid.GRID_SIZE / 2) ? -modY : DrawableGrid.GRID_SIZE - modY)));
 	}
 	
 	public static Point getPoint(Point p, Rectangle restrictedArea) {
-		Point point = getPoint(p);
+		Point point = getPoint(p,false);
 		if(restrictedArea.contains(point)) {
 			Point nearest = calculateNearestPointOnRect(p, restrictedArea);
-			point = getPoint(nearest);
+			point = getPoint(nearest,false);
 		}
 		return point;
 	}
