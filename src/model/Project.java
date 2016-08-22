@@ -24,6 +24,10 @@ public class Project {
 	
 	public static final int NR_TEXTUAL_DEFINITIONS = 8;
 	
+	private static TextualDefinition sut;
+	private static TextualDefinition spec;
+	private static TextualDefinition adap;
+	
 	public Project(String name) {
 		this.name = name;
 		this.definitions = new ArrayList<Definition>();
@@ -87,9 +91,9 @@ public class Project {
 	public static Project newProject() {
 		Project p = new Project("Unnamed");
 		Model m = Model.newModel(p, "Model1");
-		TextualDefinition sut = new TextualDefinition(p, TextualDefinition.DefType.SUT);
-		TextualDefinition adap = new TextualDefinition(p, TextualDefinition.DefType.ADAP);
-		TextualDefinition spec = new TextualDefinition(p, TextualDefinition.DefType.SPEC);
+		sut = new TextualDefinition(p, TextualDefinition.DefType.SUT);
+		adap = new TextualDefinition(p, TextualDefinition.DefType.ADAP);
+		spec = new TextualDefinition(p, TextualDefinition.DefType.SPEC);
 		TextualDefinition type = new TextualDefinition(p, TextualDefinition.DefType.TYPE);
 		TextualDefinition constDef = new TextualDefinition(p, TextualDefinition.DefType.CONST);
 		TextualDefinition func = new TextualDefinition(p, TextualDefinition.DefType.FUNC);
@@ -144,6 +148,29 @@ public class Project {
 			}
 		}
 		return def;
+	}
+	
+	public ArrayList<String> getDefinitionsByTypeDef(TextualDefinition.DefType defType){
+		ArrayList<String> defs = new ArrayList<String>();
+		String defString;
+		if(defType.equals(TextualDefinition.DefType.SPEC)){
+			defString = spec.getDefinitionAsText();
+		}else if(defType.equals(TextualDefinition.DefType.SUT)){
+			defString = sut.getDefinitionAsText();
+		}else if(defType.equals(TextualDefinition.DefType.ADAP)){
+			defString = adap.getDefinitionAsText();
+		}else{
+			defString = "";
+		}
+		
+		String defLines[] = defString.split("\n");
+		System.err.println("sutLines size : "+defLines.length);
+		for(String s : defLines){
+			if(s.contains(defType.getIdentifier())){
+				defs.add(s.substring(defType.getIdentifier().length(), s.length()).trim());
+			}
+		}
+		return defs;
 	}
 
 }
