@@ -316,7 +316,6 @@ public class SiteBar extends JPanel{
 			gbc.gridx = 1;
 			gbc.gridy = 0;
 			gbc.weightx = 0.5;
-//			gbc.weighty = 1.0;
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 			gbc.insets = new Insets(1,1,1,1);

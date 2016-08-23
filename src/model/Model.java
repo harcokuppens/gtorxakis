@@ -175,9 +175,12 @@ public class Model extends Definition {
 		sb.append("[ ");
 		for(int i = 0; i < gates.getGates().size(); i++){
 			Gate g = gates.getGates().get(i);
-			sb.append(g.getName() + " :: " + g.getType());
+			sb.append(g.getName());
+			if(!g.getType().equals("")){
+				sb.append(g.getName() + " :: " + g.getType());
+			}
 			if(!((i+1) == gates.getGates().size()))
-				sb.append(", ");
+				sb.append("; ");
 		}
 		sb.append(" ]");
 		return sb.toString();
@@ -202,7 +205,7 @@ public class Model extends Definition {
 			Variable v = variables.getVariables().get(i);
 			sb.append(v.getName() + " :: " + v.getType());
 			if(!((i+1) == variables.getVariables().size()))
-				sb.append(", ");
+				sb.append("; ");
 		}
 		return sb.toString();
 	}
@@ -225,7 +228,7 @@ public class Model extends Definition {
 			for(GraphEdge e : s.getOutgoingEdges()){ 
 				for(Transition t : e.getTransitions()){
 					if(i > 0) sb.append("\t\t");
-					sb.append("\t" + e.getFrom().getName() + "\t->\t" + t.getChannel() + t.getConditionText() + "\t" + t.getActionText() + "\t->\t" + e.getTo().getName() + "\n");					
+					sb.append("\t" + e.getFrom().getName() + "\t->\t" + t.getChannel() + "\t" + t.getConditionText() + "\t" + t.getActionText() + "\t->\t" + e.getTo().getName() + "\n");					
 					i++;
 				}
 			}

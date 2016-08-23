@@ -14,10 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
+
+
+
+import model.Gates;
+import model.Gates.Gate;
 import model.Model;
 import model.Project;
 import model.TextualDefinition;
 import model.Transition;
+import model.Variables;
+import model.Variables.Variable;
 import model.graph.Graph;
 import model.graph.GraphComment;
 import model.graph.GraphEdge;
@@ -151,7 +159,24 @@ public class ProjectImporterGTorx extends ProjectImporter {
 			toNode.getNode().addIncomingEdge(e.getEdge());
 		}
 		
-		return new Model(project, name, graph, drawableGraph);
+		ArrayList<Gate> gates = new ArrayList<Gate>();
+		ArrayList<Variable> variables = new ArrayList<Variable>();
+		if(modelElement.getChild("gates") != null || modelElement.getChild("variables")!=null){
+			for(Element e : modelElement.getChild("gates").getChildren()){
+				String gateName = e.getAttributeValue(Gates.ATTRIBUTE_NAME);
+				String gateType = e.getAttributeValue(Gates.ATTRIBUTE_TYPE);
+				gates.add(new Gate(gateName, gateType));
+			}
+			for(Element e : modelElement.getChild("variables").getChildren()){
+				String variableName = e.getAttributeValue(Variables.ATTRIBUTE_NAME);
+				String variableType = e.getAttributeValue(Variables.ATTRIBUTE_TYPE);
+				String initValue = e.getAttributeValue(Variables.ATTRIBUTE_INIT);
+				System.out.println("[Importer] initValue of "+ variableName + " = " +initValue);
+				variables.add(new Variable(variableName, variableType, initValue));
+			}
+		}
+		
+		return new Model(project, name, graph, drawableGraph, gates, variables);
 	}
 
 }

@@ -21,10 +21,14 @@ import javax.xml.stream.XMLStreamWriter;
 import javax.xml.bind.DatatypeConverter;
 
 import model.Definition;
+import model.Gates.Gate;
+import model.Gates;
 import model.Model;
 import model.Project;
 import model.TextualDefinition;
 import model.Transition;
+import model.Variables;
+import model.Variables.Variable;
 import model.graph.GraphComment;
 import model.graph.GraphEdge;
 import model.graph.GraphState;
@@ -180,6 +184,29 @@ public class ProjectExporterGTorX implements ProjectExporter {
 		streamWriter.writeEndElement();
 	}
 	
+	private void createGates(StAXStreamOutputter streamOutputter, XMLStreamWriter streamWriter, Model model) throws XMLStreamException{
+		streamWriter.writeStartElement("gates");
+			for(Gate g: model.getGates().getGates()){
+				streamWriter.writeStartElement("gate");
+				streamWriter.writeAttribute(Gates.ATTRIBUTE_NAME, String.valueOf(g.getName()));
+				streamWriter.writeAttribute(Gates.ATTRIBUTE_TYPE, String.valueOf(g.getType()));
+				streamWriter.writeEndElement();
+			}
+		streamWriter.writeEndElement();
+	}
+	
+	private void createVariables(StAXStreamOutputter streamOutputter, XMLStreamWriter streamWriter, Model model) throws XMLStreamException{
+		streamWriter.writeStartElement("variables");
+			for(Variable v: model.getVariables().getVariables()){
+				streamWriter.writeStartElement("variable");
+				streamWriter.writeAttribute(Variables.ATTRIBUTE_NAME, String.valueOf(v.getName()));
+				streamWriter.writeAttribute(Variables.ATTRIBUTE_TYPE, String.valueOf(v.getType()));
+				streamWriter.writeAttribute(Variables.ATTRIBUTE_INIT, String.valueOf(v.getInitValue()));
+				streamWriter.writeEndElement();
+			}
+		streamWriter.writeEndElement();
+	}
+	
 	private void createModel(StAXStreamOutputter streamOutputter, XMLStreamWriter streamWriter, Model model) throws XMLStreamException {
 		streamWriter.writeStartElement("model");
 			//Start model
@@ -202,6 +229,8 @@ public class ProjectExporterGTorX implements ProjectExporter {
 			}
 			createEdges(streamOutputter, streamWriter, model);
 			createComments(streamOutputter, streamWriter, model);
+			createGates(streamOutputter, streamWriter, model);
+			createVariables(streamOutputter, streamWriter, model);
 			//End model
 		streamWriter.writeEndElement();
 	}

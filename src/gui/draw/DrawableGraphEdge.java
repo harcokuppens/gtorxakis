@@ -435,7 +435,6 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 			anchorVector.translate(v.getX(), v.getY());		
 			offsetX = 0;
 			offsetY = 0;
-//		System.err.println(anchorVector.x + ", " + anchorVector.y);
 			invalidatePositions(true);
 			transitionComment.moveBy(v);
 		}
@@ -444,7 +443,6 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	@Override
 	public void setOffset(Vector v) {
 		if(edgeType.equals(EdgeType.NORMAL)){
-//		System.out.println(v.getX() + ", " + v.getY());
 			offsetX = v.getX();
 			offsetY = v.getY();
 			this.getComment().setOffset(v);

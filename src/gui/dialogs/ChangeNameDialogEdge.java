@@ -111,8 +111,6 @@ public class ChangeNameDialogEdge extends Dialog {
 			private boolean transitionsChanged(Object oldValues, Object newValues) {
 				ArrayList<Transition> newTransitions = (ArrayList<Transition>) newValues, 
 									  oldTransitions = (ArrayList<Transition>) oldValues;
-				System.out.println("New Transitions:"+newTransitions);
-				System.out.println("Old Transitions:"+oldTransitions);
 				System.out.println((newTransitions.equals(oldTransitions)));
 				return newTransitions.equals(oldTransitions);
 			}

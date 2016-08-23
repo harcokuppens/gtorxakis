@@ -62,7 +62,7 @@ public class Variables implements Configurable {
 	public static class Variable {
 		private String name, type, initValue;
 		
-		public Variable(String name, String type, String initvalue){
+		public Variable(String name, String type, String initValue){
 			this.name = name;
 			this.type = type;
 			this.initValue = initValue;
@@ -77,7 +77,7 @@ public class Variables implements Configurable {
 		}
 		
 		public static Variable getDefaultVariable(){
-			return new Variable("variable", "Int", "3");
+			return new Variable("x", "Int", "0");
 		}
 		
 		public String getInitValue(){

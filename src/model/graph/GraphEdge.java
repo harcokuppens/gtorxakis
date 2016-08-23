@@ -110,11 +110,15 @@ public class GraphEdge implements Configurable{
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
 		for(Transition t : transitions){
-			System.out.println(t);
-			if(!t.getCondition().equals("")){
+			sb.append("⬩");
+			boolean hasCondition = !t.getCondition().equals("");
+			boolean hasAction = !t.getAction().equals("");
+			if(hasCondition){
 				sb.append("if("+t.getCondition()+")");
 			}
-			sb.append("\t"+t.getChannel() + " {" + t.getAction() + "}");
+			if(hasCondition) sb.append(" → ");
+			sb.append(t.getChannel());
+			if(hasAction)sb.append(" {" + t.getAction() + "}");
 			i++;
 			if(i < transitions.size()){
 				sb.append("\n");
