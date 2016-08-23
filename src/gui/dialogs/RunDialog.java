@@ -14,8 +14,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
+import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 
 import model.TextualDefinition;
 import core.Session;
@@ -75,9 +77,21 @@ public class RunDialog extends Dialog{
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 		gbc.insets = new Insets(5,5,5,5);
+				
+		JLabel programLabel = new JLabel("Program name");
+		panel.add(programLabel, gbc);
+		gbc.gridx++;
+		gbc.weightx = 0.6;
 		
-		JLabel specLabel = new JLabel("Port");
-		panel.add(specLabel, gbc);
+		JTextField programField = new JTextField("torxakis");
+		programField.setHorizontalAlignment(SwingConstants.RIGHT);
+		panel.add(programField, gbc);
+		gbc.gridy++;
+		gbc.gridx = 0;
+		gbc.weightx = 0.4;
+		
+		JLabel portLabel = new JLabel("Port");
+		panel.add(portLabel, gbc);
 		gbc.gridx++;
 		gbc.weightx = 0.6;
 		

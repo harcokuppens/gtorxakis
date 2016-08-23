@@ -125,11 +125,13 @@ public class DrawableGrid extends DrawableElement{
 		if(!half){
 			modX = (int) (p.getX() % DrawableGrid.GRID_SIZE);
 			modY = (int) (p.getY() % DrawableGrid.GRID_SIZE);			
+			return new Point((int) (p.getX() + (modX < (DrawableGrid.GRID_SIZE / 2) ? -modX : DrawableGrid.GRID_SIZE - modX)), (int) (p.getY() + (modY < (DrawableGrid.GRID_SIZE / 2) ? -modY : DrawableGrid.GRID_SIZE - modY)));
 		}else{
 			modX = (int) (p.getX() % (DrawableGrid.GRID_SIZE/2));
 			modY = (int) (p.getY() % (DrawableGrid.GRID_SIZE/2));
+			return new Point((int) (p.getX() + (modX < (DrawableGrid.GRID_SIZE / 4) ? -modX : (DrawableGrid.GRID_SIZE / 2) - modX)), (int) (p.getY() + (modY < (DrawableGrid.GRID_SIZE / 4) ? -modY : (DrawableGrid.GRID_SIZE/2) - modY)));
+
 		}
-		return new Point((int) (p.getX() + (modX < (DrawableGrid.GRID_SIZE / 2) ? -modX : DrawableGrid.GRID_SIZE - modX)), (int) (p.getY() + (modY < (DrawableGrid.GRID_SIZE / 2) ? -modY : DrawableGrid.GRID_SIZE - modY)));
 	}
 	
 	public static Point getPoint(Point p, Rectangle restrictedArea) {

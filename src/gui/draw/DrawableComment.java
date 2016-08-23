@@ -92,7 +92,7 @@ public class DrawableComment extends DrawableElement implements Drawable, Select
 	
 	public DrawableComment(DrawableComment draft){
 		super(draft.doc);
-		position = new Point(draft.getPosition());
+		position = DrawableGrid.getPoint(draft.position,true);
 		this.paragraphs = draft.paragraphs;
 		this.commentType = draft.commentType;
 		selected = false;
@@ -108,7 +108,7 @@ public class DrawableComment extends DrawableElement implements Drawable, Select
 	
 	public DrawableComment(SVGDocument doc, int posX, int posY, CommentType commentType, String[] paragraphs, GraphEdge edge) {
 		super(doc);
-		position = new Point(posX,posY);
+		position = DrawableGrid.getPoint(new Point(posX,posY),true);
 		this.paragraphs = paragraphs;
 		this.commentType = commentType;
 		selected = false;
@@ -120,7 +120,7 @@ public class DrawableComment extends DrawableElement implements Drawable, Select
 	
 	public DrawableComment(SVGDocument doc, int posX, int posY, int width, CommentType commentType, String[] paragraphs, GraphEdge edge){
 		super(doc);
-		position = new Point(posX,posY);
+		position = DrawableGrid.getPoint(new Point(posX,posY),true);
 		this.paragraphs = paragraphs;
 		this.commentType = commentType;
 		selected = false;
@@ -404,7 +404,12 @@ public class DrawableComment extends DrawableElement implements Drawable, Select
 		int x = (int) position.getX() + offsetX;
 		int y = (int) position.getY() + offsetY;
 		Point p = DrawableGrid.getPoint(new Point(x,y),true);
+		//adjust offsets:
+		offsetX = p.x - position.x;
+		offsetY = p.y - position.y;
+		
 		element.setAttribute("transform", "translate(" + p.x + ", " + p.y + ")");
+//		element.setAttribute("transform", "translate(" + x + ", " + y + ")");
 	}
 	
 	@Override
@@ -508,10 +513,8 @@ public class DrawableComment extends DrawableElement implements Drawable, Select
 	
 	@Override
 	public void setAttribute(String cmd, Object value) {
-//		System.out.println("[DrawableComment] Set attribute fired!");
 		switch(cmd) {
 		case TEXT:
-//			System.out.println("[DrawableComment] Change Text!");
 			String temp = (String) value;
 			paragraphs = temp.split("\n");
 			setWidths();
@@ -525,14 +528,13 @@ public class DrawableComment extends DrawableElement implements Drawable, Select
 		case POSITION:
 			this.position = (Point) value;
 			break;
-		case WIDTH:
-			this.width = width;
+//		case WIDTH:
+//			this.width = width;
 		default:
 			System.err.println("Unrecognized command " + cmd);
 			return;
 		}
 		invalidate();
-//		System.out.println("[DrawableComment] Invalidated!");
 	}
 
 	@Override
