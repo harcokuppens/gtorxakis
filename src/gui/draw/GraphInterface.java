@@ -514,7 +514,12 @@ public class GraphInterface extends Observable implements ClipboardOwner {
 					if(!edge.getDrawable().anchorOnHalf()){
 						nodes.add(edge.getDrawable());
 					}else{
-						nodes.add(edge.getDrawable().getComment());
+						if(!(nodes.contains(edge.getDrawable().getComment()))){
+							nodes.add(edge.getDrawable().getComment());
+							System.out.println("not containing comment");
+						}else{
+							System.out.println("Doch");
+						}
 					}
 				}
 			}

@@ -111,7 +111,7 @@ public class DrawableGrid extends DrawableElement{
 	}
 	
 	public static Point getPoint(Point p){
-		return getPoint(p, false);
+		return getPoint(p, true);
 	}
 	
 	/**

@@ -208,6 +208,7 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		}else if(offsetX  != 0 || offsetY != 0){
 			Point p = new Point(anchorPoint);
 			p.translate(offsetX, offsetY);
+			p = DrawableGrid.getPoint(p, true);
 			points.add(p);
 			edge[EL_INDEX_ANCHOR].setAttribute("cx", String.valueOf(p.x));
 			edge[EL_INDEX_ANCHOR].setAttribute("cy", String.valueOf(p.y));
@@ -295,7 +296,6 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 			end = graphEdge.getTo().getDrawable().getLineAnchor(anchorPoint, DrawableGraphEdge.STROKE_WIDTH);
 		}
 		if(isSame){
-			System.out.println("Super");
 			anchorPoint = this.getHalfPoint();
 		}
 		
