@@ -122,19 +122,19 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		buildElement();
 	}
 	
-	public DrawableGraphEdge(SVGDocument svgDoc, DrawableGraphState from, DrawableGraphState to, Point anchorVector,
+	public DrawableGraphEdge(SVGDocument svgDoc, DrawableGraphState from, DrawableGraphState to, Point anchorPoint,
 			ArrayList<Transition> transitions, Point commentPosition, int commentWidth) {
 		super(svgDoc);
 		this.from = from;
 		this.to = to;
+		this.anchorPoint = anchorPoint;
 		System.out.println("Create edge with commentPosition");
 		graphEdge = new GraphEdge(from.getNode(), to.getNode(), transitions);
 		Point lineAnchor = to.getLineAnchor(from.getLocation(),DrawableGraphEdge.STROKE_WIDTH);
 		transitionComment = new DrawableComment(doc, commentPosition.x, commentPosition.y, commentWidth, DrawableComment.CommentType.COMMENT, new String[]{this.getEdge().getTransitionText()}, graphEdge);
 		graphEdge.setDrawable(this);
-		setStart(from.getPosition());
-		setEndPoint(lineAnchor);
-		this.anchorPoint = this.getHalfPoint();
+		start = from.getPosition();
+		end = lineAnchor;
 		if(from.equals(to)){
 			edgeType = EdgeType.SAME_ROOT;
 		}else{
@@ -157,6 +157,10 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	
 	public Point getEndPoint(){
 		return end;
+	}
+
+	public Point getAnchorPoint(){
+		return anchorPoint;
 	}
 	
 	@Override
@@ -185,6 +189,7 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	private void setEnd(Point end){
 		this.end = end;
 	}
+	
 	
 	private Point getHalfPoint(){
 		int x = (start.x + end.x) / 2;
@@ -436,10 +441,10 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		if(edgeType.equals(EdgeType.NORMAL)){
 			offsetX = 0;
 			offsetY = 0;
-			transitionComment.moveBy(v);
 			setAnchor(new Point(v.getX(), v.getY()));
 			invalidatePositions();
 		}
+		transitionComment.moveBy(v);
 	}
 
 	@Override
@@ -448,9 +453,9 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		if(edgeType.equals(EdgeType.NORMAL)){
 			offsetX = v.getX();
 			offsetY = v.getY();
-			transitionComment.setOffset(v);
 			invalidatePositions();
 		}
+		transitionComment.setOffset(v);
 	}
 
 }

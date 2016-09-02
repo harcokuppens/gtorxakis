@@ -177,7 +177,7 @@ public class Model extends Definition {
 			Gate g = gates.getGates().get(i);
 			sb.append(g.getName());
 			if(!g.getType().equals("")){
-				sb.append(g.getName() + " :: " + g.getType());
+				sb.append(" :: " + g.getType());
 			}
 			if(!((i+1) == gates.getGates().size()))
 				sb.append("; ");

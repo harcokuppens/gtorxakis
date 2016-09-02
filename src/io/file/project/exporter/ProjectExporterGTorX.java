@@ -169,8 +169,8 @@ public class ProjectExporterGTorX implements ProjectExporter {
 						streamWriter.writeAttribute("cPosX", edge.getDrawable().getComment().getPosition().x+"");
 						streamWriter.writeAttribute("cPosY", edge.getDrawable().getComment().getPosition().y+"");
 						streamWriter.writeAttribute("cWidth", edge.getDrawable().getComment().getWidth()+"");
-						streamWriter.writeAttribute("ePosX", edge.getDrawable().getAnchorVector().x+"");
-						streamWriter.writeAttribute("ePosY", edge.getDrawable().getAnchorVector().y+"");
+						streamWriter.writeAttribute("aPosX", edge.getDrawable().getAnchorPoint().x+"");
+						streamWriter.writeAttribute("aPosY", edge.getDrawable().getAnchorPoint().y+"");
 						
 						for(Transition t : edge.getTransitions()){
 							streamOutputter.output(new Element("transition")
@@ -210,7 +210,11 @@ public class ProjectExporterGTorX implements ProjectExporter {
 	private void createModel(StAXStreamOutputter streamOutputter, XMLStreamWriter streamWriter, Model model) throws XMLStreamException {
 		streamWriter.writeStartElement("model");
 			//Start model
-			streamOutputter.output(new Element("name").addContent(model.getName()).setAttribute("startState", model.getGraph().getStartState().getName()), streamWriter);
+			if(model.getGraph().getStartState() != null){
+				streamOutputter.output(new Element("name").addContent(model.getName()).setAttribute("startState", model.getGraph().getStartState().getName()), streamWriter);
+			}else{
+				streamOutputter.output(new Element("name").addContent(model.getName()).setAttribute("startState", ""), streamWriter);
+			}
 
 			for (GraphState s : model.getGraphInterface().getGraph().getStates()) {
 				//Create nodeElement
@@ -239,8 +243,9 @@ public class ProjectExporterGTorX implements ProjectExporter {
 			TextualDefinition t) throws XMLStreamException {
 		streamWriter.writeStartElement("textual");
 		//Start model
+			System.err.println(t.getTitle());
 			streamWriter.writeAttribute("title", t.getTitle());
-			streamOutputter.output(new Text(t.getDefinitionText(true)), streamWriter);
+			streamOutputter.output(new Text(t.getDefinitionText(false)), streamWriter);
 		//End model
 		streamWriter.writeEndElement();
 	}

@@ -70,13 +70,12 @@ public class TextualDefinition extends Definition{
 
 	@Override
 	public void setSaved() {
-		// TODO Auto-generated method stub
-		
+		if(drawable != null)
+			definition = drawable.getText();
 	}
 
 	@Override
 	public boolean isSaved() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

@@ -242,6 +242,7 @@ public class MyTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("SPECDEF", Token.RESERVED_WORD);
 		tokenMap.put("ADAPDEF", Token.RESERVED_WORD);
 		tokenMap.put("SUTDEF", Token.RESERVED_WORD);
+		tokenMap.put("PROCDEF", Token.RESERVED_WORD);
 		tokenMap.put("ENDDEF", Token.RESERVED_WORD);
 		
 		tokenMap.put("CHAN", Token.RESERVED_WORD_2);

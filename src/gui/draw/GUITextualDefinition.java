@@ -1,6 +1,8 @@
 package gui.draw;
 
 import java.awt.BorderLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -15,11 +17,12 @@ import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
 import org.fife.ui.rsyntaxtextarea.TokenMap;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
+import core.Session;
 import model.Definition;
 import model.TextualDefinition;
 import util.MyTokenMaker;
 
-public class GUITextualDefinition extends JPanel{
+public class GUITextualDefinition extends JPanel implements KeyListener{
 
 	private TextualDefinition definition;
 	private RSyntaxTextArea textArea;
@@ -35,6 +38,7 @@ public class GUITextualDefinition extends JPanel{
 		textArea.setSyntaxEditingStyle("text/TorXakis");
 	    textArea.setCodeFoldingEnabled(true);
 	    textArea.setText(definition.getDefinitionText(false));
+	    textArea.addKeyListener(this);
 	    RTextScrollPane sp = new RTextScrollPane(textArea);
 	    this.add(sp);
 	    
@@ -50,6 +54,22 @@ public class GUITextualDefinition extends JPanel{
 	
 	public String getText(){
 		return textArea.getText();
+	}
+
+	@Override
+	public void keyPressed(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
 	}
 	
 }

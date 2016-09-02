@@ -105,7 +105,6 @@ public class ProjectImporterGTorx extends ProjectImporter {
 		Element nameElement = modelElement.getChild("name");
 		String name = nameElement.getText();
 		String startState = nameElement.getAttributeValue("startState");
-		System.out.println("startState:"+startState);
 
 		//Get comments
 		Element commentsElement = modelElement.getChild("comments");
@@ -134,7 +133,7 @@ public class ProjectImporterGTorx extends ProjectImporter {
 			String nodeName = n.getChild(GraphState.ATTRIBUTE_NAME).getText();
 			//GraphState
 			DrawableGraphState dgn = new DrawableGraphState(svgDoc, posX, posY, nodeName);
-			if(nodeName.equals(startState)){
+			if((!startState.equals("")) && nodeName.equals(startState)){
 				System.out.println("Found start state");
 				dgn.getNode().setAttribute(GraphState.ATTRIBUTE_START_STATE, true);
 			}
@@ -150,11 +149,13 @@ public class ProjectImporterGTorx extends ProjectImporter {
 				transitions.add(new Transition(transition.getAttribute("channel").getValue(), transition.getAttribute("condition").getValue(), transition.getAttribute("action").getValue()));
 			}
 			Point commentPosition = new Point(Integer.valueOf(t.getAttributeValue("cPosX")), Integer.valueOf(t.getAttributeValue("cPosY")));
-			Point anchorVector = new Point(Integer.valueOf(t.getAttributeValue("ePosX")), Integer.valueOf(t.getAttributeValue("ePosY")));
+			
+			Point anchorPoint = new Point (Integer.valueOf(t.getAttributeValue("aPosX")), Integer.valueOf(t.getAttributeValue("aPosY")));
+			
 			int commentWidth = (Integer.valueOf(t.getAttributeValue("cWidth")));
 			DrawableGraphState fromNode = graph.getStateWithName(from).getDrawable();
 			DrawableGraphState toNode = graph.getStateWithName(to).getDrawable();
-			DrawableGraphEdge e = new DrawableGraphEdge(svgDoc, fromNode, toNode, anchorVector, transitions, commentPosition, commentWidth);
+			DrawableGraphEdge e = new DrawableGraphEdge(svgDoc, fromNode, toNode, anchorPoint, transitions, commentPosition, commentWidth);
 			fromNode.getNode().addOutgoingEdge(e.getEdge());
 			toNode.getNode().addIncomingEdge(e.getEdge());
 		}
