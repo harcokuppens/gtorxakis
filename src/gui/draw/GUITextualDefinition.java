@@ -24,12 +24,10 @@ import util.MyTokenMaker;
 
 public class GUITextualDefinition extends JPanel implements KeyListener{
 
-	private TextualDefinition definition;
 	private RSyntaxTextArea textArea;
 	
-	public GUITextualDefinition(TextualDefinition definition){
+	public GUITextualDefinition(String definition){
 		super(new BorderLayout());
-		this.definition = definition;
 		
 		AbstractTokenMakerFactory atmf = (AbstractTokenMakerFactory)TokenMakerFactory.getDefaultInstance();
 		atmf.putMapping("text/TorXakis", MyTokenMaker.class.getName());
@@ -37,7 +35,7 @@ public class GUITextualDefinition extends JPanel implements KeyListener{
 		textArea = new RSyntaxTextArea(20, 60);
 		textArea.setSyntaxEditingStyle("text/TorXakis");
 	    textArea.setCodeFoldingEnabled(true);
-	    textArea.setText(definition.getDefinitionText(false));
+	    textArea.setText(definition);
 	    textArea.addKeyListener(this);
 	    RTextScrollPane sp = new RTextScrollPane(textArea);
 	    this.add(sp);

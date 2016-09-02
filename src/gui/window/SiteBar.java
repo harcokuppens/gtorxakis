@@ -223,6 +223,7 @@ public class SiteBar extends JPanel{
 					c.setEnabled(b);
 				}
 			}
+			addGate.setEnabled(b);
 		}
 		
 	}
@@ -373,6 +374,7 @@ public class SiteBar extends JPanel{
 					c.setEnabled(b);
 				}
 			}
+			addVariable.setEnabled(b);
 		}
 		
 	}

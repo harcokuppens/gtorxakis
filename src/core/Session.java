@@ -41,7 +41,6 @@ public class Session extends Observable {
 			DEVMODE = true;
 			firstPathIndex = 1;
 		}
-
 		
 		startupProcedure();
 		this.setProject(Project.newProject());

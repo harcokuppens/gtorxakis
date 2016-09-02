@@ -242,7 +242,9 @@ public class Model extends Definition {
 		sb.append("STAUTDEF\t" + this.name + " " + getGatesText() + "()\n");
 		sb.append(" ::=\n");
 		sb.append("\tSTATE\t" + getStates() + "\n");
-		sb.append("\tVAR\t" + getVariablesText() + "\n");
+		if(variables.getVariables().size() > 0){
+			sb.append("\tVAR\t" + getVariablesText() + "\n");
+		}
 		sb.append("\tINIT\t" + graph.getStartState().getName() + "\t{ " + getInitVariables() + " }\n");
 		sb.append("\tTRANS");
 		sb.append(getTransitions()+"\n");

@@ -204,8 +204,9 @@ public class Window extends JFrame implements Observer {
 //	}
 	
 	private void showTextualDefinition(TextualDefinition d){
-		GUITextualDefinition gui = new GUITextualDefinition(d);
-		((TextualDefinition) d).setDrawable(gui);
+		System.out.println(d.getDefinitionText());
+		GUITextualDefinition gui = new GUITextualDefinition(d.getDefinitionText());
+		d.setDrawable(gui);
 		definitionPane.add(d.getTitle(), gui);
 	}
 	
@@ -417,13 +418,13 @@ public class Window extends JFrame implements Observer {
 		this.currentProject = newProject;
 		if(newProject != null) {
 			menuBar.setItemEnabled(WindowActionListener.ADD_MODEL, true);
-			menuBar.setItemEnabled(WindowActionListener.ADD_PROC, true);
+//			menuBar.setItemEnabled(WindowActionListener.ADD_PROC, true);
 			for(Definition d: newProject.getDefinitions()) {
 				showDefinition(d);
 			}
 		} else {
 			menuBar.setItemEnabled(WindowActionListener.ADD_MODEL, false);
-			menuBar.setItemEnabled(WindowActionListener.ADD_PROC, false);
+//			menuBar.setItemEnabled(WindowActionListener.ADD_PROC, false);
 		}
 	}
 	

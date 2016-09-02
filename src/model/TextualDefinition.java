@@ -11,6 +11,7 @@ public class TextualDefinition extends Definition{
 	private final Project project;
 	
 	private String definition;
+	private DefType type;
 	
 	private GUITextualDefinition drawable;
 	
@@ -18,9 +19,8 @@ public class TextualDefinition extends Definition{
 		TYPE("TYPE Definition", DEFAULT_TYPE_DEF, "TYPEDEF"),
 		CONST("CONST Definition", DEFAULT_CONST_DEF, "CONSTDEF"),
 		FUNC("FUNC Definition", DEFAULT_FUNC_DEF, "FUNCDEF"),
-		SPEC("SPEC Definition", DEFAULT_SPEC_DEF, "SPECDEF"),
-		ADAP("ADAP Definition", DEFAULT_ADAP_DEF, "ADAPDEF"),
-		SUT("SUT Definition", DEFAULT_SUT_DEF, "SUTDEF"),
+		MODEL("MODEL Definition", DEFAULT_MODEL_DEF, "MODELDEF"),
+		CNECTDEF("CNECTDEF Definition", DEFAULT_CNECT_DEF, "CNECTDEF"),
 		PROC("PROC Definition", DEFAULT_PROC_DEF, "PROCDEF");
 		
 		private String name, 
@@ -49,19 +49,19 @@ public class TextualDefinition extends Definition{
 	public static final String DEFAULT_TYPE_DEF = "TYPEDEF Type1\n\t::=\n\t\t\n\nENDDEF",
 							   DEFAULT_CONST_DEF = "CONSTDEF Const1\n\t::=\n\t\t\n\nENDDEF",
 							   DEFAULT_FUNC_DEF = "FUNCDEF Func1\n\t::=\n\t\t\n\nENDDEF",
-							   DEFAULT_SPEC_DEF = "SPECDEF Spec1\n\t::=\n\t\t\n\nENDDEF",
-							   DEFAULT_ADAP_DEF = "ADAPDEF Adap1\n\t::=\n\t\t\n\nENDDEF",
-							   DEFAULT_SUT_DEF = "SUTDEF Sut1\n\t::=\n\t\t\n\nENDDEF",
+							   DEFAULT_MODEL_DEF = "MODELDEF Model1\n\t::=\n\t\t\n\nENDDEF",
+							   DEFAULT_CNECT_DEF = "CNECTDEF Connect1\n\t::=\n\t\t\n\nENDDEF",
 							   DEFAULT_PROC_DEF = "PROCDEF Proc1\n\t::=\n\t\t\n\nENDDEF";
 	
-	public TextualDefinition(Project project, String definition, String title){
+	public TextualDefinition(Project project, String definition, String title, DefType type){
 		super(title);
 		this.project = project;
 		this.definition = definition;
+		this.type = type;
 	}
 	
 	public TextualDefinition(Project project, DefType type){
-		this(project, type.defaultDef, type.name);
+		this(project, type.defaultDef, type.name, type);
 	}
 	
 	public void setDrawable(GUITextualDefinition drawable){
@@ -70,8 +70,6 @@ public class TextualDefinition extends Definition{
 
 	@Override
 	public void setSaved() {
-		if(drawable != null)
-			definition = drawable.getText();
 	}
 
 	@Override
@@ -79,17 +77,11 @@ public class TextualDefinition extends Definition{
 		return false;
 	}
 
-
-//	public static TextualDefinition newDefinition(Project p, String title) {
-//		return new TextualDefinition(p, DEFAULT_SUT_DEFINITION, title);
-//	}
-
 	@Override
 	public boolean canRedo() {
 		drawable.canRedo();
 		return false;
 	}
-
 
 	@Override
 	public boolean canUndo() {
@@ -97,8 +89,8 @@ public class TextualDefinition extends Definition{
 		return false;
 	}
 	
-	public String getDefinitionText(boolean save){
-		if(save){
+	public String getDefinitionText(){
+		if(drawable != null){
 			definition = drawable.getText();
 		}
 		return definition;
@@ -110,7 +102,11 @@ public class TextualDefinition extends Definition{
 
 	@Override
 	public String getDefinitionAsText() {
-		return getDefinitionText(true);
+		return getDefinitionText();
+	}
+	
+	public DefType getType(){
+		return type;
 	}
 	
 }

@@ -2,29 +2,36 @@ package gui.dialogs;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
 import model.TextualDefinition;
 import core.Session;
+import io.net.SocketIO;
 
 public class RunDialog extends Dialog{
 	
+	private RunDialog runDialog;
+	private JSpinner portNumber;
+	private JTextField programField;
+	private JComboBox<String> connectDefinitions,
+							  modelDefinitions;
+	
 	public RunDialog(){
+		runDialog = this;
 		init();
 	}
 
@@ -78,12 +85,12 @@ public class RunDialog extends Dialog{
 		gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 		gbc.insets = new Insets(5,5,5,5);
 				
-		JLabel programLabel = new JLabel("Program name");
+		JLabel programLabel = new JLabel("Host");
 		panel.add(programLabel, gbc);
 		gbc.gridx++;
 		gbc.weightx = 0.6;
 		
-		JTextField programField = new JTextField("torxakis");
+		programField = new JTextField("localhost");
 		programField.setHorizontalAlignment(SwingConstants.RIGHT);
 		panel.add(programField, gbc);
 		gbc.gridy++;
@@ -96,7 +103,7 @@ public class RunDialog extends Dialog{
 		gbc.weightx = 0.6;
 		
 		
-		JSpinner portNumber = new JSpinner(new SpinnerNumberModel(7220, 0, 250000, 1));
+		portNumber = new JSpinner(new SpinnerNumberModel(7220, 0, 250000, 1));
 		JSpinner.NumberEditor editor = new JSpinner.NumberEditor(portNumber, "#"); 
 		portNumber.setEditor(editor);
 		panel.add(portNumber, gbc);
@@ -119,45 +126,46 @@ public class RunDialog extends Dialog{
 		gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 		gbc.insets = new Insets(5,5,5,5);
 		
-		JLabel specLabel = new JLabel("Specification");
+		JLabel specLabel = new JLabel("Model");
 		panel.add(specLabel, gbc);
 		gbc.gridx++;
 		gbc.weightx = 0.6;
 		
-		JComboBox<String> specDefinitions = new JComboBox<String>();
-		for(String s : Session.getSession().getProject().getDefinitionsByTypeDef(TextualDefinition.DefType.SPEC)){
-			specDefinitions.addItem(s);
+		modelDefinitions = new JComboBox<String>();
+		System.out.println(Session.getSession().getProject().getName());
+		for(String s : Session.getSession().getProject().getDefinitionsByTypeDef(TextualDefinition.DefType.MODEL)){
+			modelDefinitions.addItem(s);
 		}
-		panel.add(specDefinitions, gbc);
+		panel.add(modelDefinitions, gbc);
 		gbc.gridy++;
 		gbc.gridx = 0;
 		gbc.weightx = 0.4;
 		
-		JLabel adapLabel = new JLabel("Adapter");
-		panel.add(adapLabel, gbc);
+//		JLabel adapLabel = new JLabel("Adapter");
+//		panel.add(adapLabel, gbc);
+//		gbc.gridx++;
+//		gbc.weightx = 0.6;
+//		
+//		adapDefinitions = new JComboBox<String>();
+//		for(String s : Session.getSession().getProject().getDefinitionsByTypeDef(TextualDefinition.DefType.ADAP)){
+//			adapDefinitions.addItem(s);
+//		}
+//		panel.add(adapDefinitions, gbc);
+//		
+//		gbc.gridy++;
+//		gbc.gridx = 0;
+//		gbc.weightx = 0.4;
+		
+		JLabel connectLabel = new JLabel("Connect definition");
+		panel.add(connectLabel, gbc);
 		gbc.gridx++;
 		gbc.weightx = 0.6;
 		
-		JComboBox<String> adapDefinitions = new JComboBox<String>();
-		for(String s : Session.getSession().getProject().getDefinitionsByTypeDef(TextualDefinition.DefType.ADAP)){
-			adapDefinitions.addItem(s);
+		connectDefinitions = new JComboBox<String>();
+		for(String s : Session.getSession().getProject().getDefinitionsByTypeDef(TextualDefinition.DefType.CNECTDEF)){
+			connectDefinitions.addItem(s);
 		}
-		panel.add(adapDefinitions, gbc);
-		
-		gbc.gridy++;
-		gbc.gridx = 0;
-		gbc.weightx = 0.4;
-		
-		JLabel sutLabel = new JLabel("System Under Test");
-		panel.add(sutLabel, gbc);
-		gbc.gridx++;
-		gbc.weightx = 0.6;
-		
-		JComboBox<String> sutDefinitions = new JComboBox<String>();
-		for(String s : Session.getSession().getProject().getDefinitionsByTypeDef(TextualDefinition.DefType.SUT)){
-			sutDefinitions.addItem(s);
-		}
-		panel.add(sutDefinitions, gbc);
+		panel.add(connectDefinitions, gbc);
 		
 		return panel;
 	}
@@ -194,7 +202,23 @@ public class RunDialog extends Dialog{
 	public JPanel getButtonPanel(){
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		JButton save = new JButton("Run");
+		save.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO connect to torxakis
+				int port = (int) portNumber.getValue();
+				String host = programField.getText();
+				SocketIO socketIO = new SocketIO(port, host);
+				socketIO.startTorXakis("filename");
+			}
+		});
 		JButton cancel = new JButton("Cancel");
+		cancel.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				runDialog.dispose();
+			}
+		});
 		panel.add(cancel);
 		panel.add(save);
 		return panel;

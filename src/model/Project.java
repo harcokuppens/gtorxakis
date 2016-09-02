@@ -24,9 +24,8 @@ public class Project {
 	
 	public static final int NR_TEXTUAL_DEFINITIONS = 8;
 	
-	private static TextualDefinition sut;
-	private static TextualDefinition spec;
-	private static TextualDefinition adap;
+//	private TextualDefinition connect;
+//	private TextualDefinition model;
 	
 	public Project(String name) {
 		this.name = name;
@@ -91,9 +90,8 @@ public class Project {
 	public static Project newProject() {
 		Project p = new Project("Unnamed");
 		Model m = Model.newModel(p, "Model1");
-		sut = new TextualDefinition(p, TextualDefinition.DefType.SUT);
-		adap = new TextualDefinition(p, TextualDefinition.DefType.ADAP);
-		spec = new TextualDefinition(p, TextualDefinition.DefType.SPEC);
+		TextualDefinition connect = new TextualDefinition(p, TextualDefinition.DefType.CNECTDEF);
+		TextualDefinition model = new TextualDefinition(p, TextualDefinition.DefType.MODEL);
 		TextualDefinition type = new TextualDefinition(p, TextualDefinition.DefType.TYPE);
 		TextualDefinition constDef = new TextualDefinition(p, TextualDefinition.DefType.CONST);
 		TextualDefinition func = new TextualDefinition(p, TextualDefinition.DefType.FUNC);
@@ -102,9 +100,8 @@ public class Project {
 		p.addDefinition(type);
 		p.addDefinition(constDef);
 		p.addDefinition(func);
-		p.addDefinition(spec);
-		p.addDefinition(adap);
-		p.addDefinition(sut);
+		p.addDefinition(model);
+		p.addDefinition(connect);
 		p.addDefinition(proc);
 		p.addDefinition(m);
 		return p;
@@ -150,18 +147,31 @@ public class Project {
 		return def;
 	}
 	
+	private TextualDefinition getTextualDefinition(TextualDefinition.DefType defType){
+		for(Definition d : definitions){
+			if(d instanceof TextualDefinition){
+				TextualDefinition td = (TextualDefinition) d;
+				if(td.getType().equals(defType)){
+					return td;
+				}
+			}
+		}
+		return null;
+	}
+	
 	public ArrayList<String> getDefinitionsByTypeDef(TextualDefinition.DefType defType){
 		ArrayList<String> defs = new ArrayList<String>();
-		String defString;
-		if(defType.equals(TextualDefinition.DefType.SPEC)){
-			defString = spec.getDefinitionAsText();
-		}else if(defType.equals(TextualDefinition.DefType.SUT)){
-			defString = sut.getDefinitionAsText();
-		}else if(defType.equals(TextualDefinition.DefType.ADAP)){
-			defString = adap.getDefinitionAsText();
-		}else{
-			defString = "";
+		TextualDefinition model = this.getTextualDefinition(defType);
+		String defString = "";
+		if(model != null){
+			defString = model.getDefinitionAsText();
 		}
+//		if(defType.equals(TextualDefinition.DefType.MODEL)){
+//		}else if(defType.equals(TextualDefinition.DefType.CNECTDEF)){
+//			defString = connect.getDefinitionAsText();
+//		}else{
+//			defString = "";
+//		}
 		
 		String defLines[] = defString.split("\n");
 		System.err.println("sutLines size : "+defLines.length);

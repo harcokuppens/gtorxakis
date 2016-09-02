@@ -245,7 +245,8 @@ public class ProjectExporterGTorX implements ProjectExporter {
 		//Start model
 			System.err.println(t.getTitle());
 			streamWriter.writeAttribute("title", t.getTitle());
-			streamOutputter.output(new Text(t.getDefinitionText(false)), streamWriter);
+			streamWriter.writeAttribute("type", t.getType().name());
+			streamOutputter.output(new Text(t.getDefinitionText()), streamWriter);
 		//End model
 		streamWriter.writeEndElement();
 	}

@@ -92,8 +92,9 @@ public class ProjectImporterGTorx extends ProjectImporter {
 	private TextualDefinition importTextualDefinition(Element textualElement, Project project, Version version) {
 		System.out.println("Import textual definition");
 		String title = textualElement.getAttributeValue("title");
+		String type = textualElement.getAttributeValue("type");
 		String definition = textualElement.getText();
-		return new TextualDefinition(project, definition, title);
+		return new TextualDefinition(project, definition, title, TextualDefinition.DefType.valueOf(type));
 	}
 
 	private Model importModel(Element modelElement, Project project, Version version) throws DataConversionException {
