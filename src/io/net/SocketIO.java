@@ -13,8 +13,8 @@ public class SocketIO {
 	private int port;
 	private String host;
 	private Socket socket;
-	private PrintWriter out;
-	private BufferedReader in;
+	private PrintWriter writer;
+	private BufferedReader reader;
 	
 	public SocketIO(int port, String host){
 		this.host = host;
@@ -27,9 +27,9 @@ public class SocketIO {
 	//Create socket connection
 	   try{
 	     socket = new Socket(host, port);
-	     out = new PrintWriter(socket.getOutputStream(), 
-	                 true);
-	     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+	     writer = new PrintWriter(socket.getOutputStream(), true);
+	     reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+	     writer.println("INIT");
 	   } catch (UnknownHostException e) {
 	     System.out.println("Unknown host: " + host);
 	   } catch  (IOException e) {
@@ -38,28 +38,27 @@ public class SocketIO {
 	}
 	
 
-	public void startTorXakis(String filename){
-		File f = new File(filename);
-		
-//		out.println(text);
-		try{
-			String line = in.readLine();
-			System.out.println("Text received: " + line);
-		} catch (IOException e){
-			System.out.println("Read failed");
-			System.exit(1);
-		}
+	public void startTorXakis(String filename, String model, String connection, int iterations){
+		//TODO send path of file,
+		//send model, connect name
+		//send iterations
+		//writer.println(text);
+//		try{
+//			String line = reader.readLine();
+//			System.out.println("Text received: " + line);
+//		} catch (IOException e){
+//			System.out.println("Read failed");
+//			System.exit(1);
+//		}
 	}
 	
 	public void close(){
 		try {
-			in.close();
-			out.close();
+			writer.close();
+			reader.close();
 			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
-	
 }

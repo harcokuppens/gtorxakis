@@ -19,13 +19,17 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
 import model.TextualDefinition;
+import util.Environment;
 import core.Session;
+import io.file.FileType;
+import io.file.FileTypeAssociation;
 import io.net.SocketIO;
 
 public class RunDialog extends Dialog{
 	
 	private RunDialog runDialog;
-	private JSpinner portNumber;
+	private JSpinner portNumber,
+					 testNumber;
 	private JTextField programField;
 	private JComboBox<String> connectDefinitions,
 							  modelDefinitions;
@@ -189,7 +193,7 @@ public class RunDialog extends Dialog{
 		gbc.weightx = 0.6;
 		
 		
-		JSpinner testNumber = new JSpinner(new SpinnerNumberModel(1000, 0, null, 1));
+		testNumber = new JSpinner(new SpinnerNumberModel(1000, 0, null, 1));
 		JSpinner.NumberEditor editor = new JSpinner.NumberEditor(testNumber, "#"); 
 		testNumber.setEditor(editor);
 		panel.add(testNumber, gbc);
@@ -208,8 +212,14 @@ public class RunDialog extends Dialog{
 				//TODO connect to torxakis
 				int port = (int) portNumber.getValue();
 				String host = programField.getText();
+				String model = String.valueOf(modelDefinitions.getSelectedItem());
+				String connection = String.valueOf(connectDefinitions.getSelectedItem());
+				int iterations = (int) testNumber.getValue();
 				SocketIO socketIO = new SocketIO(port, host);
-				socketIO.startTorXakis("filename");
+				System.out.println(Session.TEMP_TXS);
+				Session.getSession().getProject().saveAs(Session.TEMP_TXS, FileTypeAssociation.TorXakisExport.getDefaultFileType());
+				socketIO.startTorXakis(Session.TEMP_TXS, model, connection, iterations);
+				socketIO.close();
 			}
 		});
 		JButton cancel = new JButton("Cancel");
