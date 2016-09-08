@@ -21,7 +21,7 @@ public class Session extends Observable {
 	public static boolean DEVMODE = true;
 	public static final String CONFIG_FILENAME = Environment.getApplicationDataFolder() + Environment.fileSeparator + "config.xml";
 	public static final String DEFAULT_PATH = "/Users/tobias/Desktop";
-	public static final String TEMP_TXS = Environment.getApplicationDataFolder() + Environment.fileSeparator + "temp";
+	public static final String TEMP_TXS = Environment.getApplicationDataFolder() + Environment.fileSeparator + "temp.txs";
 	
 	private Project currentProject = null;
 	private Window window;

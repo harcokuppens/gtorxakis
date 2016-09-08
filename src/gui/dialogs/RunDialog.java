@@ -7,6 +7,13 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -25,7 +32,7 @@ import io.file.FileType;
 import io.file.FileTypeAssociation;
 import io.net.SocketIO;
 
-public class RunDialog extends Dialog{
+public class RunDialog extends Dialog implements WindowListener{
 	
 	private RunDialog runDialog;
 	private JSpinner portNumber,
@@ -33,6 +40,36 @@ public class RunDialog extends Dialog{
 	private JTextField programField;
 	private JComboBox<String> connectDefinitions,
 							  modelDefinitions;
+	private JComboBox<TorXakisType> torxakisType;
+	private SocketIO socketIO;
+	private Process process;
+	
+	public static enum TorXakisType{
+		TESTER("TESTER", "TEST"),
+		SIMULATOR("SIMULATOR", "SIM"),
+		STEPPER("STEPPER", "STEP");
+		
+		private String cmd, runCMD;
+		
+		private TorXakisType(String cmd, String runCMD){
+			this.cmd = cmd;
+			this.runCMD = runCMD;
+		}
+		
+		public String getInitCommand(String model, String connection){
+			switch(this){
+			case TESTER:
+			case SIMULATOR:
+				return cmd + " " + model + " " + connection;
+			default:
+				return cmd + " " + model;
+			}
+		}
+		
+		public String getRunCommand(int iterations){
+			return runCMD + " " + String.valueOf(iterations);
+		}
+	}
 	
 	public RunDialog(){
 		runDialog = this;
@@ -144,22 +181,7 @@ public class RunDialog extends Dialog{
 		gbc.gridy++;
 		gbc.gridx = 0;
 		gbc.weightx = 0.4;
-		
-//		JLabel adapLabel = new JLabel("Adapter");
-//		panel.add(adapLabel, gbc);
-//		gbc.gridx++;
-//		gbc.weightx = 0.6;
-//		
-//		adapDefinitions = new JComboBox<String>();
-//		for(String s : Session.getSession().getProject().getDefinitionsByTypeDef(TextualDefinition.DefType.ADAP)){
-//			adapDefinitions.addItem(s);
-//		}
-//		panel.add(adapDefinitions, gbc);
-//		
-//		gbc.gridy++;
-//		gbc.gridx = 0;
-//		gbc.weightx = 0.4;
-		
+
 		JLabel connectLabel = new JLabel("Connect definition");
 		panel.add(connectLabel, gbc);
 		gbc.gridx++;
@@ -187,6 +209,21 @@ public class RunDialog extends Dialog{
 		gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 		gbc.insets = new Insets(5,5,5,5);
 		
+		JLabel typeLabel = new JLabel("Run mode");
+		panel.add(typeLabel, gbc);
+		gbc.gridx++;
+		gbc.weightx = 0.6;
+		
+		
+		torxakisType = new JComboBox<TorXakisType>();
+		torxakisType.addItem(TorXakisType.TESTER);
+		torxakisType.addItem(TorXakisType.SIMULATOR);
+		torxakisType.addItem(TorXakisType.STEPPER);
+		panel.add(torxakisType, gbc);
+		gbc.gridy++;
+		gbc.gridx = 0;
+		gbc.weightx = 0.4;
+		
 		JLabel specLabel = new JLabel("Number of steps");
 		panel.add(specLabel, gbc);
 		gbc.gridx++;
@@ -203,34 +240,103 @@ public class RunDialog extends Dialog{
 		return panel;
 	}
 	
+	private void startTorxakisServer(String pathToTorXakis, int port){
+		 try {
+		        String ss = null;
+		        Runtime obj = null;
+		        process = Runtime.getRuntime().exec("cmd.exe /c start java -jar " + pathToTorXakis + "\\Server.jar");
+		        BufferedWriter writeer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
+//		        writeer.write("txsserver" + port);
+		        writeer.write("dir");
+		        writeer.flush();
+		    } catch (IOException e) {
+		        System.out.println("FROM CATCH" + e.toString());
+		    }
+	}
+	
 	public JPanel getButtonPanel(){
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		JButton save = new JButton("Run");
 		save.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO connect to torxakis
 				int port = (int) portNumber.getValue();
 				String host = programField.getText();
 				String model = String.valueOf(modelDefinitions.getSelectedItem());
 				String connection = String.valueOf(connectDefinitions.getSelectedItem());
 				int iterations = (int) testNumber.getValue();
-				SocketIO socketIO = new SocketIO(port, host);
-				System.out.println(Session.TEMP_TXS);
+				TorXakisType type = (TorXakisType) torxakisType.getSelectedItem();
+				startTorxakisServer("C:\\Users\\Tobias\\Desktop", port);
 				Session.getSession().getProject().saveAs(Session.TEMP_TXS, FileTypeAssociation.TorXakisExport.getDefaultFileType());
-				socketIO.startTorXakis(Session.TEMP_TXS, model, connection, iterations);
-				socketIO.close();
+				socketIO = new SocketIO(runDialog, port, host);
+				socketIO.startTorXakis(Session.TEMP_TXS, model, connection, iterations, type);
+				TorXakisDialog td = new TorXakisDialog(socketIO.getReader());
+				Runnable r = new Runnable(){
+					@Override
+					public void run() {
+						td.readLines();
+					}
+					
+				};
+				(new Thread(r)).start();
+				td.setVisible(true);
 			}
 		});
-		JButton cancel = new JButton("Cancel");
+		JButton cancel = new JButton("Close");
 		cancel.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				destroyCMD();
 				runDialog.dispose();
 			}
 		});
 		panel.add(cancel);
 		panel.add(save);
 		return panel;
+	}
+
+	public void destroyCMD(){
+		if(process != null && process.isAlive()) process.destroy();
+	}
+	
+	@Override
+	public void windowActivated(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent arg0) {
+		destroyCMD();
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowOpened(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }

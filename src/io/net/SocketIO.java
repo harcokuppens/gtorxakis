@@ -1,5 +1,8 @@
 package io.net;
 
+import gui.dialogs.RunDialog;
+import gui.dialogs.RunDialog.TorXakisType;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +11,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import javax.swing.JOptionPane;
+
 public class SocketIO {
 
 	private int port;
@@ -15,10 +20,12 @@ public class SocketIO {
 	private Socket socket;
 	private PrintWriter writer;
 	private BufferedReader reader;
+	private RunDialog runDialog;
 	
-	public SocketIO(int port, String host){
+	public SocketIO(RunDialog runDialog,int port, String host){
 		this.host = host;
 		this.port = port;
+		this.runDialog = runDialog;
 		listenSocket();
 	}
 	
@@ -29,27 +36,22 @@ public class SocketIO {
 	     socket = new Socket(host, port);
 	     writer = new PrintWriter(socket.getOutputStream(), true);
 	     reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-	     writer.println("INIT");
-	   } catch (UnknownHostException e) {
-	     System.out.println("Unknown host: " + host);
-	   } catch  (IOException e) {
-	     System.out.println("No I/O");
+	   } catch(Exception e) {
+		 runDialog.destroyCMD();
+	     JOptionPane.showMessageDialog(null, "Can not connect to TorXakis. Are you sure that you pick the right directory?");
 	   }
 	}
 	
+	public BufferedReader getReader(){
+		return reader;
+	}
 
-	public void startTorXakis(String filename, String model, String connection, int iterations){
-		//TODO send path of file,
-		//send model, connect name
-		//send iterations
-		//writer.println(text);
-//		try{
-//			String line = reader.readLine();
-//			System.out.println("Text received: " + line);
-//		} catch (IOException e){
-//			System.out.println("Read failed");
-//			System.exit(1);
-//		}
+	public void startTorXakis(String filename, String model, String connection, int iterations, TorXakisType type){
+			String input;
+			writer.println("INIT " + filename);
+			writer.println(type.getInitCommand(model, connection));
+			writer.println(type.getRunCommand(iterations));
+			writer.println("QUIT");
 	}
 	
 	public void close(){
