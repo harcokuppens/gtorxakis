@@ -1,6 +1,7 @@
 package gui.dialogs;
 
 import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -11,6 +12,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -18,6 +21,7 @@ import java.io.OutputStreamWriter;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -37,12 +41,16 @@ public class RunDialog extends Dialog implements WindowListener{
 	private RunDialog runDialog;
 	private JSpinner portNumber,
 					 testNumber;
-	private JTextField programField;
+	private JTextField programField,
+					   pathField;
 	private JComboBox<String> connectDefinitions,
 							  modelDefinitions;
 	private JComboBox<TorXakisType> torxakisType;
 	private SocketIO socketIO;
 	private Process process;
+	
+	public static final int PORT = 7220;
+	public static final String HOST = "localhost";
 	
 	public static enum TorXakisType{
 		TESTER("TESTER", "TEST"),
@@ -121,36 +129,85 @@ public class RunDialog extends Dialog implements WindowListener{
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.weightx = 0.4;
-		gbc.weighty = 0.05;
+		gbc.weighty = 0.0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 		gbc.insets = new Insets(5,5,5,5);
 				
-		JLabel programLabel = new JLabel("Host");
-		panel.add(programLabel, gbc);
-		gbc.gridx++;
-		gbc.weightx = 0.6;
+//		JLabel programLabel = new JLabel("Host");
+//		panel.add(programLabel, gbc);
+//		
+//		gbc.gridx++;
+//		gbc.weightx = 0.6;
+//		gbc.gridwidth = 2;
+//		programField = new JTextField("localhost");
+//		programField.setHorizontalAlignment(SwingConstants.RIGHT);
+//		panel.add(programField, gbc);
 		
-		programField = new JTextField("localhost");
-		programField.setHorizontalAlignment(SwingConstants.RIGHT);
-		panel.add(programField, gbc);
 		gbc.gridy++;
 		gbc.gridx = 0;
 		gbc.weightx = 0.4;
-		
+		gbc.gridwidth = 1;
 		JLabel portLabel = new JLabel("Port");
 		panel.add(portLabel, gbc);
+		
 		gbc.gridx++;
-		gbc.weightx = 0.6;
-		
-		
+		gbc.weightx = 1;
+		gbc.gridwidth = 2;
 		portNumber = new JSpinner(new SpinnerNumberModel(7220, 0, 250000, 1));
 		JSpinner.NumberEditor editor = new JSpinner.NumberEditor(portNumber, "#"); 
 		portNumber.setEditor(editor);
 		panel.add(portNumber, gbc);
+		
 		gbc.gridy++;
 		gbc.gridx = 0;
-		gbc.weightx = 0.4;
+		gbc.weightx = 1.0;
+		gbc.gridwidth = 1;
+		panel.add(new JLabel("TorXakis directory"),gbc);
+		
+		gbc.gridy++;
+		gbc.gridwidth = 2;
+		pathField = new JTextField("", 20);
+		panel.add(pathField, gbc);
+		
+		JButton btnChoose = new JButton("Choose");
+		btnChoose.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (Environment.OperatingSystem == Environment.OS.Windows) {
+					JFileChooser fc = new JFileChooser();
+					fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+					int returnVal = fc.showOpenDialog(runDialog);
+					if (returnVal == JFileChooser.APPROVE_OPTION) {
+						String path = fc.getSelectedFile().getPath();
+						pathField.setText(path);
+					}
+				} else {
+					if (Environment.OperatingSystem == Environment.OS.Mac) {
+						System.setProperty("apple.awt.fileDialogForDirectories", "true");
+					}
+					FileDialog fd = new FileDialog(runDialog, "Choose Directory", FileDialog.LOAD);
+					fd.setFilenameFilter(new FilenameFilter() {
+						@Override
+						public boolean accept(File file, String dir) {
+							return false;
+						}
+					});
+					fd.setVisible(true);
+					File f = new File(fd.getDirectory() + fd.getFile());
+					if (Environment.OperatingSystem == Environment.OS.Mac) {
+						System.setProperty("apple.awt.fileDialogForDirectories", "false");
+					}
+					if (f.exists() && f.isDirectory()) {
+						pathField.setText(f.getPath());
+					}
+				}
+			}
+		});
+		gbc.gridx++;
+		gbc.gridx++;
+		gbc.gridwidth = 1;
+		panel.add(btnChoose,gbc);
+	
 		return panel;
 	}
 	
@@ -241,17 +298,26 @@ public class RunDialog extends Dialog implements WindowListener{
 	}
 	
 	private void startTorxakisServer(String pathToTorXakis, int port){
-		 try {
-		        String ss = null;
-		        Runtime obj = null;
-		        process = Runtime.getRuntime().exec("cmd.exe /c start java -jar " + pathToTorXakis + "\\Server.jar");
-		        BufferedWriter writeer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-//		        writeer.write("txsserver" + port);
-		        writeer.write("dir");
-		        writeer.flush();
-		    } catch (IOException e) {
-		        System.out.println("FROM CATCH" + e.toString());
-		    }
+		if(Environment.OperatingSystem == Environment.OS.Windows){
+			try {
+				String ss = null;
+				Runtime obj = null;
+				process = Runtime.getRuntime().exec("cmd.exe /c start " + pathToTorXakis + "\\txsserver " + port);
+				BufferedWriter writeer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
+//		        writeer.write("dir");
+				writeer.flush();
+			} catch (IOException e) {
+				System.out.println("FROM CATCH" + e.toString());
+			}
+		}else{
+			String[] arguments = new String[] {"java", "-jar", pathToTorXakis +"/Test.jar"};
+			try {
+				Process proc = new ProcessBuilder(arguments).start();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public JPanel getButtonPanel(){
@@ -261,7 +327,7 @@ public class RunDialog extends Dialog implements WindowListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int port = (int) portNumber.getValue();
-				String host = programField.getText();
+				String host = HOST;
 				String model = String.valueOf(modelDefinitions.getSelectedItem());
 				String connection = String.valueOf(connectDefinitions.getSelectedItem());
 				int iterations = (int) testNumber.getValue();
