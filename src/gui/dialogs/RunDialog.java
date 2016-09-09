@@ -167,14 +167,14 @@ public class RunDialog extends Dialog implements WindowListener{
 		
 		gbc.gridy++;
 		gbc.gridwidth = 2;
-		pathField = new JTextField("", 20);
+		pathField = new JTextField(Session.DEFAULT_PATH, 20);
 		panel.add(pathField, gbc);
 		
 		JButton btnChoose = new JButton("Choose");
 		btnChoose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (Environment.OperatingSystem == Environment.OS.Windows) {
-					JFileChooser fc = new JFileChooser();
+					JFileChooser fc = new JFileChooser(pathField.getText());
 					fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 					int returnVal = fc.showOpenDialog(runDialog);
 					if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -304,7 +304,6 @@ public class RunDialog extends Dialog implements WindowListener{
 				Runtime obj = null;
 				process = Runtime.getRuntime().exec("cmd.exe /c start " + pathToTorXakis + "\\txsserver.exe " + port);
 				BufferedWriter writeer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-//		        writeer.write("dir");
 				writeer.flush();
 			} catch (IOException e) {
 				System.out.println("FROM CATCH" + e.toString());
