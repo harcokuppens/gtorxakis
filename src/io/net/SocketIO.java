@@ -47,11 +47,12 @@ public class SocketIO {
 	}
 
 	public void startTorXakis(String filename, String model, String connection, int iterations, TorXakisType type){
-			String input;
 			writer.println("INIT " + filename);
+			System.out.println("INIT "+ filename);
 			writer.println(type.getInitCommand(model, connection));
 			writer.println(type.getRunCommand(iterations));
 			writer.println("QUIT");
+			writer.flush();
 	}
 	
 	public void close(){

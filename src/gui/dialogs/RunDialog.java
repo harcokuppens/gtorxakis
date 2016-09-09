@@ -302,7 +302,7 @@ public class RunDialog extends Dialog implements WindowListener{
 			try {
 				String ss = null;
 				Runtime obj = null;
-				process = Runtime.getRuntime().exec("cmd.exe /c start " + pathToTorXakis + "\\txsserver " + port);
+				process = Runtime.getRuntime().exec("cmd.exe /c start " + pathToTorXakis + "\\txsserver.exe " + port);
 				BufferedWriter writeer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
 //		        writeer.write("dir");
 				writeer.flush();
@@ -332,7 +332,7 @@ public class RunDialog extends Dialog implements WindowListener{
 				String connection = String.valueOf(connectDefinitions.getSelectedItem());
 				int iterations = (int) testNumber.getValue();
 				TorXakisType type = (TorXakisType) torxakisType.getSelectedItem();
-				startTorxakisServer("C:\\Users\\Tobias\\Desktop", port);
+				startTorxakisServer(pathField.getText(), port);
 				Session.getSession().getProject().saveAs(Session.TEMP_TXS, FileTypeAssociation.TorXakisExport.getDefaultFileType());
 				socketIO = new SocketIO(runDialog, port, host);
 				socketIO.startTorXakis(Session.TEMP_TXS, model, connection, iterations, type);
