@@ -336,7 +336,7 @@ public class RunDialog extends Dialog implements WindowListener{
 				Session.getSession().getProject().saveAs(Session.TEMP_TXS, FileTypeAssociation.TorXakisExport.getDefaultFileType());
 				socketIO = new SocketIO(runDialog, port, host);
 				socketIO.startTorXakis(Session.TEMP_TXS, model, connection, iterations, type);
-				TorXakisDialog td = new TorXakisDialog(socketIO.getReader());
+				TorXakisDialog td = new TorXakisDialog(runDialog, socketIO.getReader());
 				Runnable r = new Runnable(){
 					@Override
 					public void run() {
@@ -363,6 +363,10 @@ public class RunDialog extends Dialog implements WindowListener{
 
 	public void destroyCMD(){
 		if(process != null && process.isAlive()) process.destroy();
+	}
+	
+	public SocketIO getSocketIO(){
+		return socketIO;
 	}
 	
 	@Override

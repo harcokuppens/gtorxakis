@@ -17,7 +17,7 @@ public class TorXakisDialog extends Dialog{
 	private BufferedReader reader;
 	private Dialog dialog;
 	
-	public TorXakisDialog(BufferedReader reader){
+	public TorXakisDialog(RunDialog runDialog, BufferedReader reader){
 		this.reader = reader;
 		dialog = this;
 		setLayout(new BorderLayout());
@@ -28,6 +28,7 @@ public class TorXakisDialog extends Dialog{
 		close.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				runDialog.getSocketIO().close();
 				dialog.dispose();
 			}
 		});
