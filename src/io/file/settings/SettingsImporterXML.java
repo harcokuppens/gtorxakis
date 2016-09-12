@@ -18,7 +18,7 @@ import core.Version;
 
 public class SettingsImporterXML {
 
-	public static SessionSettings importSettings(String path) throws FileNotFoundException, JDOMException, IOException {
+	public static SessionSettings importSettings(String path) {
 		SAXBuilder SAXBuilder = new SAXBuilder();
 		File file = new File(path);
 		if(!file.exists()) return SessionSettings.getDefaultSettings();
@@ -39,7 +39,7 @@ public class SettingsImporterXML {
 			String connection = settingsElement.getChild(SessionSettings.CONNECTION).getText();
 			String directory = settingsElement.getChild(SessionSettings.TORXAKIS_DIRECTORY).getText();
 			
-			TorXakisType type = TorXakisType.valueOf(settingsElement.getChild(SessionSettings.HOST).getText());
+			TorXakisType type = TorXakisType.valueOf(settingsElement.getChild(SessionSettings.TORXAKIS_TYPE).getText());
 			
 			return new SessionSettings(port, iterations, host, model, connection, type, directory);
 		}catch(Exception e){

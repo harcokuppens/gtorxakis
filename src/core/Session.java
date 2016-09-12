@@ -26,7 +26,7 @@ public class Session extends Observable {
 	public static boolean DEVMODE = true;
 	public static final String CONFIG_FILENAME = Environment.getApplicationDataFolder() + Environment.fileSeparator + "config.xml";
 	public static final String DEFAULT_PATH = Environment.getApplicationDataFolder() + Environment.fileSeparator + "data" + Environment.fileSeparator;
-	public static final String TEMP_TXS = Environment.getApplicationDataFolder() + Environment.fileSeparator + "temp.txs";
+	public static final String TEMP_TXS = Environment.getTempDataFolder() + Environment.fileSeparator + "temp.txs";
 	
 	private Project currentProject = null;
 	private Window window;
@@ -150,11 +150,7 @@ public class Session extends Observable {
 			e.printStackTrace();
 		}
 		
-		try {
-			settings = SettingsImporterXML.importSettings(this.CONFIG_FILENAME);
-		} catch (JDOMException | IOException e) {
-			settings = SessionSettings.getDefaultSettings();
-		}
+		settings = SettingsImporterXML.importSettings(this.CONFIG_FILENAME);
 //		new Logger();
 		window = new Window(this);
 		addObserver(window);
@@ -181,6 +177,7 @@ public class Session extends Observable {
 	}
 	
 	public SessionSettings getSettings(){
+		System.err.println(settings.getAttribute(SessionSettings.ITERATIONS));
 		return settings;
 	}
 	
