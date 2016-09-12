@@ -72,6 +72,7 @@ public class GraphInterface extends Observable implements ClipboardOwner {
 	public void propertiesChanged(){
 		setChanged();
 		notifyObservers(selectedElements);
+		Session.getSession().getWindow().getSiteBar().refresh();
 	}
 	
 	public Graph getGraph() {

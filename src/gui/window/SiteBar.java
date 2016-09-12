@@ -164,6 +164,13 @@ public class SiteBar extends JPanel{
 			gateBar.initView(model);
 		}
 		
+		public void refreshList(){
+			if(model != null){
+				ArrayList<Gate> gates = (ArrayList<Gate>) model.getGates().getGates();
+				refreshList(gates);
+			}
+		}
+		
 		private void refreshList(ArrayList<Gate> gates){
 			centerPanel.removeAll();
 			container = new JPanel(new GridBagLayout());
@@ -210,8 +217,7 @@ public class SiteBar extends JPanel{
 		
 		public void initView(Model model){
 			this.model = model;
-			ArrayList<Gate> gates = (ArrayList<Gate>) model.getGates().getGates();
-			refreshList(gates);
+			refreshList();
 		}
 		
 		@Override
@@ -310,6 +316,14 @@ public class SiteBar extends JPanel{
 			variableBar.initView(model);
 		}
 		
+		public void refreshList(){
+			if(model != null){
+				ArrayList<Variable> variables = (ArrayList<Variable>) model.getVariables().getVariables();
+				refreshList(variables);
+			}
+		}
+		
+		
 		private void refreshList(ArrayList<Variable> variables){
 			centerPanel.removeAll();
 			container = new JPanel(new GridBagLayout());
@@ -361,8 +375,7 @@ public class SiteBar extends JPanel{
 
 		public void initView(Model newDefinition) {
 			this.model = newDefinition;
-			ArrayList<Variable> variables = (ArrayList<Variable>) model.getVariables().getVariables();
-			refreshList(variables);
+			refreshList();
 		}
 		
 		@Override
@@ -423,6 +436,11 @@ public class SiteBar extends JPanel{
 			JTextField textField = (JTextField) e.getSource();
 			variableBar.changeVariableAction(id, command, textField.getText());
 		}
+	}
+
+	public void refresh() {
+		gateBar.refreshList();
+		variableBar.refreshList();
 	}
 	
 

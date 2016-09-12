@@ -238,6 +238,7 @@ public class Model extends Definition {
 	
 	@Override
 	public String getDefinitionAsText() {
+		if(graph.getStartState() == null) return "";
 		StringBuilder sb = new StringBuilder();
 		sb.append("STAUTDEF\t" + this.name + " " + getGatesText() + "()\n");
 		sb.append(" ::=\n");
@@ -246,8 +247,11 @@ public class Model extends Definition {
 			sb.append("\tVAR\t" + getVariablesText() + "\n");
 		}
 		sb.append("\tINIT\t" + graph.getStartState().getName() + "\t{ " + getInitVariables() + " }\n");
-		sb.append("\tTRANS");
-		sb.append(getTransitions()+"\n");
+		String transitions = getTransitions();
+		if(!transitions.trim().equals("")){
+			sb.append("\tTRANS");
+			sb.append(transitions+"\n");			
+		}
 		sb.append("ENDDEF");
 		return sb.toString();
 	}

@@ -37,7 +37,7 @@ public class TorXakisDialog extends Dialog{
 		add(dummy, BorderLayout.SOUTH);
 		this.setSizeByScreenSize(0.5);
 		this.centerOnScreen();
-		this.setModal(true);
+//		this.setModal(true);
 	}
 	
 	public void readLines(){

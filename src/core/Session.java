@@ -3,13 +3,18 @@ package core;
 import gui.control.DrawController;
 import gui.draw.GraphInterface;
 import gui.window.Window;
+import io.file.settings.SettingsExporterXML;
+import io.file.settings.SettingsImporterXML;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Observable;
 
 import javax.swing.JComponent;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import org.jdom2.JDOMException;
 
 import model.Project;
 import util.Environment;
@@ -20,12 +25,14 @@ public class Session extends Observable {
 	public static final String PRODUCT_ID = "3";
 	public static boolean DEVMODE = true;
 	public static final String CONFIG_FILENAME = Environment.getApplicationDataFolder() + Environment.fileSeparator + "config.xml";
-	public static final String DEFAULT_PATH = "/Users/tobias/Desktop";
+	public static final String DEFAULT_PATH = Environment.getApplicationDataFolder() + Environment.fileSeparator + "data" + Environment.fileSeparator;
 	public static final String TEMP_TXS = Environment.getApplicationDataFolder() + Environment.fileSeparator + "temp.txs";
 	
 	private Project currentProject = null;
 	private Window window;
 	private Locale locale = Locale.ENGLISH;
+	
+	private SessionSettings settings;
 	
 	private static Session instance;
 
@@ -143,7 +150,12 @@ public class Session extends Observable {
 			e.printStackTrace();
 		}
 		
-		new Logger();
+		try {
+			settings = SettingsImporterXML.importSettings(this.CONFIG_FILENAME);
+		} catch (JDOMException | IOException e) {
+			settings = SessionSettings.getDefaultSettings();
+		}
+//		new Logger();
 		window = new Window(this);
 		addObserver(window);
 	}
@@ -160,11 +172,21 @@ public class Session extends Observable {
 			}
 		}
 		// point of no return
+		SettingsExporterXML.exportSettings(settings, this.CONFIG_FILENAME);
 		System.exit(0);
 	}
 
 	public String getDefaultPath() {
 		return DEFAULT_PATH;
+	}
+	
+	public SessionSettings getSettings(){
+		return settings;
+	}
+	
+	public void setSettings(SessionSettings settings){
+		this.settings = settings;
+		SettingsExporterXML.exportSettings(settings, this.CONFIG_FILENAME);
 	}
 
 }

@@ -20,7 +20,7 @@ public class TextualDefinition extends Definition{
 		CONST("CONST Definition", DEFAULT_CONST_DEF, "CONSTDEF"),
 		FUNC("FUNC Definition", DEFAULT_FUNC_DEF, "FUNCDEF"),
 		MODEL("MODEL Definition", DEFAULT_MODEL_DEF, "MODELDEF"),
-		CNECTDEF("CNECTDEF Definition", DEFAULT_CNECT_DEF, "CNECTDEF"),
+		CNECTDEF("CNECT Definition", DEFAULT_CNECT_DEF, "CNECTDEF"),
 		PROC("PROC Definition", DEFAULT_PROC_DEF, "PROCDEF");
 		
 		private String name, 
@@ -29,7 +29,8 @@ public class TextualDefinition extends Definition{
 		
 		private DefType(String name, String defaultDef, String identifier){
 			this.name = name;
-			this.defaultDef = defaultDef;
+//			this.defaultDef = defaultDef;
+			this.defaultDef = "";
 			this.identifier = identifier;
 		}
 		

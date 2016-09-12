@@ -108,7 +108,7 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 //			sd.setVisible(true);
 			break;
 		case RUN:
-			RunDialog rd = new RunDialog();
+			RunDialog rd = new RunDialog(Session.getSession().getSettings());
 			rd.setVisible(true);
 			break;
 		case ADD_MODEL:

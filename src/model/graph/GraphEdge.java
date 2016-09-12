@@ -114,11 +114,10 @@ public class GraphEdge implements Configurable{
 			boolean hasCondition = !t.getCondition().equals("");
 			boolean hasAction = !t.getAction().equals("");
 			if(hasCondition){
-				sb.append("if("+t.getCondition()+")");
+				sb.append("[[ "+t.getCondition()+" ]] ");
 			}
-			if(hasCondition) sb.append(" → ");
 			sb.append(t.getChannel());
-			if(hasAction)sb.append(" {" + t.getAction() + "}");
+			if(hasAction)sb.append(" { " + t.getAction() + " }");
 			i++;
 			if(i < transitions.size()){
 				sb.append("\n");

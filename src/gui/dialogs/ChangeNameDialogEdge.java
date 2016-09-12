@@ -54,7 +54,9 @@ public class ChangeNameDialogEdge extends Dialog {
 		transitions = new ArrayList<Transition>((ArrayList<Transition>) drawableEdge.getEdge().getAttribute(GraphEdge.ATTRIBUTE_TRANSITIONS));
 		this.setMinimumSize(new Dimension(700,300));
 		this.setPreferredSize(new Dimension(700,300));
+		this.setModal(true);
 		init();
+		this.pack();
 	}
 	
 	public void init(){

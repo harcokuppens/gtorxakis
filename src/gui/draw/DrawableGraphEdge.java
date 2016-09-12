@@ -368,7 +368,6 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 
 	@Override
 	public String getAttribute(String cmd) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

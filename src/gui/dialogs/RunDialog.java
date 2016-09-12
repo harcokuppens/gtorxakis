@@ -17,6 +17,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -32,6 +33,7 @@ import javax.swing.SwingConstants;
 import model.TextualDefinition;
 import util.Environment;
 import core.Session;
+import core.SessionSettings;
 import io.file.FileType;
 import io.file.FileTypeAssociation;
 import io.net.SocketIO;
@@ -48,9 +50,7 @@ public class RunDialog extends Dialog implements WindowListener{
 	private JComboBox<TorXakisType> torxakisType;
 	private SocketIO socketIO;
 	private Process process;
-	
-	public static final int PORT = 7220;
-	public static final String HOST = "localhost";
+	private SessionSettings sessionSettings;
 	
 	public static enum TorXakisType{
 		TESTER("TESTER", "TEST"),
@@ -79,7 +79,8 @@ public class RunDialog extends Dialog implements WindowListener{
 		}
 	}
 	
-	public RunDialog(){
+	public RunDialog(SessionSettings settings){
+		this.sessionSettings = settings;
 		runDialog = this;
 		init();
 	}
@@ -134,15 +135,15 @@ public class RunDialog extends Dialog implements WindowListener{
 		gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 		gbc.insets = new Insets(5,5,5,5);
 				
-//		JLabel programLabel = new JLabel("Host");
-//		panel.add(programLabel, gbc);
-//		
-//		gbc.gridx++;
-//		gbc.weightx = 0.6;
-//		gbc.gridwidth = 2;
-//		programField = new JTextField("localhost");
-//		programField.setHorizontalAlignment(SwingConstants.RIGHT);
-//		panel.add(programField, gbc);
+		JLabel programLabel = new JLabel("Host");
+		panel.add(programLabel, gbc);
+		
+		gbc.gridx++;
+		gbc.weightx = 0.6;
+		gbc.gridwidth = 2;
+		programField = new JTextField(sessionSettings.getAttribute(SessionSettings.HOST));
+		programField.setHorizontalAlignment(SwingConstants.RIGHT);
+		panel.add(programField, gbc);
 		
 		gbc.gridy++;
 		gbc.gridx = 0;
@@ -154,7 +155,8 @@ public class RunDialog extends Dialog implements WindowListener{
 		gbc.gridx++;
 		gbc.weightx = 1;
 		gbc.gridwidth = 2;
-		portNumber = new JSpinner(new SpinnerNumberModel(7220, 0, 250000, 1));
+		int port = Integer.valueOf(sessionSettings.getAttribute(SessionSettings.PORT));
+		portNumber = new JSpinner(new SpinnerNumberModel(port, 0, 250000, 1));
 		JSpinner.NumberEditor editor = new JSpinner.NumberEditor(portNumber, "#"); 
 		portNumber.setEditor(editor);
 		panel.add(portNumber, gbc);
@@ -167,7 +169,7 @@ public class RunDialog extends Dialog implements WindowListener{
 		
 		gbc.gridy++;
 		gbc.gridwidth = 2;
-		pathField = new JTextField(Session.DEFAULT_PATH, 20);
+		pathField = new JTextField(sessionSettings.getAttribute(SessionSettings.TORXAKIS_DIRECTORY), 20);
 		panel.add(pathField, gbc);
 		
 		JButton btnChoose = new JButton("Choose");
@@ -231,9 +233,12 @@ public class RunDialog extends Dialog implements WindowListener{
 		
 		modelDefinitions = new JComboBox<String>();
 		System.out.println(Session.getSession().getProject().getName());
-		for(String s : Session.getSession().getProject().getDefinitionsByTypeDef(TextualDefinition.DefType.MODEL)){
+		ArrayList<String> models = Session.getSession().getProject().getDefinitionsByTypeDef(TextualDefinition.DefType.MODEL);
+		for(String s : models){
 			modelDefinitions.addItem(s);
 		}
+		String savedModel = sessionSettings.getAttribute(SessionSettings.MODEL);
+		if(models.contains(savedModel)) modelDefinitions.setSelectedItem(savedModel);
 		panel.add(modelDefinitions, gbc);
 		gbc.gridy++;
 		gbc.gridx = 0;
@@ -245,9 +250,12 @@ public class RunDialog extends Dialog implements WindowListener{
 		gbc.weightx = 0.6;
 		
 		connectDefinitions = new JComboBox<String>();
-		for(String s : Session.getSession().getProject().getDefinitionsByTypeDef(TextualDefinition.DefType.CNECTDEF)){
+		ArrayList<String> connections = Session.getSession().getProject().getDefinitionsByTypeDef(TextualDefinition.DefType.CNECTDEF);
+		for(String s : connections){
 			connectDefinitions.addItem(s);
 		}
+		String savedConnection = sessionSettings.getAttribute(SessionSettings.MODEL);
+		if(models.contains(savedConnection)) modelDefinitions.setSelectedItem(savedConnection);
 		panel.add(connectDefinitions, gbc);
 		
 		return panel;
@@ -276,6 +284,7 @@ public class RunDialog extends Dialog implements WindowListener{
 		torxakisType.addItem(TorXakisType.TESTER);
 		torxakisType.addItem(TorXakisType.SIMULATOR);
 		torxakisType.addItem(TorXakisType.STEPPER);
+		torxakisType.setSelectedItem(TorXakisType.valueOf(sessionSettings.getAttribute(SessionSettings.TORXAKIS_TYPE)));
 		panel.add(torxakisType, gbc);
 		gbc.gridy++;
 		gbc.gridx = 0;
@@ -286,8 +295,8 @@ public class RunDialog extends Dialog implements WindowListener{
 		gbc.gridx++;
 		gbc.weightx = 0.6;
 		
-		
-		testNumber = new JSpinner(new SpinnerNumberModel(1000, 0, null, 1));
+		int iterations = Integer.valueOf(sessionSettings.getAttribute(SessionSettings.ITERATIONS));
+		testNumber = new JSpinner(new SpinnerNumberModel(iterations, 0, null, 1));
 		JSpinner.NumberEditor editor = new JSpinner.NumberEditor(testNumber, "#"); 
 		testNumber.setEditor(editor);
 		panel.add(testNumber, gbc);
@@ -321,17 +330,20 @@ public class RunDialog extends Dialog implements WindowListener{
 	
 	public JPanel getButtonPanel(){
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		JButton save = new JButton("Run");
+		JButton save = new JButton("Save & Run");
 		save.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int port = (int) portNumber.getValue();
-				String host = HOST;
+				String host = programField.getText();
 				String model = String.valueOf(modelDefinitions.getSelectedItem());
 				String connection = String.valueOf(connectDefinitions.getSelectedItem());
 				int iterations = (int) testNumber.getValue();
 				TorXakisType type = (TorXakisType) torxakisType.getSelectedItem();
-				startTorxakisServer(pathField.getText(), port);
+				String directory = pathField.getText();
+				SessionSettings settings = new SessionSettings(port, iterations, host, model, connection, type, directory);
+				Session.getSession().setSettings(settings);
+				startTorxakisServer(directory, port);
 				Session.getSession().getProject().saveAs(Session.TEMP_TXS, FileTypeAssociation.TorXakisExport.getDefaultFileType());
 				socketIO = new SocketIO(runDialog, port, host);
 				socketIO.startTorXakis(Session.TEMP_TXS, model, connection, iterations, type);

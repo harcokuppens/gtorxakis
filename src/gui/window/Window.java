@@ -523,7 +523,7 @@ public class Window extends JFrame implements Observer {
 		return !(returnValue == JOptionPane.CANCEL_OPTION);
 	}
 
-	public Session getSession() {
-		return this.session;
+	public SiteBar getSiteBar(){
+		return siteBar;
 	}
 }
