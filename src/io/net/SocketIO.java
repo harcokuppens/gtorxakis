@@ -22,6 +22,9 @@ public class SocketIO {
 	private BufferedReader reader;
 	private RunDialog runDialog;
 	
+	private boolean started = false;
+	private TorXakisType currentType;
+	
 	public SocketIO(RunDialog runDialog,int port, String host){
 		this.host = host;
 		this.port = port;
@@ -46,13 +49,35 @@ public class SocketIO {
 		return reader;
 	}
 
-	public void startTorXakis(String filename, String model, String connection, int iterations, TorXakisType type){
-			writer.println("INIT " + filename);
-			System.out.println("INIT "+ filename);
-			writer.println(type.getInitCommand(model, connection));
-			writer.println(type.getRunCommand(iterations));
-			writer.println("QUIT");
-			writer.flush();
+	public boolean hasStarted(){
+		return started;
+	}
+	
+	public boolean typeChanged(TorXakisType type){
+		return !type.equals(currentType);
+	}
+	
+	public void changeTorXakisType(TorXakisType type, String model, String connection){
+		writer.println("STOP");
+		currentType = type;
+		writer.println(type.getInitCommand(model, connection));
+		writer.flush();
+	}
+	
+	public void run(int iterations){
+		writer.println(currentType.getRunCommand(iterations));
+		writer.flush();
+	}
+	
+	public void startTorXakis(String filename){
+		started = true;
+		writer.println("INIT " + filename);
+	}
+	
+	public void quitTorXakis(){
+		writer.println("QUIT");
+		writer.flush();
+		started = false;
 	}
 	
 	public void close(){

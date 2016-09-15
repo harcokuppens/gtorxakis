@@ -1,5 +1,6 @@
 package gui.dialogs;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
@@ -48,6 +49,9 @@ public class RunDialog extends Dialog implements WindowListener{
 	private JComboBox<String> connectDefinitions,
 							  modelDefinitions;
 	private JComboBox<TorXakisType> torxakisType;
+	private JPanel westPanel;
+	
+	private TorXakisPanel torxakisPanel;
 	private SocketIO socketIO;
 	private Process process;
 	private SessionSettings sessionSettings;
@@ -87,9 +91,11 @@ public class RunDialog extends Dialog implements WindowListener{
 
 	public void init(){
 		setTitle("Run project with TorXakis");
-		setSizeByScreenSize(0.3, 0.5);
-		centerOnScreen();
-		setLayout(new GridBagLayout());
+//		setSizeByScreenSize(0.3, 0.5);
+//		centerOnScreen();
+		setLayout(new BorderLayout());
+		westPanel = new JPanel();
+		westPanel.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		this.setModal(true);
 		
@@ -101,23 +107,25 @@ public class RunDialog extends Dialog implements WindowListener{
 		gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 		gbc.insets = new Insets(5,5,5,5);
 		
-		add(this.getConConfigPanel(), gbc);
+		westPanel.add(this.getConConfigPanel(), gbc);
 		gbc.gridy++;
 		
-		add(this.getProjectConfigPanel(), gbc);
+		westPanel.add(this.getProjectConfigPanel(), gbc);
 		gbc.gridy++;
 		
-		add(this.getRunConfigPanel(), gbc);
+		westPanel.add(this.getRunConfigPanel(), gbc);
 		gbc.gridy++;
 
-		add(this.getButtonPanel(), gbc);
+		westPanel.add(this.getButtonPanel(), gbc);
 		gbc.gridy++;
 		
 		gbc.gridy++;
 		gbc.gridx = 0;
+		add(westPanel, BorderLayout.WEST);
+		
+		torxakisPanel = new TorXakisPanel();
+		add(torxakisPanel, BorderLayout.CENTER);
 		this.pack();
-		this.setMinimumSize(new Dimension(300,200));
-		this.setPreferredSize(new Dimension(300,200));
 		this.setResizable(false);
 		this.centerOnScreen();
 	}
@@ -343,31 +351,57 @@ public class RunDialog extends Dialog implements WindowListener{
 				String directory = pathField.getText();
 				SessionSettings settings = new SessionSettings(port, iterations, host, model, connection, type, directory);
 				Session.getSession().setSettings(settings);
-				startTorxakisServer(directory, port);
-				Session.getSession().getProject().saveAs(Session.TEMP_TXS, FileTypeAssociation.TorXakisExport.getDefaultFileType());
-				socketIO = new SocketIO(runDialog, port, host);
-				socketIO.startTorXakis(Session.TEMP_TXS, model, connection, iterations, type);
-				TorXakisDialog td = new TorXakisDialog(runDialog, socketIO.getReader());
-				Runnable r = new Runnable(){
-					@Override
-					public void run() {
-						td.readLines();
-					}
-					
-				};
-				(new Thread(r)).start();
-				td.setVisible(true);
+				if(socketIO == null){
+					torxakisPanel.clear();
+					System.out.println("Socket == null");
+					startTorxakisServer(directory, port);
+					Session.getSession().getProject().saveAs(Session.TEMP_TXS, FileTypeAssociation.TorXakisExport.getDefaultFileType());
+					socketIO = new SocketIO(runDialog, port, host);
+				}
+				
+				if(!socketIO.hasStarted()){
+					socketIO.startTorXakis(Session.TEMP_TXS);
+				}
+				if(socketIO.typeChanged(type)){
+					socketIO.changeTorXakisType(type, model, connection);
+				}
+				socketIO.run(iterations);
+				
+				if(!torxakisPanel.isReading()){
+					Runnable r = new Runnable(){
+						@Override
+						public void run() {
+							torxakisPanel.readLines(socketIO.getReader());
+						}
+						
+					};
+					(new Thread(r)).start();
+				}
 			}
 		});
+		JButton stop = new JButton("Stop");
+		stop.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(socketIO != null)
+					socketIO.close();
+				destroyCMD();
+				socketIO = null;
+			}
+		});
+		
 		JButton cancel = new JButton("Close");
 		cancel.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if(socketIO != null)
+					socketIO.close();
 				destroyCMD();
 				runDialog.dispose();
 			}
 		});
 		panel.add(cancel);
+		panel.add(stop);
 		panel.add(save);
 		return panel;
 	}
@@ -382,14 +416,10 @@ public class RunDialog extends Dialog implements WindowListener{
 	
 	@Override
 	public void windowActivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void windowClosed(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -399,25 +429,17 @@ public class RunDialog extends Dialog implements WindowListener{
 
 	@Override
 	public void windowDeactivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void windowIconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void windowOpened(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 }
