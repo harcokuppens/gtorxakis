@@ -18,6 +18,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.SocketException;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -25,6 +26,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -123,7 +125,7 @@ public class RunDialog extends Dialog implements WindowListener{
 		gbc.gridx = 0;
 		add(westPanel, BorderLayout.WEST);
 		
-		torxakisPanel = new TorXakisPanel();
+		torxakisPanel = new TorXakisPanel(this);
 		add(torxakisPanel, BorderLayout.CENTER);
 		this.pack();
 		this.setResizable(false);
@@ -371,7 +373,15 @@ public class RunDialog extends Dialog implements WindowListener{
 					Runnable r = new Runnable(){
 						@Override
 						public void run() {
-							torxakisPanel.readLines(socketIO.getReader());
+							try{
+								torxakisPanel.readLines(socketIO.getReader());
+							}catch (Exception e){
+								System.err.println("CATCH FIRED");
+								runDialog.shutdown();
+								JOptionPane.showMessageDialog(runDialog, "Possible problems:\n"
+										+ "\t\t - The SUT is not running at the specified host/port\n"
+										+ "\t\t - Another instance of TorXakis is already running at the same port", "Communication error", JOptionPane.ERROR_MESSAGE);
+								}
 						}
 						
 					};
@@ -383,10 +393,7 @@ public class RunDialog extends Dialog implements WindowListener{
 		stop.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(socketIO != null)
-					socketIO.close();
-				destroyCMD();
-				socketIO = null;
+				shutdown();
 			}
 		});
 		
@@ -394,9 +401,7 @@ public class RunDialog extends Dialog implements WindowListener{
 		cancel.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(socketIO != null)
-					socketIO.close();
-				destroyCMD();
+				shutdown();
 				runDialog.dispose();
 			}
 		});
@@ -404,6 +409,13 @@ public class RunDialog extends Dialog implements WindowListener{
 		panel.add(stop);
 		panel.add(save);
 		return panel;
+	}
+	
+	public void shutdown(){
+		if(socketIO != null)
+			socketIO.close();
+		destroyCMD();
+		socketIO = null;
 	}
 
 	public void destroyCMD(){

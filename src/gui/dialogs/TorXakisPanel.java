@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.SocketException;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,6 +20,8 @@ import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
 public class TorXakisPanel extends JPanel{
+	
+	private RunDialog dialog;
 	
 	private JTextPane textPane;
 	private JScrollPane scrollPane;
@@ -41,7 +44,8 @@ public class TorXakisPanel extends JPanel{
 		}
 	}
 	
-	public TorXakisPanel(){
+	public TorXakisPanel(RunDialog dialog){
+		this.dialog = dialog;
 		setLayout(new BorderLayout());
 		scrollPane = new JScrollPane();
 		textPane = new JTextPane();
@@ -54,20 +58,16 @@ public class TorXakisPanel extends JPanel{
 		this.setPreferredSize(new Dimension(600,300));
 	}
 	
-	public void readLines(BufferedReader reader){
+	public void readLines(BufferedReader reader) throws SocketException, IOException{
 		String line;
 		isReading = true;
-		try {
-			while((line = reader.readLine()) != null){
+		while((line = reader.readLine()) != null){
 //				textArea.insertComponent(new JLabel("<html><strong>"+getLine(line)+"</strong></br></html>"));
 //				textArea.setCaretPosition(textArea.getText().length());
 //				textPane.append(getLine(line) + "\n");
-				addLine(line+"\n");
-				JScrollBar vertical = scrollPane.getVerticalScrollBar();
-				vertical.setValue( vertical.getMaximum() );
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+			addLine(line+"\n");
+			JScrollBar vertical = scrollPane.getVerticalScrollBar();
+			vertical.setValue( vertical.getMaximum() );
 		}
 	}
 	
