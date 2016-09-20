@@ -58,6 +58,8 @@ public class RunDialog extends Dialog implements WindowListener{
 	private Process process;
 	private SessionSettings sessionSettings;
 	
+	private boolean stopped = false;
+	
 	public static enum TorXakisType{
 		TESTER("TESTER", "TEST"),
 		SIMULATOR("SIMULATOR", "SIM"),
@@ -376,12 +378,16 @@ public class RunDialog extends Dialog implements WindowListener{
 							try{
 								torxakisPanel.readLines(socketIO.getReader());
 							}catch (Exception e){
-								System.err.println("CATCH FIRED");
-								runDialog.shutdown();
-								JOptionPane.showMessageDialog(runDialog, "Possible problems:\n"
-										+ "\t\t - The SUT is not running at the specified host/port\n"
-										+ "\t\t - Another instance of TorXakis is already running at the same port", "Communication error", JOptionPane.ERROR_MESSAGE);
+								if(!stopped){
+									System.err.println("CATCH FIRED");
+									runDialog.shutdown();
+									JOptionPane.showMessageDialog(runDialog, "Possible problems:\n"
+											+ "\t\t - TorXakis server is closed.\n"
+											+ "\t\t - The SUT is not running at the specified host/port.\n"
+											+ "\t\t - Another instance of TorXakis is already running at the same port.", "Communication error", JOptionPane.ERROR_MESSAGE);
 								}
+								stopped = false;
+							}
 						}
 						
 					};
@@ -412,6 +418,7 @@ public class RunDialog extends Dialog implements WindowListener{
 	}
 	
 	public void shutdown(){
+		stopped = true;
 		if(socketIO != null)
 			socketIO.close();
 		destroyCMD();

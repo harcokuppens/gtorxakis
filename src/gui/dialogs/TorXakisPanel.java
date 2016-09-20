@@ -127,4 +127,5 @@ public class TorXakisPanel extends JPanel{
 		StyleConstants.setForeground(s, new Color(0,0,0));
 	}
 
+
 }
