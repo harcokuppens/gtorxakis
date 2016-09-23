@@ -31,7 +31,8 @@ public class TorXakisPanel extends JPanel{
 	private enum AnswerType{
 		PACK("black"),
 		NACK("red"),
-		FACK("green");
+		FACK("green"),
+		ERROR("red");
 		
 		private String color;
 		
@@ -75,11 +76,18 @@ public class TorXakisPanel extends JPanel{
 		if(line.trim().equals("") || line.trim().equals("\n")) {
 			return;
 		}
-		
-		AnswerType type = AnswerType.valueOf(line.substring(0,4));
+		AnswerType type;
+		String message;
+		try{
+			type = AnswerType.valueOf(line.substring(0,4));
+			message = line.substring(5);
+		}catch(Exception e){
+			type = AnswerType.ERROR;
+			message = line;
+		}
 		StyledDocument doc = textPane.getStyledDocument();
 		try {
-			doc.insertString(doc.getLength(), line.substring(5), doc.getStyle(type.getColor()));
+			doc.insertString(doc.getLength(), message, doc.getStyle(type.getColor()));
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}

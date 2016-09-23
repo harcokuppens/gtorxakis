@@ -378,6 +378,7 @@ public class RunDialog extends Dialog implements WindowListener{
 							try{
 								torxakisPanel.readLines(socketIO.getReader());
 							}catch (Exception e){
+								e.printStackTrace();
 								if(!stopped){
 									System.err.println("CATCH FIRED");
 									runDialog.shutdown();

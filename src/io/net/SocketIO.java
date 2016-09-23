@@ -58,7 +58,7 @@ public class SocketIO {
 	}
 	
 	public void changeTorXakisType(TorXakisType type, String model, String connection){
-		writer.println("STOP");
+		if(currentType != null) writer.println("STOP");
 		currentType = type;
 		writer.println(type.getInitCommand(model, connection));
 		writer.flush();
@@ -71,6 +71,7 @@ public class SocketIO {
 	
 	public void startTorXakis(String filename){
 		started = true;
+		writer.println("START");
 		writer.println("INIT " + filename);
 	}
 	
