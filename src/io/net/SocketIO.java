@@ -81,6 +81,11 @@ public class SocketIO {
 		started = false;
 	}
 	
+	public void sendCommand(String cmd){
+		writer.println(cmd);
+		writer.flush();
+	}
+	
 	public void close(){
 		try {
 			writer.close();

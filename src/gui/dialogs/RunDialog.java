@@ -352,13 +352,13 @@ public class RunDialog extends Dialog implements WindowListener{
 				String connection = String.valueOf(connectDefinitions.getSelectedItem());
 				int iterations = (int) testNumber.getValue();
 				TorXakisType type = (TorXakisType) torxakisType.getSelectedItem();
-				String directory = pathField.getText();
-				SessionSettings settings = new SessionSettings(port, iterations, host, model, connection, type, directory);
+				File f = new File(pathField.getText());
+				SessionSettings settings = new SessionSettings(port, iterations, host, model, connection, type, f.getPath());
 				Session.getSession().setSettings(settings);
 				if(socketIO == null){
 					torxakisPanel.clear();
 					System.out.println("Socket == null");
-					startTorxakisServer(directory, port);
+					startTorxakisServer(f.getPath(), port);
 					Session.getSession().getProject().saveAs(Session.TEMP_TXS, FileTypeAssociation.TorXakisExport.getDefaultFileType());
 					socketIO = new SocketIO(runDialog, port, host);
 				}
@@ -378,7 +378,7 @@ public class RunDialog extends Dialog implements WindowListener{
 							try{
 								torxakisPanel.readLines(socketIO.getReader());
 							}catch (Exception e){
-								e.printStackTrace();
+//								e.printStackTrace();
 								if(!stopped){
 									System.err.println("CATCH FIRED");
 									runDialog.shutdown();

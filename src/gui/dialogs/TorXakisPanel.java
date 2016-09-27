@@ -2,16 +2,23 @@ package gui.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.SocketException;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
@@ -55,10 +62,31 @@ public class TorXakisPanel extends JPanel{
 		textPane.setEditable(false);
 		scrollPane.setViewportView(textPane);
 		this.add(scrollPane, BorderLayout.CENTER);
+		this.add(createCommandPanel(), BorderLayout.SOUTH);
 		this.setMinimumSize(new Dimension(600,300));
 		this.setPreferredSize(new Dimension(600,300));
 	}
 	
+	private JPanel createCommandPanel() {
+		JPanel temp = new JPanel(new BorderLayout());
+		JTextField commandLine = new JTextField("", 30);
+		JButton send = new JButton("Send");
+		send.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try{
+					dialog.getSocketIO().sendCommand(commandLine.getText());
+				}catch(NullPointerException e){
+					JOptionPane.showMessageDialog(dialog, "Communication error with TorXakis. Are you sure that TorXakis is running?");
+
+				}
+			}
+		});
+		temp.add(commandLine, BorderLayout.CENTER);
+		temp.add(send, BorderLayout.EAST);
+		return temp;
+	}
+
 	public void readLines(BufferedReader reader) throws SocketException, IOException{
 		String line;
 		isReading = true;
