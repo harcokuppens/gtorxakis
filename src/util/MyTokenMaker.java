@@ -253,6 +253,11 @@ public class MyTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("MAP", Token.RESERVED_WORD_2);
 		tokenMap.put("SOCK", Token.RESERVED_WORD_2);
 		tokenMap.put("HOST", Token.RESERVED_WORD_2);
+		tokenMap.put("PORT", Token.RESERVED_WORD_2);
+		tokenMap.put("ENCODE", Token.RESERVED_WORD_2);
+		tokenMap.put("DECODE", Token.RESERVED_WORD_2);
+		tokenMap.put("CLIENTSOCK", Token.RESERVED_WORD_2);
+		tokenMap.put("SERVERSOCK", Token.RESERVED_WORD_2);
 		
 		tokenMap.put("String", Token.VARIABLE);
 		tokenMap.put("Int", Token.VARIABLE);
@@ -267,7 +272,16 @@ public class MyTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("-", Token.OPERATOR);
 		tokenMap.put("++", Token.OPERATOR);
 		tokenMap.put("->", Token.OPERATOR);
+		tokenMap.put("<-", Token.OPERATOR);
 		tokenMap.put("#", Token.OPERATOR);
+		tokenMap.put("##", Token.OPERATOR);
+		
+		tokenMap.put("LET", Token.PREPROCESSOR);
+		tokenMap.put("IF", Token.PREPROCESSOR);
+		tokenMap.put("ELSE", Token.PREPROCESSOR);
+		tokenMap.put("THEN", Token.PREPROCESSOR);
+		tokenMap.put("NI", Token.PREPROCESSOR);
+		tokenMap.put("FI", Token.PREPROCESSOR);
 		
 		tokenMap.put("IN", Token.PREPROCESSOR);
 		tokenMap.put("OUT", Token.PREPROCESSOR);
