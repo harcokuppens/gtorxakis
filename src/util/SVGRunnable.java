@@ -1,7 +1,6 @@
 package util;
 
 import gui.control.DrawController;
-import core.Session;
 
 import java.util.concurrent.Semaphore;
 

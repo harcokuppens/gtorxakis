@@ -45,20 +45,14 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 			PASTE = "paste",
 			DELETE = "delete",
 			SELECT_ALL = "selectall",
-			SETTINGS = "settings",
 			ADD_MODEL = "addModel",
 			ADD_PROC = "addProc",
 			RUN = "run",
-			SHOW_RESULTS = "showresults",
-			EXPORT_HTML = "exporthtml",
-			EXPORT_EXCEL = "exportexcel",
 			EXPORT_GRAPH_PNG = "exportgraphpng",
 			EXPORT_GRAPH_SVG = "exportgraphsvg",
 			EXPORT_GRAPH_JPG = "exportgraphjpg",
 			EXPORT_TORXAKIS = "exporttorxakis",
-			CHECK_UPDATES = "checkUpdates",
 			HELP = "help",
-			UPGRADE_LICENSE = "upgradeLicense",
 			ABOUT = "about";
 	
 	public WindowActionListener(Window w) {
@@ -73,7 +67,6 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
-//		JComponent item = (JComponent) e.getSource();
 		final Window window = Session.getSession().getWindow();
 		switch (cmd) {
 		case NEW:
@@ -103,28 +96,12 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 				}
 			})).start();
 			break;
-		case SETTINGS: 
-//			SettingsDialog sd = new SettingsDialog(window);
-//			sd.setVisible(true);
-			break;
 		case RUN:
 			RunDialog rd = new RunDialog(Session.getSession().getSettings());
 			rd.setVisible(true);
 			break;
 		case ADD_MODEL:
 			window.addModel();
-			break;
-//		case ADD_PROC:
-//			window.addProc();
-//			break;
-		case SHOW_RESULTS:
-//			showResultsAction(window.getCurrentModel());
-			break;
-		case EXPORT_HTML:
-//			ResultExportDialogHTML redh = new ResultExportDialogHTML(window, window.getCurrentModel());
-			break;
-		case EXPORT_EXCEL:
-//			ResultExportDialogExcel rede = new ResultExportDialogExcel(window, window.getCurrentModel());
 			break;
 		case EXPORT_GRAPH_PNG:
 			new GraphExportDialog(window, FileTypeAssociation.PngExport, (Model) window.getCurrentDefinition());

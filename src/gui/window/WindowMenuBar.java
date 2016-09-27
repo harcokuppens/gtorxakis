@@ -79,7 +79,6 @@ public class WindowMenuBar extends JMenuBar{
 		delete.setAccelerator(KeyStroke.getKeyStroke((Environment.OperatingSystem.equals(Environment.OS.Mac)) ? KeyEvent.VK_BACK_SPACE : KeyEvent.VK_DELETE, 0));
 		addMenuItem("Select all", edit, true, KeyEvent.VK_A, false, WindowActionListener.SELECT_ALL, null, inputListener);
 		edit.addSeparator();
-		addMenuItem("Settings", edit, true, -1, false, WindowActionListener.SETTINGS, "/icons/cog_edit.png", wat);
 		
 		//Run menu
 		JMenu run = addMenu("Run");
@@ -200,23 +199,11 @@ public class WindowMenuBar extends JMenuBar{
 		case WindowActionListener.ADD_MODEL:
 			addModel.setEnabled(b);
 			break;
-//		case WindowActionListener.ADD_PROC:
-//			addProc.setEnabled(b);
-//			break;
 		case WindowActionListener.UNDO:
 			undo.setEnabled(b);
 			break;
 		case WindowActionListener.REDO:
 			redo.setEnabled(b);
-			break;
-		case WindowActionListener.SHOW_RESULTS:
-			showResults.setEnabled(b);
-			break;
-		case WindowActionListener.EXPORT_HTML:
-			exportHTML.setEnabled(b);
-			break;
-		case WindowActionListener.EXPORT_EXCEL:
-			exportEXCEL.setEnabled(b);
 			break;
 		case WindowActionListener.SHOW_GRID:
 //			showGrid.setState(true);

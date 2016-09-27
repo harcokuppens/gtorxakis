@@ -16,12 +16,12 @@ public class ChangeNameDialogState extends ChangeNameDialog{
 	public ChangeNameDialogState(Model model, Selectable selectable, JFrame parent) {
 		super(model, selectable, parent, ChangeNameDialog.NODE);
 		this.dgn = (DrawableGraphState) selectable;
-		this.init(dgn.getNode().getName());
+		this.init(dgn.getState().getName());
 	}
 
 	@Override
 	public void success() {
-		GraphState[] objects = new GraphState[] {dgn.getNode()};
+		GraphState[] objects = new GraphState[] {dgn.getState()};
 		String[] cmd = new String[]{GraphState.ATTRIBUTE_NAME};
 		Object[][] oldValues = new String[1][objects.length];
 		for(int i = 0; i < objects.length; i++) {

@@ -47,11 +47,8 @@ import core.Session;
 /**
  * Handles the interaction between the user, the SVG graph, and the graph model
  * 
- * @author
- * 
  */
 public class GraphInterface extends Observable implements ClipboardOwner {
-	//Diese Variabele umbedingt auslagern!!! inkl. zugehoerige elemente - Lars
 	public static int ARROW_MARKER_SIZE = 5;
 	
 	private final Model model;
@@ -186,7 +183,7 @@ public class GraphInterface extends Observable implements ClipboardOwner {
 			ArrayList<DrawableGraphState> selectedNodes = getSelectedNodes();
 			int index = 0;
 			if(!selectedNodes.isEmpty()){
-				index = graph.getNodeIndex(selectedNodes.get(0).getNode()) + 1;
+				index = graph.getNodeIndex(selectedNodes.get(0).getState()) + 1;
 				clearSelection();
 				if(index >= graph.getStates().size()){
 					index = 0;
@@ -212,7 +209,7 @@ public class GraphInterface extends Observable implements ClipboardOwner {
 		ArrayList<DrawableGraphState> nodes = new ArrayList<DrawableGraphState>();
 		DrawableGraphState dn = new DrawableGraphState(doc, x, y);
 		if(this.getGraph().getStartState() == null){
-			dn.getNode().setAttribute(GraphState.ATTRIBUTE_START_STATE, true);
+			dn.getState().setAttribute(GraphState.ATTRIBUTE_START_STATE, true);
 		}
 		nodes.add(dn);
 		
@@ -282,8 +279,8 @@ public class GraphInterface extends Observable implements ClipboardOwner {
 				pasteEdges.add(dge);
 				int index_from = tg.getNodes().indexOf(dge.getEdge().getFrom().getDrawable());
 				int index_to = tg.getNodes().indexOf(dge.getEdge().getTo().getDrawable());
-				dge.getEdge().setFrom(pasteNodes.get(index_from).getNode());
-				dge.getEdge().setTo(pasteNodes.get(index_to).getNode());
+				dge.getEdge().setFrom(pasteNodes.get(index_from).getState());
+				dge.getEdge().setTo(pasteNodes.get(index_to).getState());
 				dge.invalidate();
 			}
 			
@@ -328,12 +325,12 @@ public class GraphInterface extends Observable implements ClipboardOwner {
 			if(s instanceof DrawableGraphState){
 				DrawableGraphState n = (DrawableGraphState)s;
 				nodeList.add(n);
-				for(GraphEdge e : n.getNode().getOutgoingEdges()){
+				for(GraphEdge e : n.getState().getOutgoingEdges()){
 					if(!edgeList.contains(e.getDrawable())){
 						edgeList.add(e.getDrawable());
 					}
 				}
-				for(GraphEdge e : n.getNode().getIncomingEdges()){
+				for(GraphEdge e : n.getState().getIncomingEdges()){
 					if(!edgeList.contains(e.getDrawable())){
 						edgeList.add(e.getDrawable());
 					}
@@ -549,8 +546,6 @@ public class GraphInterface extends Observable implements ClipboardOwner {
 
 	@Override
 	public void lostOwnership(Clipboard arg0, Transferable arg1) {
-		// Do nothing
-		
 	}
 
 	public void addCommentEvent(int x, int y, CommentType commentType) {

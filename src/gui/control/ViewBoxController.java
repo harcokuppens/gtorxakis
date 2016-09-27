@@ -1,14 +1,12 @@
 package gui.control;
 
+import gui.draw.GraphPanel;
+
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.util.concurrent.Semaphore;
-
-import gui.draw.GraphPanel;
-import gui.control.DrawController;
 
 import org.w3c.dom.svg.SVGDocument;
 
@@ -39,8 +37,6 @@ public class ViewBoxController {
 		vbm = new ViewBoxManipulator();
 		viewBox = fetchViewBox(d);
 		vbm.setAttributes(viewBox.x, viewBox.y, viewBox.width, viewBox.height);
-		// System.out.println("[ViewBoxController] Doc dimensions: " + docW + " " + docH);
-		// System.out.println("[ViewBoxController] Frame dimensions: " + frameW + " " + frameH);
 		focus(docW/2, docH/2);
 		
 	}
@@ -50,7 +46,6 @@ public class ViewBoxController {
 	}
 	
 	private void recalibrate() {
-		// System.out.println("[ViewBoxController] recalibrating...");
 		frameW = panel.getWidth();
 		frameH = panel.getHeight();
 		fr = (double) frameW / (double) frameH;
@@ -79,7 +74,6 @@ public class ViewBoxController {
 		}
 		rt.scale(scale, scale);
 		rt.translate(dx, dy);
-		// System.out.println("[ViewBoxController] applying RenderingTransform: " + rt);
 		panel.setRenderingTransform(rt);
 		panel.setRecenterOnResize(true);
 	}
@@ -102,7 +96,6 @@ public class ViewBoxController {
 			e.printStackTrace();
 			return null;
 		}
-//		System.out.println(p2);
 		return new Point((int) p2.getX(), (int) p2.getY());
 	}
 	
@@ -114,8 +107,6 @@ public class ViewBoxController {
 				attributes[i] = Integer.valueOf(s[i]);
 			}
 			Rectangle r = new Rectangle(attributes[0], attributes[1], getBaseWidth(), getBaseHeight());
-//			r.height = (int) ((double) r.width * aspectRatio);
-			// System.out.println("[ViewBoxController] found viewBox: " + r);
 			return r;
 		} catch(NullPointerException | NumberFormatException e) {
 			System.err.println("[ViewBoxController] Severe: The provided document does not have a viewbox attribute");
@@ -181,10 +172,8 @@ public class ViewBoxController {
 	 * @param y the y coordinate of the central point in graph coordinates
 	 */
 	private void focus(int x, int y) {
-		// System.out.println("Center at " + x + " " + y);
 		int posx = x - (viewBox.width/2);
 		int posy = y - (viewBox.height/2);
-//		System.out.println("Focussing on " + posx + " " + posy);
 		vbm.setPos(posx, posy);
 	}
 	
@@ -221,17 +210,14 @@ public class ViewBoxController {
 		}
 		
 		public void setAttributes(int x, int y, int w, int h) {
-//			System.out.println("entering: " + x +" "+ y +" "+ w +" "+ h);
 			viewBox.width = w; // boundLimiterW(w);
 			viewBox.height = h; // boundLimiterH(h);
 			viewBox.x = boundLimiterX(x, viewBox.width);
 			viewBox.y = boundLimiterY(y, viewBox.height);
-//			System.out.println("leaving: " + viewBox.x +" "+ viewBox.y +" "+ viewBox.width +" "+ viewBox.height);
 			try{
 				String s = toSVGAttribute(viewBox);
 				if(vbe == null || !vbe.setAttributes(s)) {
 					vbe = new EconomicViewBoxEvent(s);
-//					System.out.println("[ViewBoxController " +this+"] sent viewBox update");
 					dc.addToQueue(vbe);
 				}
 			} catch (NullPointerException e) {
@@ -239,18 +225,6 @@ public class ViewBoxController {
 			} 
 		}
 		
-		private int boundLimiterH(int h) {
-			if(h < MINHEIGHT) return MINHEIGHT;
-			else if(h > MAXHEIGHT) return MAXHEIGHT;
-			else return h;
-		}
-
-		private int boundLimiterW(int w) {
-			if(w < MINWIDTH) return MINWIDTH;
-			else if(w > MAXWIDTH) return MAXWIDTH;
-			else return w;
-		}
-
 		private int boundLimiterY(int y, int h) {
 			if(y < 0) return 0;
 			else if(y + h > docH) 

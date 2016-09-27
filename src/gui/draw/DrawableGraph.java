@@ -11,8 +11,6 @@ import org.w3c.dom.svg.SVGDocument;
 import util.SVGRunnable;
 
 public class DrawableGraph {
-//	private GraphInterface gi;
-	
 	private SVGDocument document;
 	private Element definitions;
 	
@@ -59,7 +57,6 @@ public class DrawableGraph {
 		return new ArrayList<DrawableGraphEdge>(edges);
 	}
 	
-	//TODO: Finish this function
 	@Override
 	public DrawableGraph clone() {
 		DrawableGraph clone = new DrawableGraph();

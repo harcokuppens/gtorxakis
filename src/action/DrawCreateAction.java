@@ -25,7 +25,7 @@ public class DrawCreateAction extends Action {
 		drawableNodes = new ArrayList<DrawableGraphState>(drawableNodeList);
 		nodes = new ArrayList<GraphState>();
 		for(DrawableGraphState n: drawableNodes) {
-			nodes.add(n.getNode());
+			nodes.add(n.getState());
 		}
 		drawableEdges = new ArrayList<DrawableGraphEdge>(drawableEdgeList);
 		edges = new ArrayList<GraphEdge>();

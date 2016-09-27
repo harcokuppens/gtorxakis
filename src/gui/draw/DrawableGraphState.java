@@ -33,14 +33,13 @@ public class DrawableGraphState extends DrawableElement implements Configurable,
 	public static final String ATTRIBUTE_VIEW_INDICATORS = "viewIndicators";
 
 	private Point position;
-	private Element textTSpanElement, valueTSpanElement, superScriptElement;
 	private int offsetX, offsetY;
 	private Element[] elements;
     private boolean selected = false; 
 	
     private boolean viewIndicators = true;
     
-	private GraphState node;
+	private GraphState state;
 
 	public static final int WIDTH = 60; 
 	public static final int HEIGHT = 60; 
@@ -56,43 +55,35 @@ public class DrawableGraphState extends DrawableElement implements Configurable,
 	
 	public DrawableGraphState(SVGDocument doc, int posX, int posY) {
 		super(doc);
-		this.node = new GraphState();
-		this.node.setDrawable(this);
-
-		
+		this.state = new GraphState();
+		this.state.setDrawable(this);
 		this.position = DrawableGrid.getPoint(new Point(posX, posY));
 		buildElement();
 	}
 
 	public DrawableGraphState(SVGDocument doc, int posX, int posY, String name) {
 		super(doc);
-		this.node = new GraphState(name);
-		this.node.setDrawable(this);
-		this.viewIndicators = viewIndicators;
-		
+		this.state = new GraphState(name);
+		this.state.setDrawable(this);
 		this.position = DrawableGrid.getPoint(new Point(posX, posY));
-		
 		buildElement();
 	}
 
 	/**
 	 * Copy constructor
 	 * 
-	 * @param draft
-	 *            The DrawableGraphNode to be duplicated
+	 * @param draft The DrawableGraphNode to be duplicated
 	 */
 	protected DrawableGraphState(SVGDocument doc, DrawableGraphState draft) {
 		super(doc);
-		this.node = new GraphState(draft.getNode());
-		this.node.setDrawable(this);
-		
-		
+		this.state = new GraphState(draft.getState());
+		this.state.setDrawable(this);
 		this.position = (Point) (draft.getPosition().clone());
 		buildElement();
 	}
 	
-	public GraphState getNode() {
-		return this.node;
+	public GraphState getState() {
+		return this.state;
 	}
 
 	public Point getPosition() {
@@ -142,10 +133,10 @@ public class DrawableGraphState extends DrawableElement implements Configurable,
 	}
 
 	private void updateEdges() {
-		for (GraphEdge edge : this.node.getIncomingEdges()) {
+		for (GraphEdge edge : this.state.getIncomingEdges()) {
 			edge.getDrawable().invalidate();
 		}
-		for (GraphEdge edge : this.node.getOutgoingEdges()) {
+		for (GraphEdge edge : this.state.getOutgoingEdges()) {
 			edge.getDrawable().invalidate();
 		}
 	}
@@ -170,7 +161,7 @@ public class DrawableGraphState extends DrawableElement implements Configurable,
 		elements[Elements.GROUP.ordinal()].setAttribute("render-order", "-1");
 		
 		//Set start_state properties
-		boolean isStartState = (boolean) this.getNode().getAttribute(GraphState.ATTRIBUTE_START_STATE);
+		boolean isStartState = (boolean) this.getState().getAttribute(GraphState.ATTRIBUTE_START_STATE);
 		if(isStartState){
 			elements[Elements.START_STATE.ordinal()].setAttribute("x1", "-50");
 			elements[Elements.START_STATE.ordinal()].setAttribute("y1", "-50");
@@ -209,17 +200,11 @@ public class DrawableGraphState extends DrawableElement implements Configurable,
 		elements[Elements.TEXT.ordinal()].setAttribute("font-weight", TEXT_WEIGHT);
 		elements[Elements.TEXT.ordinal()].setAttribute("font-family", TEXT_FAMILY);
 		elements[Elements.TEXT.ordinal()].setAttribute("fill", TEXT_COLOR);
-		elements[Elements.TEXT.ordinal()].setTextContent(this.node.getName());
+		elements[Elements.TEXT.ordinal()].setTextContent(this.state.getName());
 	}
 
 	protected void buildElement() {
 		this.elements = new Element[Elements.values().length];
-		
-		textTSpanElement = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan");
-		superScriptElement = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan");
-		superScriptElement.setAttribute("baseline-shift", "super");
-		superScriptElement.setAttribute("font-size", String.valueOf(TEXT_SIZE - 3));
-		valueTSpanElement = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan");
 		
 		elements[Elements.WRAPPER.ordinal()] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "g");
 		elements[Elements.GROUP.ordinal()] = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "g");

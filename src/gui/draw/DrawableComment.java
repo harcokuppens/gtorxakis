@@ -1,17 +1,17 @@
 package gui.draw;
 
+import gui.control.DrawController;
+import gui.control.Movable;
+import gui.control.Resizable;
+import gui.control.Selectable;
+
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import gui.control.Movable;
-import gui.control.Resizable;
-import gui.control.Selectable;
-import gui.control.DrawController;
 import model.graph.GraphComment;
 import model.graph.GraphEdge;
 
@@ -19,10 +19,9 @@ import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.dom.svg.SVGOMTextElement;
 import org.w3c.dom.Element;
 import org.w3c.dom.svg.SVGDocument;
-import org.w3c.dom.svg.SVGGElement;
 
-import action.Configurable;
 import util.Vector;
+import action.Configurable;
 
 public class DrawableComment extends DrawableElement implements Drawable, Selectable, Movable, Resizable, Configurable {
 	private int width = 50, height = 0, minimalWidth = 0;

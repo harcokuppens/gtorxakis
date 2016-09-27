@@ -3,17 +3,9 @@ package gui.dialogs;
 import io.file.FileType;
 import io.file.FileTypeAssociation;
 
-import java.awt.Frame;
 import java.awt.Dialog;
-import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.io.File;
-
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
-import core.Session;
 
 public abstract class AdvancedFileChooserOpen extends AdvFileChooser {
 

@@ -1,14 +1,13 @@
 package gui.window;
 
-import gui.control.Movable;
 import gui.control.Selectable;
 import gui.dialogs.ChangeCommentParagraphsDialog;
 import gui.dialogs.ChangeNameDialogEdge;
 import gui.dialogs.ChangeNameDialogState;
+import gui.draw.DrawableComment;
 import gui.draw.DrawableComment.CommentType;
 import gui.draw.DrawableGraphEdge;
 import gui.draw.DrawableGraphState;
-import gui.draw.DrawableComment;
 import gui.draw.GraphInterface;
 import gui.draw.TransferableGraphElements;
 
@@ -23,15 +22,13 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import model.Model;
 import model.graph.GraphEdge;
 import model.graph.GraphState;
-import model.Model;
 import action.Action;
-import action.DrawMoveAction;
 import action.SetConfigAction;
 import core.Session;
 
@@ -101,18 +98,10 @@ public class GraphContextMenu {
 		return true;
 	}
 
-	private DrawableGraphState[] castSelectableToDrawableGraphState(ArrayList<Selectable> selectables){
-		ArrayList<DrawableGraphState> nodes = new ArrayList<DrawableGraphState>();
-		for(Selectable s : selectables){
-			nodes.add((DrawableGraphState) s);
-		}
-		return nodes.toArray(new DrawableGraphState[nodes.size()]);
-	}
-	
 	public ArrayList<GraphState> castSelectableToGraphState(ArrayList<Selectable> selectables){
 		ArrayList<GraphState> nodes = new ArrayList<GraphState>();
 		for(Selectable s : selectables){
-			nodes.add(((DrawableGraphState) s).getNode());
+			nodes.add(((DrawableGraphState) s).getState());
 		}
 		return nodes;
 	}
@@ -128,7 +117,6 @@ public class GraphContextMenu {
 	private abstract class ContextMenu extends JPopupMenu implements ActionListener{
 		protected JMenuItem addComment, 
 							addHeadline, 
-							removeName,
 							changeName, 
 							cut, 
 							copy, 
@@ -140,16 +128,13 @@ public class GraphContextMenu {
 		public static final String ADD_COMMENT = "Add comment",
 				   ADD_HEADLINE = "Add title",
 				   RENAME = "Rename",
-				   CHANGE_LABEL = "Change label",
 				   EDIT_TEXT = "Edit text",
 				   EDIT_TRANSITIONS = "Edit transitions",
-				   ADD_NAME = "Assign label",
 				   REMOVE_NAME = "Remove label",
 				   CUT = "Cut",
 				   COPY = "Copy",
 				   PASTE = "Paste",
 				   DELETE = "Delete",
-				   PROPERTIES = "Properties",
 				   START_STATE = "Set start state"
 				   ;
 		
@@ -196,7 +181,6 @@ public class GraphContextMenu {
 			ArrayList<Selectable> selectables = gi.getSelection();
 			Selectable selectedItem;
 			
-			ArrayList<GraphState> nodes;
 			switch(cmd){
 			case ADD_COMMENT:
 				gi.addCommentEvent((int) p.getX(), (int) p.getY(), CommentType.COMMENT);
@@ -242,11 +226,6 @@ public class GraphContextMenu {
 			case DELETE:
 				gi.deleteEvent();
 				break;
-			case PROPERTIES :
-				nodes  = castSelectableToGraphState(selectable);
-//				GraphStatePropertyDialog gnpd = new GraphStatePropertyDialog(nodes, Session.getSession().getWindow(), model);
-//				gnpd.setVisible(true);
-				break;
 			case START_STATE:
 				startStateAction();
 				break;
@@ -255,7 +234,7 @@ public class GraphContextMenu {
 	}
 	
 	private void startStateAction(){
-		GraphState newState = ((DrawableGraphState) selectable.get(0)).getNode();
+		GraphState newState = ((DrawableGraphState) selectable.get(0)).getState();
 		GraphState oldState = model.getGraph().getStartState();
 		
 		if(newState.equals(oldState)){
@@ -297,7 +276,6 @@ public class GraphContextMenu {
 			copy = createMenuEntry(copy, COPY, "/icons/page_copy.png");
 			paste = createMenuEntry(paste, PASTE, "/icons/page_paste.png");
 			delete = createMenuEntry(delete, DELETE, "/icons/cross.png");
-			properties = createMenuEntry(properties, PROPERTIES, "/icons/cog_edit.png");
 			
 			boolean isStartState = false;
 			if(selectable.size() == 1){

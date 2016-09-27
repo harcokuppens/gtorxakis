@@ -56,7 +56,6 @@ public class Variables implements Configurable {
 
 	@Override
 	public void updateConfigs(DrawController dc) {
-		// TODO Auto-generated method stub
 	}
 	
 	public static class Variable {

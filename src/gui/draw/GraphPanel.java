@@ -7,8 +7,6 @@ import org.w3c.dom.svg.SVGDocument;
 import model.Model;
 
 public class GraphPanel extends JSVGCanvas {
-	private Model model;
-
 	// SVG size. Default: 80, 45
 	public static final int width = 80 * DrawableGrid.GRID_SIZE;
 	public static final int height = 45 * DrawableGrid.GRID_SIZE; 
@@ -29,10 +27,6 @@ public class GraphPanel extends JSVGCanvas {
 		this.setDoubleBufferedRendering(true);
 	}
 
-	public void setModel(Model model) {
-		this.model = model;
-	}
-
 	/**
 	 * Specifies which document to show
 	 * @param doc the document to be rendered
@@ -51,6 +45,4 @@ public class GraphPanel extends JSVGCanvas {
 		this.addGVTTreeRendererListener(currentListener);
 		
 	}
-	
-	
 }

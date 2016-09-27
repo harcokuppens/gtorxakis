@@ -3,14 +3,11 @@ package gui.dialogs;
 import io.file.FileType;
 import io.file.FileTypeAssociation;
 
-import java.io.File;
-
-import java.awt.Frame;
 import java.awt.Dialog;
-
-import core.Session;
+import java.awt.Frame;
 
 import model.Project;
+import core.Session;
 
 public class SaveAsDialog extends AdvancedFileChooserSave {
 	private static final FileTypeAssociation association = FileTypeAssociation.ProjectExport;

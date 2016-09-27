@@ -170,7 +170,5 @@ public class DrawableGrid extends DrawableElement{
 
 	@Override
 	protected void invalidate() {
-		// TODO Auto-generated method stub
-		
 	}
 }

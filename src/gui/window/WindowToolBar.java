@@ -37,7 +37,6 @@ public class WindowToolBar extends JToolBar {
 		addButton("Zoom In", WindowActionListener.ZOOM_IN, true, "/icons/magnifier_zoom_in.png",wat);
 		this.add(new JToolBar.Separator());
 		addButton("Run", WindowActionListener.RUN, true, "/icons/application_go.png", wat);
-		showResults = addButton("Show results", WindowActionListener.SHOW_RESULTS, false, "/icons/script.png", wat);
 		
 		for(Component c : this.getComponents()){
 			c.setFocusable(false);
@@ -62,9 +61,6 @@ public class WindowToolBar extends JToolBar {
 			break;
 		case WindowActionListener.REDO:
 			redo.setEnabled(b);
-			break;
-		case WindowActionListener.SHOW_RESULTS:
-			showResults.setEnabled(b);
 			break;
 		}
 	}

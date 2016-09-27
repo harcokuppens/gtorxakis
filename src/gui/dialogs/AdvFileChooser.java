@@ -1,32 +1,25 @@
 package gui.dialogs;
 
 import io.file.FileType;
-
-import java.io.FilenameFilter;
-
 import io.file.FileTypeAssociation;
 
-import java.awt.Frame;
 import java.awt.Component;
 import java.awt.Dialog;
-import java.beans.PropertyChangeEvent;
+import java.awt.FileDialog;
+import java.awt.Frame;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 import core.Session;
-
-import java.awt.FileDialog;
-import java.awt.FlowLayout;
 
 public abstract class AdvFileChooser extends FileDialog {
 	private PropertyChangeListener autochangeExtensionListener;

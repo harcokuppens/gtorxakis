@@ -354,9 +354,7 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 			case RESIZECOMMENT:
 				dc.resizeElement(resizeType);
 				resizeType = ResizeType.NONE;
-				//Do nothing
 			case PAN:
-				// Do nothing
 			case NONE:
 				// Do nothing
 				break;
@@ -367,7 +365,6 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 			
 			controlMethod = ControlMethod.NONE;
 			finished = true;
-//			System.out.println("[InputListener] mouseReleased finished with " + controlMethod.name());
 		}
 	}
 

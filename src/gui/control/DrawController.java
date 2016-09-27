@@ -292,8 +292,7 @@ public class DrawController {
 	
 	public void removeTempEdge(boolean isSamePoint) {
 		if(dragEndNode != null){
-//			if (!dragEndNode.equals(dragStartNode) && !dragStartNode.getNode().hasEdgetoNode(dragEndNode.getNode())) {
-			if (!dragStartNode.getNode().hasEdgetoNode(dragEndNode.getNode()) && !isSamePoint) {
+			if (!dragStartNode.getState().hasEdgetoNode(dragEndNode.getState()) && !isSamePoint) {
 				gi.addEdge(dragStartNode, dragEndNode);
 			}
 		}

@@ -24,9 +24,6 @@ public class Project {
 	
 	public static final int NR_TEXTUAL_DEFINITIONS = 8;
 	
-//	private TextualDefinition connect;
-//	private TextualDefinition model;
-	
 	public Project(String name) {
 		this.name = name;
 		this.definitions = new ArrayList<Definition>();
@@ -107,14 +104,6 @@ public class Project {
 		return p;
 	}
 	
-	private void setConfiguration(SetConfigAction a) {
-		for(int c = 0; c < a.objects.length; c++) {
-			for(int i = 0; i < a.attributes.length; i++){
-				a.objects[c].setAttribute(a.attributes[i], a.values[i][c]);
-			}
-		}
-	}
-
 	public void addDefinition(Definition d) {
 		definitions.add(d);
 		modelsChanged = true;

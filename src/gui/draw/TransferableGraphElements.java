@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import model.graph.GraphEdge;
 
-public class TransferableGraphElements implements Transferable /* ,Serializable*/ {
+public class TransferableGraphElements implements Transferable{
 	private ArrayList<DrawableGraphState> nodes;
 	private ArrayList<DrawableGraphEdge> edges;
 	private ArrayList<DrawableComment> comments;
@@ -49,7 +49,7 @@ public class TransferableGraphElements implements Transferable /* ,Serializable*
 		calculateCenter();
 		int o = 0;
 		for(DrawableGraphState n: selectedNodes) {
-			for(GraphEdge e: n.getNode().getOutgoingEdges()) {
+			for(GraphEdge e: n.getState().getOutgoingEdges()) {
 				if(selectedNodes.contains(e.getTo().getDrawable())) {
 					int d = selectedNodes.indexOf(e.getTo().getDrawable());
 					DrawableGraphState no = nodes.get(o), nd = nodes.get(d);

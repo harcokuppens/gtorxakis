@@ -1,15 +1,11 @@
 package gui.control;
 
-import java.awt.geom.AffineTransform;
-import java.util.Queue;
-
-import gui.draw.GraphInterface;
 import gui.draw.GraphPanel;
+
+import java.util.Queue;
 
 import org.apache.batik.swing.gvt.GVTTreeRendererEvent;
 import org.apache.batik.swing.gvt.GVTTreeRendererListener;
-
-import core.Session;
 
 public class TreeRendererListener implements GVTTreeRendererListener{
 	private DrawController dc;
@@ -25,7 +21,6 @@ public class TreeRendererListener implements GVTTreeRendererListener{
 	private boolean executed = false;
 	@Override
 	public void gvtRenderingCancelled(GVTTreeRendererEvent arg0) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -45,19 +40,13 @@ public class TreeRendererListener implements GVTTreeRendererListener{
 
 	@Override
 	public void gvtRenderingFailed(GVTTreeRendererEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void gvtRenderingPrepare(GVTTreeRendererEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void gvtRenderingStarted(GVTTreeRendererEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 }

@@ -136,9 +136,9 @@ public class ProjectImporterGTorx extends ProjectImporter {
 			DrawableGraphState dgn = new DrawableGraphState(svgDoc, posX, posY, nodeName);
 			if((!startState.equals("")) && nodeName.equals(startState)){
 				System.out.println("Found start state");
-				dgn.getNode().setAttribute(GraphState.ATTRIBUTE_START_STATE, true);
+				dgn.getState().setAttribute(GraphState.ATTRIBUTE_START_STATE, true);
 			}
-			graph.addState(dgn.getNode());
+			graph.addState(dgn.getState());
 		}
 
 		//OutgoingEdges / IncomingEdges
@@ -157,8 +157,8 @@ public class ProjectImporterGTorx extends ProjectImporter {
 			DrawableGraphState fromNode = graph.getStateWithName(from).getDrawable();
 			DrawableGraphState toNode = graph.getStateWithName(to).getDrawable();
 			DrawableGraphEdge e = new DrawableGraphEdge(svgDoc, fromNode, toNode, anchorPoint, transitions, commentPosition, commentWidth);
-			fromNode.getNode().addOutgoingEdge(e.getEdge());
-			toNode.getNode().addIncomingEdge(e.getEdge());
+			fromNode.getState().addOutgoingEdge(e.getEdge());
+			toNode.getState().addIncomingEdge(e.getEdge());
 		}
 		
 		ArrayList<Gate> gates = new ArrayList<Gate>();

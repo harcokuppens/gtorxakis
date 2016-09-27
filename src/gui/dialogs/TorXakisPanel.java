@@ -2,9 +2,7 @@ package gui.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -12,12 +10,10 @@ import java.io.IOException;
 import java.net.SocketException;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -91,9 +87,6 @@ public class TorXakisPanel extends JPanel{
 		String line;
 		isReading = true;
 		while((line = reader.readLine()) != null){
-//				textArea.insertComponent(new JLabel("<html><strong>"+getLine(line)+"</strong></br></html>"));
-//				textArea.setCaretPosition(textArea.getText().length());
-//				textPane.append(getLine(line) + "\n");
 			addLine(line+"\n");
 			JScrollBar vertical = scrollPane.getVerticalScrollBar();
 			vertical.setValue( vertical.getMaximum() );
@@ -134,7 +127,6 @@ public class TorXakisPanel extends JPanel{
 	
 	 
 	protected void addStylesToDocument(StyledDocument doc) {
-		//Initialize some styles.
 		Style def = StyleContext.getDefaultStyleContext(). getStyle(StyleContext.DEFAULT_STYLE);
 		
 		Style regular = doc.addStyle("regular", def);

@@ -47,7 +47,6 @@ public class Graph {
 	}
 	
 	public void addStates(ArrayList<? extends GraphState> states) {
-		boolean showLimitMessage = false;
 		for(GraphState s: states) {
 			addState(s);
 		}

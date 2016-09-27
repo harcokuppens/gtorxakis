@@ -67,9 +67,9 @@ public class Model extends Definition {
 		
 		for(DrawableGraphState n : this.drawableGraph.getNodes()){
 			DrawableGraphState dgn = n.clone(doc);
-			if(n.getNode().equals(start)) dgn.getNode().setAttribute(GraphState.ATTRIBUTE_START_STATE, true);
+			if(n.getState().equals(start)) dgn.getState().setAttribute(GraphState.ATTRIBUTE_START_STATE, true);
 			clonedDrawableNodes.add(dgn);
-			clonedNodes.add(dgn.getNode());
+			clonedNodes.add(dgn.getState());
 		}
 		graph.addStates(clonedNodes);
 		
@@ -77,10 +77,10 @@ public class Model extends Definition {
 			DrawableGraphEdge clonedDge = dge.clone(doc);
 			GraphEdge e = clonedDge.getEdge();
 			int index_from = this.drawableGraph.getNodes().indexOf(e.getFrom().getDrawable());
-			e.setFrom(clonedDrawableNodes.get(index_from).getNode());
+			e.setFrom(clonedDrawableNodes.get(index_from).getState());
 			e.getFrom().addOutgoingEdge(e);
 			int index_to = this.drawableGraph.getNodes().indexOf(e.getTo().getDrawable());
-			e.setTo(clonedDrawableNodes.get(index_to).getNode());
+			e.setTo(clonedDrawableNodes.get(index_to).getState());
 			e.getTo().addIncomingEdge(e);
 		}
 
@@ -154,7 +154,7 @@ public class Model extends Definition {
 		int docW = Integer.valueOf(doc.getRootElement().getAttribute("width"));
 		int docH = Integer.valueOf(doc.getRootElement().getAttribute("height"));
 		DrawableGraphState dgn = new DrawableGraphState(doc, docW/2, docH/2);
-		dgn.getNode().setAttribute(GraphState.ATTRIBUTE_NAME, "First construct");
+		dgn.getState().setAttribute(GraphState.ATTRIBUTE_NAME, "First construct");
 		return new Model(project, name, graph, drawableGraph);
 	}
 	

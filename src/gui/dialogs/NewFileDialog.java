@@ -1,16 +1,12 @@
 package gui.dialogs;
 
-import java.awt.Frame;
-import java.io.File;
-import java.awt.Dialog;
+import io.file.FileType;
+import io.file.FileTypeAssociation;
 
-import javax.swing.JFrame;
-import javax.swing.filechooser.FileView;
+import java.awt.Frame;
 
 import model.Project;
 import core.Session;
-import io.file.FileType;
-import io.file.FileTypeAssociation;
 
 public class NewFileDialog extends AdvancedFileChooserSave{
 	private static final FileTypeAssociation association = FileTypeAssociation.ProjectExport;

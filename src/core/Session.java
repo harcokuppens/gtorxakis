@@ -22,7 +22,6 @@ import util.Environment;
 public class Session extends Observable {
 	public static final String PROGRAM_NAME = "TorXakis";
 	public static final Version PROGRAM_VERSION = new Version(0, 5, 0);
-	public static final String PRODUCT_ID = "3";
 	public static boolean DEVMODE = true;
 	public static final String CONFIG_FILENAME = Environment.getApplicationDataFolder() + Environment.fileSeparator + "config.xml";
 	public static final String DEFAULT_PATH = Environment.getApplicationDataFolder() + Environment.fileSeparator + "data" + Environment.fileSeparator;
@@ -53,19 +52,6 @@ public class Session extends Observable {
 		startupProcedure();
 		this.setProject(Project.newProject());
 
-		StringBuilder pathBuilder = new StringBuilder();
-		for(int i = firstPathIndex; i < args.length; i++) {
-			String s = args[i];
-			pathBuilder.append(s + " ");
-		}
-		String path = pathBuilder.toString();
-//		if(args.length > 0) {
-//			load(path);
-//			initializeWindow();
-//		} else {
-//			startscreen = new StartScreen(window);
-//			startscreen.setVisible(true);
-//		}
 		window.setVisible(true);
 		window.invalidate();
 	}
@@ -77,27 +63,7 @@ public class Session extends Observable {
 	public Project getProject() {
 		return currentProject;
 	}
-	
-//	public void load(final String path){
-//		(new Thread() {
-//			@Override
-//			public void run() {
-//				Project p;
-//				ProjectImporter pi = new ProjectImporterPLSP();
-//				try {
-//					File f = new File(path.trim());
-//					p = pi.importProject(f);
-//				} catch(IOException e) {
-//		//			e.printStackTrace();
-//					pi.showErrorMessage(e.getMessage(), path);
-//					p = Project.newProject(getProject() != null?getProject().getData():null);
-//				}
-//				setProject(p);
-//
-//			}
-//		}).start();
-//	}
-	
+
 	public void setProject(Project project) {
 		if(closeProject()) {
 			window.setProject(currentProject, project);			
@@ -151,7 +117,6 @@ public class Session extends Observable {
 		}
 		
 		settings = SettingsImporterXML.importSettings(this.CONFIG_FILENAME);
-//		new Logger();
 		window = new Window(this);
 		addObserver(window);
 	}

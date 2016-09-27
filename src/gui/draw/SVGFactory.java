@@ -27,7 +27,6 @@ public class SVGFactory {
 		int width = GraphPanel.width;
 		int height = GraphPanel.height;
 		String blankSVG = "<svg width=\"" + width + "\" height=\""+ height +"\" viewBox=\"0 0 0 0\" xmlns=\"http://www.w3.org/2000/svg\"></svg>";
-		// viewBox=\"0 0 1920 1080\" preserveAspectRatio=\"xMidYMid meet\"
 		doc = null;
 		try {
 			doc = f.createSVGDocument(null, new StringReader(blankSVG));

@@ -1,7 +1,6 @@
 package gui.window;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -22,17 +21,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import action.Action;
-import action.SetConfigAction;
 import model.Definition;
 import model.Gates;
 import model.Gates.Gate;
-import model.graph.GraphEdge;
 import model.Model;
 import model.Project;
-import model.Transition;
 import model.Variables;
 import model.Variables.Variable;
+import action.Action;
+import action.SetConfigAction;
 
 public class SiteBar extends JPanel{
 	

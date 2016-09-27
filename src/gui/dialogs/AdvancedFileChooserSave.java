@@ -3,20 +3,11 @@ package gui.dialogs;
 import io.file.FileType;
 import io.file.FileTypeAssociation;
 
-import core.Session;
-
+import java.awt.Dialog;
 import java.awt.Frame;
 import java.io.File;
-import java.awt.Dialog;
-import java.awt.FlowLayout;
 
-import javax.swing.BoxLayout;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
+import core.Session;
 
 public abstract class AdvancedFileChooserSave extends AdvFileChooser {
 	

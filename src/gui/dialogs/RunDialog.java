@@ -1,7 +1,9 @@
 package gui.dialogs;
 
+import io.file.FileTypeAssociation;
+import io.net.SocketIO;
+
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -11,14 +13,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.SocketException;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -37,9 +36,6 @@ import model.TextualDefinition;
 import util.Environment;
 import core.Session;
 import core.SessionSettings;
-import io.file.FileType;
-import io.file.FileTypeAssociation;
-import io.net.SocketIO;
 
 public class RunDialog extends Dialog implements WindowListener{
 	
@@ -95,8 +91,6 @@ public class RunDialog extends Dialog implements WindowListener{
 
 	public void init(){
 		setTitle("Run project with TorXakis");
-//		setSizeByScreenSize(0.3, 0.5);
-//		centerOnScreen();
 		setLayout(new BorderLayout());
 		westPanel = new JPanel();
 		westPanel.setLayout(new GridBagLayout());

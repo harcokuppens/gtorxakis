@@ -1,13 +1,12 @@
 package gui.dialogs;
 
+import gui.draw.DrawableComment;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-
-import gui.draw.DrawableComment;
-import gui.draw.GraphInterface;
 
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
@@ -17,16 +16,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
-import model.graph.GraphState;
 import model.Model;
 import action.Action;
 import action.SetConfigAction;
-import core.Session;
 
 public class ChangeCommentParagraphsDialog extends Dialog{
 	

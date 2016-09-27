@@ -1,10 +1,9 @@
 package gui.draw;
 
+import gui.control.DrawController;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.svg.SVGDocument;
-
-import core.Session;
-import gui.control.DrawController;
 
 public abstract class DrawableElement {
 	protected abstract Element getElement();

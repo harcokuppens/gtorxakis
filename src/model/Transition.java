@@ -69,11 +69,7 @@ public class Transition {
 	}
 	
 	public String getActionText() {
-//		if(!this.getAction().equals("")){
 			return "{ " + action + " }";
-//		}else{
-//			return "\t";
-//		}
 	}
 
 }

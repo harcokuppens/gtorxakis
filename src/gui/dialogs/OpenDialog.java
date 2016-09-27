@@ -4,16 +4,11 @@ import io.file.FileType;
 import io.file.FileTypeAssociation;
 import io.file.project.importer.ProjectImporter;
 
-import java.awt.Frame;
 import java.awt.Dialog;
+import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
-import model.Project;
 import core.Session;
 
 public class OpenDialog extends AdvancedFileChooserOpen {

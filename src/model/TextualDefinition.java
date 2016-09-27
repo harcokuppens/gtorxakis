@@ -1,9 +1,5 @@
 package model;
 
-import org.apache.xpath.functions.FuncUnparsedEntityURI;
-
-import action.Configurable;
-import gui.control.DrawController;
 import gui.draw.GUITextualDefinition;
 
 public class TextualDefinition extends Definition{
@@ -29,7 +25,6 @@ public class TextualDefinition extends Definition{
 		
 		private DefType(String name, String defaultDef, String identifier){
 			this.name = name;
-//			this.defaultDef = defaultDef;
 			this.defaultDef = "";
 			this.identifier = identifier;
 		}

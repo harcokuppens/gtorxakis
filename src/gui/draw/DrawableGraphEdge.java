@@ -5,16 +5,16 @@ import gui.control.Selectable;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import model.Transition;
 import model.graph.GraphEdge;
-import util.Vector;
 
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.w3c.dom.Element;
 import org.w3c.dom.svg.SVGDocument;
+
+import util.Vector;
 
 
 /**
@@ -25,11 +25,11 @@ import org.w3c.dom.svg.SVGDocument;
 
 public class DrawableGraphEdge extends DrawableElement implements Drawable, Selectable, Movable{
 	private static final int EL_INDEX_SHAPE = 0;
-	private static final int EL_INDEX_COMMENT = 1;
 	private static final int EL_INDEX_ANCHOR = 4;
 	
 	public static final int STROKE_WIDTH = 2,
 							TEXT_SIZE = 14;
+	
 	public static final String TEXT_WEIGHT = "bold",
 							   TEXT_FAMILY = "arial",
 							   TEXT_ANCHOR = "middle",
@@ -37,8 +37,7 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 							   BACKGROUND_ANCHOR = "center",
 							   BACKGROUND_COLOR = "white";
 	
-	private static final int MARGIN = ((STROKE_WIDTH - 1) * GraphInterface.ARROW_MARKER_SIZE) / 2,
-							 RESULT_MARGIN = 3;
+	private static final int MARGIN = ((STROKE_WIDTH - 1) * GraphInterface.ARROW_MARKER_SIZE) / 2;
 	
 	private enum EdgeType{
 		NORMAL,
@@ -57,16 +56,13 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	private DrawableComment transitionComment;
 	private DrawableGraphState from,
 							   to;
-
-	private int width = 0,
-				height = 0;
 	
 	public DrawableGraphEdge(SVGDocument doc, DrawableGraphState from, DrawableGraphState to) {
 		super(doc);
 		this.from = from;
 		this.to = to;
 		System.err.println("Create edge");
-		graphEdge = new GraphEdge(from.getNode(), to.getNode());
+		graphEdge = new GraphEdge(from.getState(), to.getState());
 		Point lineAnchor = to.getLineAnchor(from.getLocation(),DrawableGraphEdge.STROKE_WIDTH);
 		Point comment = new Point((from.getPosition().x + lineAnchor.x)/2, (from.getPosition().y + lineAnchor.y)/2);
 		transitionComment = new DrawableComment(doc, comment.x, comment.y, DrawableComment.CommentType.COMMENT,this.graphEdge);
@@ -93,7 +89,7 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		super(doc);
 		this.from = from;
 		System.err.println("Create temp edge");
-		graphEdge = new GraphEdge(from.getNode(), null);
+		graphEdge = new GraphEdge(from.getState(), null);
 		graphEdge.setDrawable(this);
 		if(from.contains(to)){
 //			The point is on the same state
@@ -129,7 +125,7 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		this.to = to;
 		this.anchorPoint = anchorPoint;
 		System.out.println("Create edge with commentPosition");
-		graphEdge = new GraphEdge(from.getNode(), to.getNode(), transitions);
+		graphEdge = new GraphEdge(from.getState(), to.getState(), transitions);
 		Point lineAnchor = to.getLineAnchor(from.getLocation(),DrawableGraphEdge.STROKE_WIDTH);
 		transitionComment = new DrawableComment(doc, commentPosition.x, commentPosition.y, commentWidth, DrawableComment.CommentType.COMMENT, new String[]{this.getEdge().getTransitionText()}, graphEdge);
 		graphEdge.setDrawable(this);
@@ -231,7 +227,7 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 			}
 			edge[EL_INDEX_ANCHOR].setAttribute("cx", String.valueOf(anchorPoint.x));
 			edge[EL_INDEX_ANCHOR].setAttribute("cy", String.valueOf(anchorPoint.y));
-			System.out.println(to.getNode().getName());
+			System.out.println(to.getState().getName());
 			points.add(to.getLineAnchor(p, DrawableGraphEdge.STROKE_WIDTH));
 		}
 		System.out.println("Size of points: " + points.size());
@@ -318,8 +314,6 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		if(edgeType.equals(EdgeType.NORMAL)){
 			int i = 0;
 			ArrayList<Point> points = this.getAnchorPoints();
-//			start = points.get(0);
-//			end = points.get(points.size()-1);
 			for (Point p : points) {
 					lineAnchorPoints.append(p.getX());
 					lineAnchorPoints.append(",");
@@ -432,7 +426,6 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 	
 	@Override
 	public void moveTo(Point p) {
-		// not used
 	}
 	
 	@Override

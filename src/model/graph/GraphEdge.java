@@ -10,7 +10,6 @@ import model.Transition;
 
 public class GraphEdge implements Configurable{
 	private GraphState from, to;
-//	private String name;
 	private ArrayList<Transition> transitions;
 	
 	private DrawableGraphEdge drawable;

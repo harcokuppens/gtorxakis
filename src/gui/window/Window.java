@@ -31,7 +31,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
 import util.Environment;
-import util.CalculationDispatcher;
 import model.Definition;
 import model.Model;
 import model.Project;
@@ -65,7 +64,6 @@ public class Window extends JFrame implements Observer {
 
 	private final Session session;
 
-	private final CalculationDispatcher calculationDispatcher;
 	
 	public Window(Session session) {
 		window = this;
@@ -136,9 +134,6 @@ public class Window extends JFrame implements Observer {
 		
 		this.setMinimumSize(new Dimension(600,600));
 
-		calculationDispatcher = new CalculationDispatcher();
-		calculationDispatcher.start();
-		
 	}
 	
 	public WindowMenuBar getWindowMenuBar(){
@@ -223,7 +218,6 @@ public class Window extends JFrame implements Observer {
 
 			panels.put(m, g);
 			definitions.put(g,  m);
-			g.setModel(m);
 			m.getDrawController().attach(g);
 
 			this.definitionPane.addTab(m.getName(), null, g, null);
@@ -477,13 +471,6 @@ public class Window extends JFrame implements Observer {
 			}
 	}
 	
-	public void hasResults(boolean hasResults) {
-		menuBar.setItemEnabled(WindowActionListener.SHOW_RESULTS, hasResults);
-		menuBar.setItemEnabled(WindowActionListener.EXPORT_HTML, hasResults);
-		menuBar.setItemEnabled(WindowActionListener.EXPORT_EXCEL, hasResults);
-		toolBar.setItemEnabled(WindowActionListener.SHOW_RESULTS, hasResults);
-	}
-
 	@Override
 	public void update(Observable observable, Object obj) {
 		if(observable instanceof Session) {

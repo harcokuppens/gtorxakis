@@ -1,16 +1,15 @@
 package gui.dialogs;
 
+import io.file.FileType;
+import io.file.FileTypeAssociation;
+import io.file.project.exporter.ProjectExporterTorXakis;
+
 import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLStreamException;
 
-import io.file.FileType;
-import io.file.FileTypeAssociation;
-import io.file.graph.exporter.GraphExport;
-import io.file.project.exporter.ProjectExporterTorXakis;
-import model.Model;
 import model.Project;
 
 public class TorXakisExportDialog extends AdvancedFileChooserSave{

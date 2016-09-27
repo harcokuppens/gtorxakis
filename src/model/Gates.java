@@ -55,8 +55,6 @@ public class Gates implements Configurable {
 
 	@Override
 	public void updateConfigs(DrawController dc) {
-		// TODO Auto-generated method stub
-
 	}
 	
 	
