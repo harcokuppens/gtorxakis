@@ -449,5 +449,67 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		}
 		transitionComment.setOffset(v);
 	}
+	
+	public Rectangle getBoundingBox() {
+		int startX, startY, width, height;
+		
+		Point anchorPoint = (this.anchorPoint != null)?this.anchorPoint:getHalfPoint();
+		
+		if(start.y > anchorPoint.y){
+			if(anchorPoint.y > end.y){
+				startY = end.y;
+			}else{
+				startY = anchorPoint.y;
+			}
+		}else{
+			if(start.y > end.y){
+				startY = end.y;
+			}else{
+				startY = start.y;
+			}
+		}
+		if(start.x > anchorPoint.x){
+			if(anchorPoint.x > end.x){
+				startX = end.x;
+			}else{
+				startX = anchorPoint.x;
+			}
+		}else{
+			if(start.x > end.x){
+				startX = end.x;
+			}else{
+				startX = start.x;
+			}
+		}
+		
+		if(Math.abs(startX - start.x) < Math.abs(startX - anchorPoint.x)){
+			if(Math.abs(startX - anchorPoint.x) < Math.abs(startX - end.x)){
+				width = Math.abs(startX - end.x);
+			}else{
+				width = Math.abs(startX - anchorPoint.x);
+			}
+		}else{
+			if(Math.abs(startX - start.x) < Math.abs(startX - end.x)){
+				width = Math.abs(startX - end.x);
+			}else{
+				width = Math.abs(startX - start.x);
+			}
+		}
+		
+		if(Math.abs(startY - start.y) < Math.abs(startY - anchorPoint.y)){
+			if(Math.abs(startY - anchorPoint.y) < Math.abs(startY - end.y)){
+				height = Math.abs(startY - end.y);
+			}else{
+				height = Math.abs(startY - anchorPoint.y);
+			}
+		}else{
+			if(Math.abs(startY - start.y) < Math.abs(startY - end.y)){
+				height = Math.abs(startY - end.y);
+			}else{
+				height = Math.abs(startY - start.y);
+			}
+		}
+		return new Rectangle (startX, startY, width, height);
+	}
 
 }

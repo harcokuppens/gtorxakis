@@ -1,7 +1,7 @@
 package io.file.graph.exporter;
 
+import gui.draw.DrawableGraphEdge;
 import gui.draw.SVGFactory;
-
 import gui.control.Selectable;
 import gui.draw.GraphInterface;
 import io.file.Exporter;
@@ -9,6 +9,7 @@ import io.file.Exporter;
 import java.awt.Rectangle;
 
 import model.graph.GraphComment;
+import model.graph.GraphEdge;
 import model.graph.GraphState;
 import core.Session;
 
@@ -54,12 +55,19 @@ public abstract class GraphExporter implements Exporter  {
 		for(GraphState state : gi.getGraph().getStates()) {
 			Rectangle rect = state.getDrawable().getBoundingBox(true);
 			aoi.add(rect);
+			for(GraphEdge edge : state.getOutgoingEdges()){
+				DrawableGraphEdge dge = edge.getDrawable();
+				aoi.add(dge.getBoundingBox());
+				if(dge.getComment() != null){
+					aoi.add(dge.getComment().getBoundingBox());
+				}
+			}
 		}
 		for(GraphComment comment : gi.getGraph().getComments()){
 			Rectangle rect = comment.getDrawable().getBoundingBox();
 			aoi.add(rect);
 		}
-		aoi.grow(10, 10);
+		aoi.grow(50, 50);
 		return aoi;
 	}
 }
