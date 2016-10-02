@@ -58,7 +58,7 @@ public class RunDialog extends Dialog implements WindowListener{
 	
 	public static enum TorXakisType{
 		TESTER("TESTER", "TEST"),
-		SIMULATOR("SIMULATOR", "SIM"),
+//		SIMULATOR("SIMULATOR", "SIM"),
 		STEPPER("STEPPER", "STEP");
 		
 		private String cmd, runCMD;
@@ -71,7 +71,7 @@ public class RunDialog extends Dialog implements WindowListener{
 		public String getInitCommand(String model, String connection){
 			switch(this){
 			case TESTER:
-			case SIMULATOR:
+//			case SIMULATOR:
 				return cmd + " " + model + " " + connection;
 			default:
 				return cmd + " " + model;
@@ -288,7 +288,7 @@ public class RunDialog extends Dialog implements WindowListener{
 		
 		torxakisType = new JComboBox<TorXakisType>();
 		torxakisType.addItem(TorXakisType.TESTER);
-		torxakisType.addItem(TorXakisType.SIMULATOR);
+//		torxakisType.addItem(TorXakisType.SIMULATOR);
 		torxakisType.addItem(TorXakisType.STEPPER);
 		torxakisType.setSelectedItem(TorXakisType.valueOf(sessionSettings.getAttribute(SessionSettings.TORXAKIS_TYPE)));
 		panel.add(torxakisType, gbc);
@@ -356,7 +356,12 @@ public class RunDialog extends Dialog implements WindowListener{
 					Session.getSession().getProject().saveAs(Session.TEMP_TXS, FileTypeAssociation.TorXakisExport.getDefaultFileType());
 					socketIO = new SocketIO(runDialog, port, host);
 				}
-				
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				if(!socketIO.hasStarted()){
 					socketIO.startTorXakis(Session.TEMP_TXS);
 				}
