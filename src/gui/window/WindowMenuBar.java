@@ -27,18 +27,13 @@ public class WindowMenuBar extends JMenuBar{
 	private JMenuItem clearData, 
 					  importData, 
 					  addModel, 
-					  addProc,
 					  undo, 
 					  redo, 
-					  showResults, 
-					  exportHTML, 
-					  exportEXCEL,
 					  exportGraphPng, 
 					  exportGraphSvg, 
 					  exportGraphJpg, 
 					  exportTorXakis;
 	private JMenu projectMenu;
-	private JCheckBoxMenuItem showGrid;
 	
 	public WindowMenuBar(WindowActionListener wat, InputListener inputListener){
 		this.wat = wat;
@@ -55,12 +50,16 @@ public class WindowMenuBar extends JMenuBar{
 		addMenuItem("Save as..", file, true, KeyEvent.VK_S, true, "saveas", "/icons/disk.png", wat);
 		file.addSeparator();
 		exportTorXakis = addMenuItem("Export to TorXakis(.txs)", file, true, -1, false, WindowActionListener.EXPORT_TORXAKIS, null, wat);
+		JMenu export = new JMenu("Export Model");
+		file.add(export);
+		exportGraphPng = addMenuItem("...to Portable Network Graphic (.png)", export, false, -1, false, WindowActionListener.EXPORT_GRAPH_PNG, null, wat);
+		exportGraphSvg = addMenuItem("...to Scalable Vector Graphic (.svg)", export, false, -1, false, WindowActionListener.EXPORT_GRAPH_SVG, null, wat);
+		exportGraphJpg = addMenuItem("...to JPEG (.jpeg)", export, false, -1, false, WindowActionListener.EXPORT_GRAPH_JPG, null, wat);
 		file.addSeparator();
 		addMenuItem("Exit", file, true, KeyEvent.VK_W, false, "exit", "/icons/door_in.png", wat);
 		
 		//Project menu
 		projectMenu = addMenu("Project");
-		addProc = generateMenuItem("New proc definition...", false, -1, false, WindowActionListener.ADD_PROC, null, wat);
 		addModel = generateMenuItem("New Model...", false, -1, false, WindowActionListener.ADD_MODEL, null, wat);
 		fillProjectMenu(projectMenu, null);
 		
@@ -75,7 +74,6 @@ public class WindowMenuBar extends JMenuBar{
 		edit.addSeparator();
 		JMenuItem delete = addMenuItem("Delete", edit, true, -1, false, WindowActionListener.DELETE, "/icons/cross.png", inputListener);
 		
-//		String vers = System.getProperty("os.name").toLowerCase();
 		delete.setAccelerator(KeyStroke.getKeyStroke((Environment.OperatingSystem.equals(Environment.OS.Mac)) ? KeyEvent.VK_BACK_SPACE : KeyEvent.VK_DELETE, 0));
 		addMenuItem("Select all", edit, true, KeyEvent.VK_A, false, WindowActionListener.SELECT_ALL, null, inputListener);
 		edit.addSeparator();
@@ -83,35 +81,12 @@ public class WindowMenuBar extends JMenuBar{
 		//Run menu
 		JMenu run = addMenu("Run");
 		addMenuItem("Run", run, true, KeyEvent.VK_R, false, WindowActionListener.RUN, "/icons/application_go.png", wat);
-
-		//Results menu 
-		JMenu results = addMenu("Results");
-//		showResults = addMenuItem("Show results...", results, false, -1, false, WindowActionListener.SHOW_RESULTS, null, wat);
-//		results.addSeparator();
-//		exportHTML = addMenuItem("Export to HTML...", results, false, -1, false, WindowActionListener.EXPORT_HTML,null, wat);
-//		exportEXCEL = addMenuItem("Export to Excel...", results, false, -1, false, WindowActionListener.EXPORT_EXCEL, null, wat);
-//		results.addSeparator();
-		JMenu export = new JMenu("Export Model");
-		results.add(export);
-		exportGraphPng = addMenuItem("...to Portable Network Graphic (.png)", export, false, -1, false, WindowActionListener.EXPORT_GRAPH_PNG, null, wat);
-		exportGraphSvg = addMenuItem("...to Scalable Vector Graphic (.svg)", export, false, -1, false, WindowActionListener.EXPORT_GRAPH_SVG, null, wat);
-		exportGraphJpg = addMenuItem("...to JPEG (.jpeg)", export, false, -1, false, WindowActionListener.EXPORT_GRAPH_JPG, null, wat);
-		
 		
 		//View menu
 		JMenu view = addMenu("View");
 		addMenuItem("Zoom In", view, true, KeyEvent.VK_ADD, false, WindowActionListener.ZOOM_IN, "/icons/magnifier_zoom_in.png", wat);
 		addMenuItem("Reset Zoom", view, true, KeyEvent.VK_NUMPAD0, false, WindowActionListener.ZOOM_RESET, "/icons/magnifier.png", wat);
 		addMenuItem("Zoom Out", view, true, KeyEvent.VK_MINUS, false, WindowActionListener.ZOOM_OUT, "/icons/magnifier_zoom_out.png", wat);
-//		showGrid = addCheckBoxMenuItem("Show Grid", view, true,WindowActionListener.SHOW_GRID,wat);
-	
-		//Help menu
-//		JMenu help = addMenu("Help");
-//		addMenuItem("Check for Updates", help, true, -1, false, WindowActionListener.CHECK_UPDATES, null, wat);
-//		help.addSeparator();
-//		addMenuItem("Help", help, true, -1, false, WindowActionListener.HELP, "/icons/help.png", wat);
-//		addMenuItem("Upgrade license...", help, true, -1, false, WindowActionListener.UPGRADE_LICENSE, null, wat);
-//		addMenuItem("About", help, true, -1, false, WindowActionListener.ABOUT, "/icons/information.png", wat);
 	}
 	
 	private JMenu addMenu(String name){
@@ -156,7 +131,6 @@ public class WindowMenuBar extends JMenuBar{
 		
 		if(project != null) {
 			projectMenu.add(addModel);
-//			projectMenu.add(addProc);
 			projectMenu.addSeparator();
 
 			System.err.println("Size:"+project.getModels().size());
