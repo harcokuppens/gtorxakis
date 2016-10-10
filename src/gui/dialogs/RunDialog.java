@@ -95,7 +95,6 @@ public class RunDialog extends Dialog implements WindowListener{
 		westPanel = new JPanel();
 		westPanel.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
-		this.setModal(true);
 		
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -124,7 +123,8 @@ public class RunDialog extends Dialog implements WindowListener{
 		torxakisPanel = new TorXakisPanel(this);
 		add(torxakisPanel, BorderLayout.CENTER);
 		this.pack();
-		this.setResizable(false);
+		this.setModal(true);
+//		this.setResizable(false);
 		this.centerOnScreen();
 	}
 	
@@ -176,6 +176,7 @@ public class RunDialog extends Dialog implements WindowListener{
 		gbc.gridy++;
 		gbc.gridwidth = 2;
 		pathField = new JTextField(sessionSettings.getAttribute(SessionSettings.TORXAKIS_DIRECTORY), 20);
+		pathField.setEditable(false);
 		panel.add(pathField, gbc);
 		
 		JButton btnChoose = new JButton("Choose");
@@ -312,11 +313,10 @@ public class RunDialog extends Dialog implements WindowListener{
 		return panel;
 	}
 	
-	private void startTorxakisServer(String pathToTorXakis, int port){
+	public void startTorxakisServer(int port){
+		String pathToTorXakis = new File(pathField.getText()).getPath();
 		if(Environment.OperatingSystem == Environment.OS.Windows){
 			try {
-				String ss = null;
-				Runtime obj = null;
 				process = Runtime.getRuntime().exec("cmd.exe /c start " + pathToTorXakis + "\\txsserver.exe " + port);
 				BufferedWriter writeer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
 				writeer.flush();
@@ -328,7 +328,6 @@ public class RunDialog extends Dialog implements WindowListener{
 			try {
 				Process proc = new ProcessBuilder(arguments).start();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -351,19 +350,23 @@ public class RunDialog extends Dialog implements WindowListener{
 				Session.getSession().setSettings(settings);
 				if(socketIO == null){
 					torxakisPanel.clear();
-					System.out.println("Socket == null");
-					startTorxakisServer(f.getPath(), port);
+					startTorxakisServer(port);
 					Session.getSession().getProject().saveAs(Session.TEMP_TXS, FileTypeAssociation.TorXakisExport.getDefaultFileType());
-					socketIO = new SocketIO(runDialog, port, host);
+					try{
+						socketIO = new SocketIO(runDialog, port, host);
+					}catch(Exception socketException){
+						JOptionPane.showMessageDialog(null, "Can not connect to TorXakis. Are you sure that you pick the right directory?");
+						runDialog.shutdown();
+					}
 				}
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				if(!socketIO.hasStarted()){
-					socketIO.startTorXakis(Session.TEMP_TXS);
+				try{
+					if(!socketIO.hasStarted()){
+						System.err.println("Try to start socketIO");
+						socketIO.startTorXakis(Session.TEMP_TXS);
+					}					
+				}catch(Exception exception){
+					shutdown();
+					return;
 				}
 				if(socketIO.typeChanged(type)){
 					socketIO.changeTorXakisType(type, model, connection);
@@ -443,7 +446,7 @@ public class RunDialog extends Dialog implements WindowListener{
 
 	@Override
 	public void windowClosing(WindowEvent arg0) {
-		destroyCMD();
+		shutdown();
 	}
 
 	@Override

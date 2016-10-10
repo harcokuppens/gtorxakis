@@ -25,7 +25,7 @@ public class SocketIO {
 	private boolean started = false;
 	private TorXakisType currentType;
 	
-	public SocketIO(RunDialog runDialog,int port, String host){
+	public SocketIO(RunDialog runDialog,int port, String host) throws Exception{
 		this.host = host;
 		this.port = port;
 		this.runDialog = runDialog;
@@ -33,15 +33,15 @@ public class SocketIO {
 	}
 	
 
-	public void listenSocket(){
+	public void listenSocket() throws Exception{
 	//Create socket connection
 	   try{
 	     socket = new Socket(host, port);
 	     writer = new PrintWriter(socket.getOutputStream(), true);
 	     reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	   } catch(Exception e) {
-		 runDialog.destroyCMD();
-	     JOptionPane.showMessageDialog(null, "Can not connect to TorXakis. Are you sure that you pick the right directory?");
+		 JOptionPane.showMessageDialog(null, "Can not connect to TorXakis. Are you sure that you pick the right directory?");
+		 runDialog.shutdown();
 	   }
 	}
 	
@@ -70,9 +70,9 @@ public class SocketIO {
 	}
 	
 	public void startTorXakis(String filename){
-		started = true;
 		writer.println("START");
 		writer.println("INIT " + filename);
+		started = true;
 	}
 	
 	public void quitTorXakis(){
@@ -91,8 +91,9 @@ public class SocketIO {
 			writer.close();
 			reader.close();
 			socket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+//			e.printStackTrace();
+			System.err.println("Socket closed with errors");
 		}
 	}
 }

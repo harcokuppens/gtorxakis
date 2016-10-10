@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.SocketException;
@@ -66,12 +68,26 @@ public class TorXakisPanel extends JPanel{
 	private JPanel createCommandPanel() {
 		JPanel temp = new JPanel(new BorderLayout());
 		JTextField commandLine = new JTextField("", 30);
+		commandLine.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try{
+					dialog.getSocketIO().sendCommand(commandLine.getText());
+					commandLine.setText("");
+				}catch(NullPointerException e){
+					JOptionPane.showMessageDialog(dialog, "Communication error with TorXakis. Are you sure that TorXakis is running?");
+				}
+			}
+			
+		});
 		JButton send = new JButton("Send");
 		send.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try{
 					dialog.getSocketIO().sendCommand(commandLine.getText());
+					commandLine.setText("");
 				}catch(NullPointerException e){
 					JOptionPane.showMessageDialog(dialog, "Communication error with TorXakis. Are you sure that TorXakis is running?");
 
