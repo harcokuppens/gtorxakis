@@ -58,7 +58,7 @@ public class RunDialog extends Dialog implements WindowListener{
 	
 	public static enum TorXakisType{
 		TESTER("TESTER", "TEST"),
-//		SIMULATOR("SIMULATOR", "SIM"),
+		SIMULATOR("SIMULATOR", "SIM"),
 		STEPPER("STEPPER", "STEP");
 		
 		private String cmd, runCMD;
@@ -71,7 +71,7 @@ public class RunDialog extends Dialog implements WindowListener{
 		public String getInitCommand(String model, String connection){
 			switch(this){
 			case TESTER:
-//			case SIMULATOR:
+			case SIMULATOR:
 				return cmd + " " + model + " " + connection;
 			default:
 				return cmd + " " + model;
@@ -289,7 +289,7 @@ public class RunDialog extends Dialog implements WindowListener{
 		
 		torxakisType = new JComboBox<TorXakisType>();
 		torxakisType.addItem(TorXakisType.TESTER);
-//		torxakisType.addItem(TorXakisType.SIMULATOR);
+		torxakisType.addItem(TorXakisType.SIMULATOR);
 		torxakisType.addItem(TorXakisType.STEPPER);
 		torxakisType.setSelectedItem(TorXakisType.valueOf(sessionSettings.getAttribute(SessionSettings.TORXAKIS_TYPE)));
 		panel.add(torxakisType, gbc);
@@ -316,13 +316,26 @@ public class RunDialog extends Dialog implements WindowListener{
 	public void startTorxakisServer(int port){
 		String pathToTorXakis = new File(pathField.getText()).getPath();
 		if(Environment.OperatingSystem == Environment.OS.Windows){
-			try {
-				process = Runtime.getRuntime().exec("cmd.exe /c start " + pathToTorXakis + "\\txsserver.exe " + port);
-				BufferedWriter writeer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-				writeer.flush();
-			} catch (IOException e) {
-				System.out.println("FROM CATCH" + e.toString());
-			}
+//			try {
+				Runnable r = new Runnable(){
+					@Override
+					public void run() {
+						try {
+							process = Runtime.getRuntime().exec("cmd.exe /c start " + pathToTorXakis + "\\txsserver.exe " + port);
+						} catch (IOException e) {
+							System.out.println("FROM CATCH" + e.toString());
+						}
+					}
+				};
+				(new Thread(r)).start();;
+//				ProcessBuilder pb = new ProcessBuilder("cmd.exe","/c","start",pathToTorXakis+"\\txsserver.exe " + port);
+//				ProcessBuilder pb = new ProcessBuilder(new String[]{pathToTorXakis+"\\txsserver.exe", port+""});
+//				process = pb.start();
+//				BufferedWriter writeer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
+//				writeer.flush();
+//			} catch (IOException e) {
+//				
+//			}
 		}else{
 			String[] arguments = new String[] {"java", "-jar", pathToTorXakis +"/Test.jar"};
 			try {
@@ -353,6 +366,7 @@ public class RunDialog extends Dialog implements WindowListener{
 					startTorxakisServer(port);
 					Session.getSession().getProject().saveAs(Session.TEMP_TXS, FileTypeAssociation.TorXakisExport.getDefaultFileType());
 					try{
+						Thread.sleep(1000);
 						socketIO = new SocketIO(runDialog, port, host);
 					}catch(Exception socketException){
 						JOptionPane.showMessageDialog(null, "Can not connect to TorXakis. Are you sure that you pick the right directory?");
@@ -380,7 +394,7 @@ public class RunDialog extends Dialog implements WindowListener{
 							try{
 								torxakisPanel.readLines(socketIO.getReader());
 							}catch (Exception e){
-//								e.printStackTrace();
+								e.printStackTrace();
 								if(!stopped){
 									System.err.println("CATCH FIRED");
 									runDialog.shutdown();

@@ -65,8 +65,10 @@ public class SocketIO {
 	}
 	
 	public void run(int iterations){
-		writer.println(currentType.getRunCommand(iterations));
-		writer.flush();
+		if(currentType != TorXakisType.SIMULATOR){
+			writer.println(currentType.getRunCommand(iterations));
+			writer.flush();
+		}
 	}
 	
 	public void startTorXakis(String filename){
@@ -88,6 +90,7 @@ public class SocketIO {
 	
 	public void close(){
 		try {
+			System.out.println("socket closed");
 			writer.close();
 			reader.close();
 			socket.close();
