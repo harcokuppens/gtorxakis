@@ -366,7 +366,7 @@ public class RunDialog extends Dialog implements WindowListener{
 					startTorxakisServer(port);
 					Session.getSession().getProject().saveAs(Session.TEMP_TXS, FileTypeAssociation.TorXakisExport.getDefaultFileType());
 					try{
-						Thread.sleep(1000);
+						Thread.sleep(2000);
 						socketIO = new SocketIO(runDialog, port, host);
 					}catch(Exception socketException){
 						JOptionPane.showMessageDialog(null, "Can not connect to TorXakis. Are you sure that you pick the right directory?");

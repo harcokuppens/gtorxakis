@@ -214,9 +214,11 @@ public class Model extends Definition {
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < variables.getVariables().size(); i++){
 			Variable v = variables.getVariables().get(i);
-			sb.append(v.getName() + " := " + v.getInitValue());
+			String initValue = v.getInitValue();
+			if(v.getType().trim().toLowerCase().equals("string")) initValue = "\""+initValue+"\"";
+			sb.append(v.getName() + " := " + initValue);
 			if(!((i+1) == variables.getVariables().size()))
-				sb.append(", ");
+				sb.append("; ");
 		}
 		return sb.toString();
 	}

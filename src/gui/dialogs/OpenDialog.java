@@ -14,11 +14,8 @@ import core.Session;
 public class OpenDialog extends AdvancedFileChooserOpen {
 	private static FileTypeAssociation association = FileTypeAssociation.ProjectImport;
 	
-	private boolean startscreen;
-
 	public OpenDialog(Frame parent, boolean startscreen) {
 		super(parent, association);
-		this.startscreen = startscreen;
 		setDirectory(Session.getSession().getDefaultPath());		
 		
 		showOpenDialog();
@@ -26,7 +23,6 @@ public class OpenDialog extends AdvancedFileChooserOpen {
 
 	public OpenDialog(Dialog parent, boolean startscreen) {
 		super(parent, association);
-		this.startscreen = startscreen;
 		setDirectory(Session.getSession().DEFAULT_PATH);		
 		
 		showOpenDialog();
