@@ -6,28 +6,17 @@ import gui.draw.DrawableGraphState;
 import gui.draw.DrawableSelectionBox;
 import gui.draw.GraphInterface;
 import gui.draw.GraphPanel;
-
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.Semaphore;
-
 import model.graph.GraphEdge;
 import model.graph.GraphState;
-
 import org.apache.batik.swing.gvt.GVTTreeRendererListener;
-
 import util.SVGRunnable;
 import util.Vector;
-import core.Session;
 
 public class DrawController {
 	private boolean isDeployed = false;

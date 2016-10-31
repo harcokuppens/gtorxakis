@@ -1,7 +1,6 @@
 package action;
 
 import java.util.ArrayList;
-
 import model.graph.GraphComment;
 import model.graph.GraphEdge;
 import model.graph.GraphState;
@@ -18,7 +17,6 @@ public class DrawDeleteAction extends Action {
 	private ArrayList<GraphEdge> edges;
 	private ArrayList<DrawableComment> drawableComments;
 	private ArrayList<GraphComment> comments;
-	private GraphInterface gi;
 	
 	public DrawDeleteAction(ArrayList<DrawableGraphState> drawableNodeList, ArrayList<DrawableGraphEdge> drawableEdgeList,  ArrayList<DrawableComment> drawableCommentList) {
 		super(true);

@@ -1,13 +1,9 @@
 package action;
 
 import gui.control.Movable;
-import gui.draw.GraphInterface;
 import gui.control.DrawController;
-
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import util.Vector;
 
 public class DrawMoveAction extends Action {

@@ -32,7 +32,6 @@ public class ActionHandler extends Thread {
 		while(true) {
 			invocSem.acquireUninterruptibly();
 			Action a = actionStack.pop();
-			// check if calculation results should be cleared before performing this action
 			a.run(model.getDrawController());
 		}
 	}

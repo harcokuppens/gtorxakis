@@ -1,8 +1,6 @@
 package action;
 
 import java.util.ArrayList;
-
-
 import model.graph.GraphComment;
 import model.graph.GraphEdge;
 import model.graph.GraphState;

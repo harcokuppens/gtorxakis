@@ -8,6 +8,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
+import javax.swing.JPanel;
+
 import org.w3c.dom.svg.SVGDocument;
 
 public class ViewBoxController {
@@ -75,7 +77,7 @@ public class ViewBoxController {
 		rt.scale(scale, scale);
 		rt.translate(dx, dy);
 		panel.setRenderingTransform(rt);
-		panel.setRecenterOnResize(true);
+		panel.setRecenterOnResize(false);
 	}
 
 	private int getBaseWidth() {

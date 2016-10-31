@@ -45,4 +45,14 @@ public class GraphPanel extends JSVGCanvas {
 		this.addGVTTreeRendererListener(currentListener);
 		
 	}
+	
+	public int getWidth2(){
+		return 500;
+	}
+	
+	public int getHeight2(){
+		return 300;
+	}
+	
 }
+

@@ -1,12 +1,8 @@
 package action;
 
-import java.awt.Point;
-
-import util.Vector;
 import gui.control.Resizable;
 import gui.control.DrawController;
 import gui.draw.DrawableComment.ResizeType;
-import gui.draw.GraphInterface;
 
 public class DrawResizeAction extends Action{
 	private Runnable svgAction;

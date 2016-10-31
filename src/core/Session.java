@@ -96,27 +96,20 @@ public class Session extends Observable {
 			System.setProperty("com.apple.mrj.application.apple.menu.about.name", Session.PROGRAM_NAME);
 			System.setProperty("apple.awt.fakefullscreen", "true");
 		}	
-		//set look and feel to system default
 		try {
-			UIManager.setLookAndFeel(
-					UIManager.getSystemLookAndFeelClassName());
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			Locale.setDefault(locale);
 			JComponent.setDefaultLocale(locale);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		settings = SettingsImporterXML.importSettings(this.CONFIG_FILENAME);
+		settings = SettingsImporterXML.importSettings(CONFIG_FILENAME);
 		window = new Window(this);
 		addObserver(window);
 	}
@@ -132,7 +125,7 @@ public class Session extends Observable {
 				if(!window.confirmClose()) return;
 			}
 		}
-		SettingsExporterXML.exportSettings(settings, this.CONFIG_FILENAME);
+		SettingsExporterXML.exportSettings(settings, CONFIG_FILENAME);
 		System.exit(0);
 	}
 
@@ -141,13 +134,12 @@ public class Session extends Observable {
 	}
 	
 	public SessionSettings getSettings(){
-		System.err.println(settings.getAttribute(SessionSettings.ITERATIONS));
 		return settings;
 	}
 	
 	public void setSettings(SessionSettings settings){
 		this.settings = settings;
-		SettingsExporterXML.exportSettings(settings, this.CONFIG_FILENAME);
+		SettingsExporterXML.exportSettings(settings, CONFIG_FILENAME);
 	}
 
 }
