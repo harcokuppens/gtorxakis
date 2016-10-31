@@ -2,6 +2,7 @@ package gui.dialogs;
 
 import io.file.FileTypeAssociation;
 import io.net.SocketIO;
+import io.net.SocketIO.TorXakisType;
 
 import java.awt.BorderLayout;
 import java.awt.FileDialog;
@@ -55,33 +56,6 @@ public class RunDialog extends Dialog implements WindowListener{
 	private SessionSettings sessionSettings;
 	
 	private boolean stopped = false;
-	
-	public static enum TorXakisType{
-		TESTER("TESTER", "TEST"),
-		SIMULATOR("SIMULATOR", "SIM"),
-		STEPPER("STEPPER", "STEP");
-		
-		private String cmd, runCMD;
-		
-		private TorXakisType(String cmd, String runCMD){
-			this.cmd = cmd;
-			this.runCMD = runCMD;
-		}
-		
-		public String getInitCommand(String model, String connection){
-			switch(this){
-			case TESTER:
-			case SIMULATOR:
-				return cmd + " " + model + " " + connection;
-			default:
-				return cmd + " " + model;
-			}
-		}
-		
-		public String getRunCommand(int iterations){
-			return runCMD + " " + String.valueOf(iterations);
-		}
-	}
 	
 	public RunDialog(SessionSettings settings){
 		this.sessionSettings = settings;

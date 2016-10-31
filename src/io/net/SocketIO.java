@@ -1,7 +1,6 @@
 package io.net;
 
 import gui.dialogs.RunDialog;
-import gui.dialogs.RunDialog.TorXakisType;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,6 +23,33 @@ public class SocketIO {
 	
 	private boolean started = false;
 	private TorXakisType currentType;
+	
+	public static enum TorXakisType{
+		TESTER("TESTER", "TEST"),
+		SIMULATOR("SIMULATOR", "SIM"),
+		STEPPER("STEPPER", "STEP");
+		
+		private String cmd, runCMD;
+		
+		private TorXakisType(String cmd, String runCMD){
+			this.cmd = cmd;
+			this.runCMD = runCMD;
+		}
+		
+		public String getInitCommand(String model, String connection){
+			switch(this){
+			case TESTER:
+			case SIMULATOR:
+				return cmd + " " + model + " " + connection;
+			default:
+				return cmd + " " + model;
+			}
+		}
+		
+		public String getRunCommand(int iterations){
+			return runCMD + " " + String.valueOf(iterations);
+		}
+	}
 	
 	public SocketIO(RunDialog runDialog,int port, String host) throws Exception{
 		this.host = host;

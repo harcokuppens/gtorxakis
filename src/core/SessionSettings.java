@@ -1,8 +1,8 @@
 package core;
 
-import java.util.InputMismatchException;
+import io.net.SocketIO.TorXakisType;
 
-import gui.dialogs.RunDialog.TorXakisType;
+import java.util.InputMismatchException;
 
 public class SessionSettings {
 	
