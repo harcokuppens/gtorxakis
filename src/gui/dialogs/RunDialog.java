@@ -14,9 +14,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -323,11 +325,9 @@ public class RunDialog extends Dialog implements WindowListener{
 	
 	private void setButtons(){
 		if(socketIO == null){
-			start.setEnabled(true);
 			run.setEnabled(false);
 			stop.setEnabled(false);
 		}else{
-			start.setEnabled(!socketIO.isStarted());
 			run.setEnabled(socketIO.isStarted());
 			stop.setEnabled(socketIO.isStarted());
 		}
@@ -354,7 +354,8 @@ public class RunDialog extends Dialog implements WindowListener{
 				SessionSettings settings = new SessionSettings(port, iterations, host, model, connection, type, f.getPath());
 				Session.getSession().setSettings(settings);
 				
-				if(socketIO == null){
+//				if(socketIO == null){
+				shutdown();
 					torxakisPanel.clear();
 					startTorxakisServer(port);
 					Session.getSession().getProject().saveAs(Session.TEMP_TXS, FileTypeAssociation.TorXakisExport.getDefaultFileType());
@@ -365,7 +366,7 @@ public class RunDialog extends Dialog implements WindowListener{
 						JOptionPane.showMessageDialog(null, "Can not connect to TorXakis. Are you sure that you pick the right directory?");
 						runDialog.shutdown();
 					}
-				}
+//				}
 				
 				socketIO.startTorXakis(type, model, connection);
 				
@@ -537,7 +538,9 @@ public class RunDialog extends Dialog implements WindowListener{
 	}
 
 	public void destroyCMD(){
-		if(process != null && process.isAlive()) process.destroy();
+		if(process != null && process.isAlive()){
+			process.destroy();
+		}
 	}
 	
 	public SocketIO getSocketIO(){
