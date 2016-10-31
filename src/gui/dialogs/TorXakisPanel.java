@@ -61,8 +61,8 @@ public class TorXakisPanel extends JPanel{
 		scrollPane.setViewportView(textPane);
 		this.add(scrollPane, BorderLayout.CENTER);
 		this.add(createCommandPanel(), BorderLayout.SOUTH);
-		this.setMinimumSize(new Dimension(600,300));
-		this.setPreferredSize(new Dimension(600,300));
+		this.setMinimumSize(new Dimension(800,300));
+		this.setPreferredSize(new Dimension(800,300));
 	}
 	
 	private JPanel createCommandPanel() {

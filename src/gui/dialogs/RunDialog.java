@@ -325,9 +325,11 @@ public class RunDialog extends Dialog implements WindowListener{
 	
 	private void setButtons(){
 		if(socketIO == null){
+			start.setText("Start");
 			run.setEnabled(false);
 			stop.setEnabled(false);
 		}else{
+			start.setText("Restart");
 			run.setEnabled(socketIO.isStarted());
 			stop.setEnabled(socketIO.isStarted());
 		}
