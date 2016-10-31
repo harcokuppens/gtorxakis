@@ -8,7 +8,9 @@ import gui.dialogs.SaveAsDialog;
 import gui.dialogs.TorXakisExportDialog;
 import gui.draw.GraphInterface;
 import gui.window.Window;
+import io.file.FileType;
 import io.file.FileTypeAssociation;
+import io.file.project.importer.ProjectImporter;
 import model.Model;
 import model.Project;
 
@@ -18,7 +20,12 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 
+
+
+import java.io.IOException;
+
 import javax.swing.AbstractAction;
+
 import core.Session;
 
 public class WindowActionListener implements ActionListener, ComponentListener {
@@ -47,6 +54,7 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 			SELECT_ALL = "selectall",
 			ADD_MODEL = "addModel",
 			ADD_PROC = "addProc",
+			RELOAD = "reload",
 			RUN = "run",
 			EXPORT_GRAPH_PNG = "exportgraphpng",
 			EXPORT_GRAPH_SVG = "exportgraphsvg",
@@ -73,7 +81,14 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 			new NewFileDialog(w);
 			break;
 		case OPEN:
-			new OpenDialog(w,false);		
+			new OpenDialog(w,false);	
+			break;
+		case RELOAD:
+			ProjectImporter importer = (ProjectImporter) FileTypeAssociation.ProjectImport.getDefaultFileType().getImporter();
+			try {
+				Session.getSession().setProject(importer.importProject(Session.getSession().getProject().getPath()));
+			} catch (Exception e1) {
+			}
 			break;
 		case SAVE:
 			final Project p = Session.getSession().getProject();
@@ -130,10 +145,6 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 //			JCheckBoxMenuItem i = (JCheckBoxMenuItem) e.getSource();
 //			Session.getSession().getSettings().setBooleanSetting(SettingsValue.view_grid, i.getState());
 //			dc.setViewGrid(i.getState());
-			break;
-		case ABOUT:
-//			AboutDialog ad = new AboutDialog(window);
-//			ad.setVisible(true);
 			break;
 		default:
 			System.err.println("ActionCommand that we don't use!");

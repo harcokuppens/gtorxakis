@@ -40,8 +40,6 @@ import model.Model;
  * which state the current selection in the GraphInterface is, it implements the
  * Observer class and observes the GraphInterface to be notified when the
  * selection changes.
- * 
- * 
  */
 public class InputListener implements MouseListener, MouseMotionListener, KeyListener, Observer, MouseWheelListener, ActionListener {
 
@@ -54,8 +52,6 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 	 * Furthermore, some of the actions can only be started in a special state.
 	 * For a full overview of pre- and postconditions, please refer to the
 	 * documentation.
-	 * 
-	 * 
 	 */
 	private enum ControlMethod {
 		NONE, // State: Selection is empty, initial state

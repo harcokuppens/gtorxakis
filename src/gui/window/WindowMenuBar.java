@@ -28,7 +28,8 @@ public class WindowMenuBar extends JMenuBar{
 					  importData, 
 					  addModel, 
 					  undo, 
-					  redo, 
+					  redo,
+					  reload,
 					  exportGraphPng, 
 					  exportGraphSvg, 
 					  exportGraphJpg, 
@@ -55,6 +56,8 @@ public class WindowMenuBar extends JMenuBar{
 		exportGraphPng = addMenuItem("...to Portable Network Graphic (.png)", export, false, -1, false, WindowActionListener.EXPORT_GRAPH_PNG, null, wat);
 		exportGraphSvg = addMenuItem("...to Scalable Vector Graphic (.svg)", export, false, -1, false, WindowActionListener.EXPORT_GRAPH_SVG, null, wat);
 		exportGraphJpg = addMenuItem("...to JPEG (.jpeg)", export, false, -1, false, WindowActionListener.EXPORT_GRAPH_JPG, null, wat);
+		file.addSeparator();
+		reload = addMenuItem("Reload project", file, true, KeyEvent.VK_F5, false, "reload", "/icons/arrow_refresh.png", wat);
 		file.addSeparator();
 		addMenuItem("Exit", file, true, KeyEvent.VK_W, false, "exit", "/icons/door_in.png", wat);
 		
@@ -156,12 +159,9 @@ public class WindowMenuBar extends JMenuBar{
 //				duplicateModelItem.setText("Duplicate");
 				projectMenu.add(modelMenu);
 			}
-
 		}	
-	
 	}
 
-	
 	public void setItemEnabled(String name,boolean b) {
 		switch(name){
 		case WindowActionListener.CLEAR_DATA:
@@ -184,6 +184,9 @@ public class WindowMenuBar extends JMenuBar{
 			break;
 		case WindowActionListener.EXPORT_TORXAKIS:
 			exportTorXakis.setEnabled(b);
+			break;
+		case WindowActionListener.RELOAD:
+			reload.setEnabled(b);
 			break;
 		case WindowActionListener.EXPORT_GRAPH_PNG: // intended fall-through
 		case WindowActionListener.EXPORT_GRAPH_SVG: // intended fall-through

@@ -51,6 +51,7 @@ public class Session extends Observable {
 		
 		startupProcedure();
 		this.setProject(Project.newProject());
+		this.currentProject.setSaved();
 
 		window.setVisible(true);
 		window.invalidate();

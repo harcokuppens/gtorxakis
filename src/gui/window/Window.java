@@ -54,7 +54,6 @@ public class Window extends JFrame implements Observer {
 	private StatusBar statusBar;
 	private SiteBar siteBar;
 	private final StatusBarMessageHandler statusBarMessageHandler;
-	private WindowToolBar toolBar;
 	
 	private JTabbedPane definitionPane;
 
@@ -96,18 +95,12 @@ public class Window extends JFrame implements Observer {
 		setExtendedState(Frame.MAXIMIZED_BOTH);
 		
 		//set titlebar
-//		setIconImage(Toolkit.getDefaultToolkit().getImage(Window.class.getResource("/logo/adanco-icon.gif")));
 		setTitle(Session.PROGRAM_NAME);
 				
 		//set menubar
 		menuBar = new WindowMenuBar(wat, inputListener);
 		setJMenuBar(menuBar);
 
-		//set toolbar
-		toolBar = new WindowToolBar(wat, inputListener);
-		toolBar.setFloatable(false);
-//		getContentPane().add(toolBar, BorderLayout.NORTH);
-		
 		definitionPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 		definitionPane.addChangeListener(new ChangeListener() {
 			@Override
@@ -133,7 +126,6 @@ public class Window extends JFrame implements Observer {
 		this.statusBarMessageHandler = new StatusBarMessageHandler(statusBar);
 		
 		this.setMinimumSize(new Dimension(600,600));
-
 	}
 	
 	public WindowMenuBar getWindowMenuBar(){
@@ -149,21 +141,16 @@ public class Window extends JFrame implements Observer {
 		DrawableGraph dg = new DrawableGraph();
 		String modelBaseName = "Model";
 		int count = 1;
-		ArrayList<String> otherModelNames = new ArrayList<String>();
 		for(Model m: currentProject.getModels()) {
 			String n = m.getName().trim();
 			if(n.startsWith(modelBaseName)) {
 				try {
-					// cut off the modelBaseName at the beginning.
 					String rem = n.substring(modelBaseName.length()).trim();
 					int modelIndex = Integer.valueOf(rem);
 					if(modelIndex >= count) {
 						count = modelIndex + 1;
 					}
 				} catch(NumberFormatException e) {
-					// This happens when we try to cast something like
-					// "Model A" or "Model 1_new". But we don't care about
-					// these anyway. -- Mo
 					continue;
 				}
 			}
@@ -183,21 +170,7 @@ public class Window extends JFrame implements Observer {
 		}
 		
 	}
-	
-//	private void showProc(ProcDefinition d){
-//		GUITextualDefinition gui = new GUITextualDefinition(d);
-//		this.definitionPane.addTab(d.getTitle(), gui);
-//		definitionPane.setTabComponentAt(this.definitionPane.getTabCount()-1, new ButtonTabComponent(definitionPane) {
-//			@Override
-//			public void onButtonPressed(JTabbedPane pane, int index) {
-////				hideModel(index);
-//			}
-//		});
-//		definitionPane.setSelectedIndex(this.definitionPane.getTabCount()-1);
-//		updateDefinition(currentDefinition, d);
-//		menuBar.updateDefinitions(currentProject);
-//	}
-	
+
 	private void showTextualDefinition(TextualDefinition d){
 		System.out.println(d.getDefinitionText());
 		GUITextualDefinition gui = new GUITextualDefinition(d.getDefinitionText());
@@ -327,7 +300,6 @@ public class Window extends JFrame implements Observer {
 	private void removeAllModels() {
 		updateDefinition(currentDefinition, null);
 		definitionPane.removeAll();
-//		definitionPane.addTab("SUT definition", new TextualDefinition(null));
 	}
 
 	public void hideModel(int i) {
@@ -352,18 +324,6 @@ public class Window extends JFrame implements Observer {
 
 	public StatusBar getStatusBar() {
 		return this.statusBar;
-	}
-	
-
-	private boolean confirmClearData() {
-		int returnValOptionPaneModifyModel = JOptionPane
-				.showConfirmDialog(
-						this,
-						"This will vanish all currently used indicators and you will not be able to undo this. Do you want to proceed?",
-						"Clear data warning",
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.WARNING_MESSAGE);
-		return returnValOptionPaneModifyModel == JOptionPane.YES_OPTION;
 	}
 	
 	private void updateGraphView(Definition oldDefinition, Definition newDefinition) {
@@ -398,7 +358,6 @@ public class Window extends JFrame implements Observer {
 			newPanel.requestFocus();
 			if(newDefinition instanceof Model){
 				((Model)newDefinition).getDrawController().getGraphInterface().addObserver(inputListener);
-				this.dc = dc;				
 			}
 		} else {
 			this.dc = null;
@@ -412,13 +371,11 @@ public class Window extends JFrame implements Observer {
 		this.currentProject = newProject;
 		if(newProject != null) {
 			menuBar.setItemEnabled(WindowActionListener.ADD_MODEL, true);
-//			menuBar.setItemEnabled(WindowActionListener.ADD_PROC, true);
 			for(Definition d: newProject.getDefinitions()) {
 				showDefinition(d);
 			}
 		} else {
 			menuBar.setItemEnabled(WindowActionListener.ADD_MODEL, false);
-//			menuBar.setItemEnabled(WindowActionListener.ADD_PROC, false);
 		}
 	}
 	
@@ -458,16 +415,12 @@ public class Window extends JFrame implements Observer {
 				}
 				menuBar.setItemEnabled(WindowActionListener.REDO, d.canRedo());
 				menuBar.setItemEnabled(WindowActionListener.UNDO, d.canUndo());
-				toolBar.setItemEnabled(WindowActionListener.UNDO, d.canUndo());
-				toolBar.setItemEnabled(WindowActionListener.REDO, d.canRedo());
 			} else {
 				menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_PNG, false);
 				menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_SVG, false);
 				menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_JPG, false);
 				menuBar.setItemEnabled(WindowActionListener.REDO, false);
 				menuBar.setItemEnabled(WindowActionListener.UNDO, false);
-				toolBar.setItemEnabled(WindowActionListener.UNDO, false);
-				toolBar.setItemEnabled(WindowActionListener.REDO, false);
 			}
 	}
 	
@@ -505,7 +458,7 @@ public class Window extends JFrame implements Observer {
 				JOptionPane.WARNING_MESSAGE
 		);
 		if(returnValue == JOptionPane.YES_OPTION) {
-//			Session.getSession().getProject().save();
+			Session.getSession().getProject().save();
 		}
 		return !(returnValue == JOptionPane.CANCEL_OPTION);
 	}
