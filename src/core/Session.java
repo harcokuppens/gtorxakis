@@ -21,7 +21,7 @@ import util.Environment;
 
 public class Session extends Observable {
 	public static final String PROGRAM_NAME = "TorXakis";
-	public static final Version PROGRAM_VERSION = new Version(0, 5, 0);
+	public static final Version PROGRAM_VERSION = new Version(1, 0, 0);
 	public static boolean DEVMODE = true;
 	public static final String CONFIG_FILENAME = Environment.getApplicationDataFolder() + Environment.fileSeparator + "config.xml";
 	public static final String DEFAULT_PATH = Environment.getApplicationDataFolder() + Environment.fileSeparator + "data" + Environment.fileSeparator;
@@ -132,7 +132,6 @@ public class Session extends Observable {
 				if(!window.confirmClose()) return;
 			}
 		}
-		// point of no return
 		SettingsExporterXML.exportSettings(settings, this.CONFIG_FILENAME);
 		System.exit(0);
 	}

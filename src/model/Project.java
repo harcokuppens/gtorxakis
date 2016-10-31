@@ -15,7 +15,6 @@ import io.file.project.exporter.ProjectExport;
 public class Project {
 	private String name;
 	
-	private boolean settingsChanged = false;
 	private boolean modelsChanged = false;
 
 	private String path;
@@ -37,7 +36,6 @@ public class Project {
 		for (Definition d : definitions) {
 			d.setSaved();
 		}
-		settingsChanged = false;
 		modelsChanged = false;
 	}
 
@@ -46,7 +44,7 @@ public class Project {
 		for(Definition d: definitions) {
 			isSaved &= d.isSaved();
 		}
-		return isSaved && !settingsChanged && !modelsChanged;
+		return isSaved && !modelsChanged;
 	}
 
 	public String getName() {
@@ -155,12 +153,6 @@ public class Project {
 		if(model != null){
 			defString = model.getDefinitionAsText();
 		}
-//		if(defType.equals(TextualDefinition.DefType.MODEL)){
-//		}else if(defType.equals(TextualDefinition.DefType.CNECTDEF)){
-//			defString = connect.getDefinitionAsText();
-//		}else{
-//			defString = "";
-//		}
 		
 		String defLines[] = defString.split("\n");
 		System.err.println("sutLines size : "+defLines.length);

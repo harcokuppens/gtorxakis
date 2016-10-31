@@ -7,6 +7,7 @@ public class TextualDefinition extends Definition{
 	private final Project project;
 	
 	private String definition;
+	private String savedText;
 	private DefType type;
 	
 	private GUITextualDefinition drawable;
@@ -53,6 +54,7 @@ public class TextualDefinition extends Definition{
 		super(title);
 		this.project = project;
 		this.definition = definition;
+		savedText = definition;
 		this.type = type;
 	}
 	
@@ -66,23 +68,22 @@ public class TextualDefinition extends Definition{
 
 	@Override
 	public void setSaved() {
+		savedText = this.getDefinitionAsText();
 	}
 
 	@Override
 	public boolean isSaved() {
-		return false;
+		return savedText.equals(this.getDefinitionAsText());
 	}
 
 	@Override
 	public boolean canRedo() {
-		drawable.canRedo();
-		return false;
+		return drawable.canRedo();
 	}
 
 	@Override
 	public boolean canUndo() {
-		drawable.canUndo();
-		return false;
+		return drawable.canUndo();
 	}
 	
 	public String getDefinitionText(){

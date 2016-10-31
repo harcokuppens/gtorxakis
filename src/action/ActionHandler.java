@@ -8,10 +8,8 @@ import core.Session;
 
 public class ActionHandler extends Thread {
 	public Stack<Action> actionStack;
-	public Semaphore invocSem; //InvocationSemaphore 
+	public Semaphore invocSem; 
 
-	// We need a reference to the model so that we can manipulate it
-	// from the ActionHandler's thread.
 	private final Model model;
 	
 	/**
