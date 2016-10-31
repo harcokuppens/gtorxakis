@@ -3,14 +3,13 @@ package io.net;
 import gui.dialogs.RunDialog;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import javax.swing.JOptionPane;
+
+import core.Session;
 
 public class SocketIO {
 
@@ -47,7 +46,12 @@ public class SocketIO {
 		}
 		
 		public String getRunCommand(int iterations){
-			return runCMD + " " + String.valueOf(iterations);
+			switch(this){
+			case SIMULATOR:
+				return runCMD;
+			default:
+				return runCMD + " " + String.valueOf(iterations);
+			}
 		}
 	}
 	
@@ -75,7 +79,7 @@ public class SocketIO {
 		return reader;
 	}
 
-	public boolean hasStarted(){
+	public boolean isStarted(){
 		return started;
 	}
 	
@@ -91,10 +95,8 @@ public class SocketIO {
 	}
 	
 	public void run(int iterations){
-		if(currentType != TorXakisType.SIMULATOR){
-			writer.println(currentType.getRunCommand(iterations));
-			writer.flush();
-		}
+		writer.println(currentType.getRunCommand(iterations));
+		writer.flush();
 	}
 	
 	public void startTorXakis(String filename){
@@ -123,6 +125,21 @@ public class SocketIO {
 		} catch (Exception e) {
 //			e.printStackTrace();
 			System.err.println("Socket closed with errors");
+		}
+	}
+	
+	public void startTorXakis(TorXakisType type, String model, String connection){
+		try{
+			if(!isStarted()){
+				System.err.println("Try to start socketIO");
+				startTorXakis(Session.TEMP_TXS);
+			}					
+		}catch(Exception exception){
+			runDialog.shutdown();
+			return;
+		}
+		if(typeChanged(type)){
+			changeTorXakisType(type, model, connection);
 		}
 	}
 }
