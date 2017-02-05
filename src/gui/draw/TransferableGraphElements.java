@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import model.graph.GraphEdge;
 
 public class TransferableGraphElements implements Transferable{
-	private ArrayList<DrawableGraphState> nodes;
+	private ArrayList<DrawableGraphState> states;
 	private ArrayList<DrawableGraphEdge> edges;
 	private ArrayList<DrawableComment> comments;
 	private int centerX, centerY;
@@ -21,16 +21,16 @@ public class TransferableGraphElements implements Transferable{
 	
 	public TransferableGraphElements(ArrayList<Selectable> selectedElements, GraphInterface graphInterface) {
 		this.graphInterface = graphInterface;
-		nodes = new ArrayList<DrawableGraphState>();
+		states = new ArrayList<DrawableGraphState>();
 		edges = new ArrayList<DrawableGraphEdge>();
 		comments = new ArrayList<DrawableComment>();
 		
-		ArrayList<DrawableGraphState> selectedNodes = new ArrayList<DrawableGraphState>();
+		ArrayList<DrawableGraphState> selectedStates = new ArrayList<DrawableGraphState>();
 		ArrayList<DrawableComment> selectedComments = new ArrayList<DrawableComment>();
 		for(Selectable s : selectedElements) {
 			if( s instanceof DrawableGraphState){
 				DrawableGraphState n = (DrawableGraphState) s;
-				selectedNodes.add(n);
+				selectedStates.add(n);
 			}else if (s instanceof DrawableComment){
 				DrawableComment c = (DrawableComment) s;
 				selectedComments.add(c);
@@ -42,17 +42,17 @@ public class TransferableGraphElements implements Transferable{
 		}
 		
 		
-		for(DrawableGraphState d: selectedNodes) {
+		for(DrawableGraphState d: selectedStates) {
 			DrawableGraphState n = d.clone(); 
-			nodes.add(n);
+			states.add(n);
 		}
 		calculateCenter();
 		int o = 0;
-		for(DrawableGraphState n: selectedNodes) {
+		for(DrawableGraphState n: selectedStates) {
 			for(GraphEdge e: n.getState().getOutgoingEdges()) {
-				if(selectedNodes.contains(e.getTo().getDrawable())) {
-					int d = selectedNodes.indexOf(e.getTo().getDrawable());
-					DrawableGraphState no = nodes.get(o), nd = nodes.get(d);
+				if(selectedStates.contains(e.getTo().getDrawable())) {
+					int d = selectedStates.indexOf(e.getTo().getDrawable());
+					DrawableGraphState no = states.get(o), nd = states.get(d);
 					DrawableGraphEdge edge = new DrawableGraphEdge(graphInterface.getSVGDocument(), no, nd); 
 					edges.add(edge);
 				}
@@ -62,11 +62,11 @@ public class TransferableGraphElements implements Transferable{
 	}
 	
 	protected TransferableGraphElements(TransferableGraphElements draft) {
-		nodes = new ArrayList<DrawableGraphState>();
+		states = new ArrayList<DrawableGraphState>();
 		edges = new ArrayList<DrawableGraphEdge>();
 		comments = new ArrayList<DrawableComment>();
-		for(DrawableGraphState n: draft.nodes) {
-			nodes.add(n.clone());
+		for(DrawableGraphState n: draft.states) {
+			states.add(n.clone());
 		}
 		for(DrawableComment c : draft.comments){
 			comments.add(new DrawableComment(c));
@@ -74,15 +74,15 @@ public class TransferableGraphElements implements Transferable{
 		calculateCenter();
 		graphInterface = draft.graphInterface;
 		for(DrawableGraphEdge e: draft.edges) {
-			int o = draft.nodes.indexOf(e.getEdge().getFrom().getDrawable());
-			int d = draft.nodes.indexOf(e.getEdge().getTo().getDrawable());
-			edges.add(new DrawableGraphEdge(graphInterface.getSVGDocument(), nodes.get(o), nodes.get(d)));
+			int o = draft.states.indexOf(e.getEdge().getFrom().getDrawable());
+			int d = draft.states.indexOf(e.getEdge().getTo().getDrawable());
+			edges.add(new DrawableGraphEdge(graphInterface.getSVGDocument(), states.get(o), states.get(d)));
 		}
 	}
 	
 	private void calculateCenter() {
 		int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxX = 0, maxY = 0;
-		for(DrawableGraphState n: nodes) {
+		for(DrawableGraphState n: states) {
 			int x = (int) n.getLocation().getX();
 			int y = (int) n.getLocation().getY();
 			if(x < minX) {
@@ -137,8 +137,8 @@ public class TransferableGraphElements implements Transferable{
 		return df.equals(TransferableGraphElements.df);
 	}
 	
-	public ArrayList<DrawableGraphState> getNodes() {
-		return nodes;
+	public ArrayList<DrawableGraphState> getStates() {
+		return states;
 	}
 	
 	public ArrayList<DrawableGraphEdge> getEdges() {
@@ -150,9 +150,9 @@ public class TransferableGraphElements implements Transferable{
 	}
 	
 	public Selectable[] getDrawables() {
-		Selectable[] selected = new Selectable[nodes.size()];
-		for(int i = 0; i < nodes.size(); i++) {
-			selected[i] = nodes.get(i);
+		Selectable[] selected = new Selectable[states.size()];
+		for(int i = 0; i < states.size(); i++) {
+			selected[i] = states.get(i);
 		}
 		return selected;
 	}

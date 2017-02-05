@@ -8,6 +8,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
+/**
+ * A statusbar that is shown at the bottomn of the window. For example a message is shown, that defines how to add states.
+ * @author Tobias
+ *
+ */
 public class StatusBar extends JPanel {
 	public static final String DEFAULT_MESSAGE = "";
 	

@@ -29,7 +29,6 @@ public class GraphState implements Configurable {
 		this.name = name;
 		incomingEdges = new ArrayList<GraphEdge>();
 		outgoingEdges = new ArrayList<GraphEdge>();
-		
 	}
 	
 	
@@ -41,7 +40,6 @@ public class GraphState implements Configurable {
 		this.name = draft.name;
 		incomingEdges = new ArrayList<GraphEdge>();
 		outgoingEdges = new ArrayList<GraphEdge>();
-		
 	}
 	
 	public String getName() {
@@ -89,11 +87,8 @@ public class GraphState implements Configurable {
 			break;
 		case ATTRIBUTE_START_STATE:
 			startState = (boolean) value;
-			System.err.println(this.name + ": " + startState);
 			break;
 		default :
-			System.out.println("Set attribute failed");
-			System.err.println("Tried to set invalid attribute " + cmd);			
 		}
 
 	}
@@ -105,7 +100,6 @@ public class GraphState implements Configurable {
 		case ATTRIBUTE_START_STATE:
 			return startState;
 		default:
-			System.err.println("Tried to get non existing attribute of GraphNode (" + cmd + ")!");
 			return null;
 		}
 	}

@@ -14,7 +14,7 @@ public class ChangeNameDialogState extends ChangeNameDialog{
 	private DrawableGraphState dgn;
 	
 	public ChangeNameDialogState(Model model, Selectable selectable, JFrame parent) {
-		super(model, selectable, parent, ChangeNameDialog.NODE);
+		super(model, parent, ChangeNameDialog.NODE);
 		this.dgn = (DrawableGraphState) selectable;
 		this.init(dgn.getState().getName());
 	}

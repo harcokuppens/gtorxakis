@@ -28,10 +28,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
 package gui.window;
  
-import javax.swing.*;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
@@ -44,7 +42,6 @@ import java.awt.event.*;
  */
 public abstract class ButtonTabComponent extends JPanel {
 	private final JTabbedPane pane;
- 
 	public ButtonTabComponent(final JTabbedPane pane) {
 		//unset default FlowLayout' gaps
 		super(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -84,7 +81,6 @@ public abstract class ButtonTabComponent extends JPanel {
 	public abstract void onButtonPressed(JTabbedPane pane, int index);
 
 	private class TabButton extends JButton {
-
 		public TabButton() {
 			int size = 17;
 			setPreferredSize(new Dimension(size, size));

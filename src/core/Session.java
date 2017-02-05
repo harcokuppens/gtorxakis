@@ -1,12 +1,9 @@
 package core;
 
-import gui.control.DrawController;
-import gui.draw.GraphInterface;
 import gui.window.Window;
 import io.file.settings.SettingsExporterXML;
 import io.file.settings.SettingsImporterXML;
 
-import java.io.IOException;
 import java.util.Locale;
 import java.util.Observable;
 
@@ -14,15 +11,12 @@ import javax.swing.JComponent;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.jdom2.JDOMException;
-
 import model.Project;
 import util.Environment;
 
 public class Session extends Observable {
 	public static final String PROGRAM_NAME = "TorXakis";
 	public static final Version PROGRAM_VERSION = new Version(1, 0, 0);
-	public static boolean DEVMODE = true;
 	public static final String CONFIG_FILENAME = Environment.getApplicationDataFolder() + Environment.fileSeparator + "config.xml";
 	public static final String DEFAULT_PATH = Environment.getApplicationDataFolder() + Environment.fileSeparator + "data" + Environment.fileSeparator;
 	public static final String TEMP_TXS = Environment.getTempDataFolder() + Environment.fileSeparator + "temp.txs";
@@ -36,19 +30,13 @@ public class Session extends Observable {
 	private static Session instance;
 
 	public static void main(String[] args) {
-		System.out.println("Operating system:\t" + Environment.OperatingSystem + "\napplication dir:\t" + Environment.applicationDataDir + "\nComputer ID:\t" + Environment.getComputerID());
+		System.out.println("Operating system:\t" + Environment.OperatingSystem + "\napplication dir:\t" + Environment.applicationDataDir);
 		new Session(args);
 	}
 
 	public Session(String... args) {
 		instance = this;
-		
-		int firstPathIndex = 0;
-		if(args.length > 0 && args[0].trim().equals("--dev")) {
-			DEVMODE = true;
-			firstPathIndex = 1;
-		}
-		
+
 		startupProcedure();
 		this.setProject(Project.newProject());
 		this.currentProject.setSaved();

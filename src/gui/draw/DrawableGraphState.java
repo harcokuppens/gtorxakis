@@ -72,7 +72,7 @@ public class DrawableGraphState extends DrawableElement implements Configurable,
 	/**
 	 * Copy constructor
 	 * 
-	 * @param draft The DrawableGraphNode to be duplicated
+	 * @param draft The DrawableGraphState to be duplicated
 	 */
 	protected DrawableGraphState(SVGDocument doc, DrawableGraphState draft) {
 		super(doc);
@@ -257,7 +257,7 @@ public class DrawableGraphState extends DrawableElement implements Configurable,
 		case ATTRIBUTE_VIEW_INDICATORS:
 			return String.valueOf(viewIndicators);
 		default:
-			System.err.println("Tried to get non existing attribute of DrawableGraphNode (" + cmd + ")!");
+			System.err.println("Tried to get non existing attribute of DrawableGraphState (" + cmd + ")!");
 			return null;
 		}
 	}
@@ -275,7 +275,7 @@ public class DrawableGraphState extends DrawableElement implements Configurable,
 			this.viewIndicators = (Boolean.valueOf((String) value));
 			break;
 		default:
-			System.err.println("Tried to set non existing attribute of DrawableGraphNode (" + cmd + ")!");
+			System.err.println("Tried to set non existing attribute of DrawableGraphState (" + cmd + ")!");
 		}
 	}
 
@@ -304,7 +304,7 @@ public class DrawableGraphState extends DrawableElement implements Configurable,
 	}
 	
 	/**
-	 * Clones this DrawableGraphNode so that it can be used in the
+	 * Clones this DrawableGraphState so that it can be used in the
 	 * provided document.
 	 * @param doc The SVGDocument that this element will be part of
 	 * @return A clone of this DrawableGraphEdge

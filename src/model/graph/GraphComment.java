@@ -6,10 +6,6 @@ public class GraphComment {
 	private DrawableComment drawable;
 	private GraphEdge edge;
 	
-	private GraphComment(DrawableComment drawable){
-		this(drawable, null);
-	}
-		
 	public GraphComment(DrawableComment drawable, GraphEdge edge){
 		this.drawable = drawable;
 		this.edge = edge;

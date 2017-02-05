@@ -11,8 +11,8 @@ import gui.draw.GraphInterface;
 import gui.control.DrawController;
 
 public class DrawCreateAction extends Action {
-	private ArrayList<DrawableGraphState> drawableNodes;
-	private ArrayList<GraphState> nodes;
+	private ArrayList<DrawableGraphState> drawableStates;
+	private ArrayList<GraphState> states;
 	private ArrayList<DrawableGraphEdge> drawableEdges;
 	private ArrayList<GraphEdge> edges;
 	private ArrayList<DrawableComment> drawableComments;
@@ -20,10 +20,10 @@ public class DrawCreateAction extends Action {
 	
 	public DrawCreateAction(ArrayList<DrawableGraphState> drawableNodeList, ArrayList<DrawableGraphEdge> drawableEdgeList, ArrayList<DrawableComment> drawableCommentList) {
 		super(true);
-		drawableNodes = new ArrayList<DrawableGraphState>(drawableNodeList);
-		nodes = new ArrayList<GraphState>();
-		for(DrawableGraphState n: drawableNodes) {
-			nodes.add(n.getState());
+		drawableStates = new ArrayList<DrawableGraphState>(drawableNodeList);
+		states = new ArrayList<GraphState>();
+		for(DrawableGraphState n: drawableStates) {
+			states.add(n.getState());
 		}
 		drawableEdges = new ArrayList<DrawableGraphEdge>(drawableEdgeList);
 		edges = new ArrayList<GraphEdge>();
@@ -42,14 +42,14 @@ public class DrawCreateAction extends Action {
 	@Override
 	public void run(DrawController dc) {
 		GraphInterface gi = dc.getGraphInterface();
-		gi.getGraph().addStates(nodes);
+		gi.getGraph().addStates(states);
 		gi.getGraph().addComments(comments);
 		
 		for(GraphEdge e: edges) {
 			e.getFrom().addOutgoingEdge(e);
 			e.getTo().addIncomingEdge(e);
 		}
-		gi.getDrawableGraph().addNodes(drawableNodes);
+		gi.getDrawableGraph().addStates(drawableStates);
 		gi.getDrawableGraph().addEdges(drawableEdges);
 		gi.getDrawableGraph().addComments(drawableComments);
 	}

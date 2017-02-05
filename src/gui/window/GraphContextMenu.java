@@ -41,7 +41,7 @@ public class GraphContextMenu {
 	private Model model;
 
 	private enum MenuType{
-		NODES,
+		STATES,
 		EDGES,
 		COMMENTS,
 		EMPTY,
@@ -59,8 +59,8 @@ public class GraphContextMenu {
 	private ContextMenu getContextMenu(){
 		MenuType temp = getMenuType();
 		switch(temp){
-		case NODES:
-			return new NodesContextMenu();
+		case STATES:
+			return new StatesContextMenu();
 		case EDGES:
 			return new EdgesContextMenu();
 		case COMMENTS:
@@ -69,7 +69,6 @@ public class GraphContextMenu {
 		case OTHER:
 		default:
 			return new DefaultContextMenu();
-			//Do we have a difference between empty selection and a selection of multiple selectables? -tobi-
 		}
 	}
 	
@@ -78,7 +77,7 @@ public class GraphContextMenu {
 			return MenuType.EMPTY;
 		}
 		if(containsOnly(DrawableGraphState.class)){
-			return MenuType.NODES;
+			return MenuType.STATES;
 		}
 		if(containsOnly(DrawableGraphEdge.class)){
 			return MenuType.EDGES;
@@ -121,7 +120,6 @@ public class GraphContextMenu {
 							cut, 
 							copy, 
 							paste, 
-							properties, 
 							delete;
 		protected JCheckBoxMenuItem startState;
 		
@@ -130,13 +128,11 @@ public class GraphContextMenu {
 				   RENAME = "Rename",
 				   EDIT_TEXT = "Edit text",
 				   EDIT_TRANSITIONS = "Edit transitions",
-				   REMOVE_NAME = "Remove label",
 				   CUT = "Cut",
 				   COPY = "Copy",
 				   PASTE = "Paste",
 				   DELETE = "Delete",
-				   START_STATE = "Set start state"
-				   ;
+				   START_STATE = "Set start state";
 		
 		public ContextMenu(){
 			init();
@@ -156,23 +152,6 @@ public class GraphContextMenu {
 			item.setActionCommand(cmd);
 			item.addActionListener(this);
 			return item;
-		}
-		
-		private void removeEdgeNameAction(){
-			GraphEdge[] objects1 = castSelectableToGraphEdge(selectable);
-			
-			String[] command1 = new String[]{GraphEdge.ATTRIBUTE_NAME};
-			Object[][] oldValues1 = new String[1][objects1.length];
-			for(int i = 0; i < objects1.length; i++) {
-				oldValues1[0][i] = objects1[i].getAttribute(GraphEdge.ATTRIBUTE_NAME);
-			}
-			Object[][] newValues1 = new String[1][objects1.length];
-			for(int i = 0; i < objects1.length; i++) {
-				newValues1[0][i] = String.valueOf("");
-			}
-			Action a5 = new SetConfigAction(objects1, command1, oldValues1);
-			Action a6 = new SetConfigAction(objects1, command1, newValues1);
-			model.performAction(a6, a5);	
 		}
 		
 		@Override
@@ -201,9 +180,6 @@ public class GraphContextMenu {
 						cnd.setVisible(true);
 					}
 				}
-				break;
-			case REMOVE_NAME:
-				removeEdgeNameAction();
 				break;
 			case EDIT_TEXT:
 				selectedItem = selectables.get(0);
@@ -247,8 +223,12 @@ public class GraphContextMenu {
 		String[] command1 = new String[]{GraphState.ATTRIBUTE_START_STATE};
 		Object[][] oldValues1 = new Object[1][objects1.length];
 		for(int i = 0; i < objects1.length; i++) {
-			System.out.println(objects1[i].getAttribute(GraphState.ATTRIBUTE_START_STATE));
-			oldValues1[0][i] = objects1[i].getAttribute(GraphState.ATTRIBUTE_START_STATE);
+			if(objects1[i] == null) 
+				oldValues1[0][i] = null;
+			else{
+				System.out.println(objects1[i].getAttribute(GraphState.ATTRIBUTE_START_STATE));
+				oldValues1[0][i] = objects1[i].getAttribute(GraphState.ATTRIBUTE_START_STATE);
+			}
 		}
 		Object[][] newValues1 = new Object[1][objects1.length];
 		for(int i = 0; i < objects1.length; i++) {
@@ -263,9 +243,9 @@ public class GraphContextMenu {
 		contextMenu.show(component, x, y);
 	}
 	
-	private class NodesContextMenu extends ContextMenu {
+	private class StatesContextMenu extends ContextMenu {
 		
-		public NodesContextMenu(){
+		public StatesContextMenu(){
 			super();
 		}
 		
@@ -295,8 +275,6 @@ public class GraphContextMenu {
 			add(copy);
 			add(paste);
 			add(delete);
-			addSeparator();
-			add(properties);
 		}
 
 		@Override

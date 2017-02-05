@@ -32,7 +32,6 @@ public class ProjectExport {
 		} catch (FactoryConfigurationError e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

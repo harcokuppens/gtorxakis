@@ -1,5 +1,10 @@
 package model;
 
+/**
+ * This class represents a transition that can be added to an edge.
+ * @author Tobias
+ *
+ */
 public class Transition {
 	
 	private String channel,

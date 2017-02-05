@@ -4,8 +4,6 @@ package model.graph;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import core.Session;
-
 public class Graph {
 
 	private ArrayList<GraphState> states;
@@ -115,8 +113,8 @@ public class Graph {
 		return names;
 	}
 	
-	public int getNodeIndex(GraphState node) {
-		return states.indexOf(node);
+	public int getStateIndex(GraphState state) {
+		return states.indexOf(state);
 	}
 	
 	public GraphState getStateWithName(String name){

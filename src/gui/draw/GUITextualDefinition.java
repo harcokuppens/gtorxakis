@@ -13,6 +13,11 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 
 import util.MyTokenMaker;
 
+/**
+ * Graphical representaiton of a textual definition.
+ * @author Tobias
+ *
+ */
 public class GUITextualDefinition extends JPanel implements KeyListener{
 
 	private RSyntaxTextArea textArea;
@@ -47,14 +52,10 @@ public class GUITextualDefinition extends JPanel implements KeyListener{
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

@@ -9,14 +9,8 @@ import gui.draw.DrawableGraphState;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
-
-
 
 import model.Gates;
 import model.Gates.Gate;
@@ -28,19 +22,17 @@ import model.Variables;
 import model.Variables.Variable;
 import model.graph.Graph;
 import model.graph.GraphComment;
-import model.graph.GraphEdge;
 import model.graph.GraphState;
-import core.Session;
-import core.Version;
 
-import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
-import org.apache.batik.util.XMLResourceDescriptor;
+import org.jdom2.DataConversionException;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
-import org.jdom2.DataConversionException;
 import org.w3c.dom.svg.SVGDocument;
+
+import core.Session;
+import core.Version;
 
 public class ProjectImporterGTorx extends ProjectImporter {
 	public static final String ENCODING = "UTF-8";
@@ -57,7 +49,6 @@ public class ProjectImporterGTorx extends ProjectImporter {
 			Element versionElement = projectElement.getChild("version");
 			version = new Version(versionElement.getText());
 
-			System.err.println(name);
 			Project project = new Project(name);
 			project.setPath(file.getPath());
 
@@ -94,7 +85,7 @@ public class ProjectImporterGTorx extends ProjectImporter {
 		String title = textualElement.getAttributeValue("title");
 		String type = textualElement.getAttributeValue("type");
 		String definition = textualElement.getText();
-		return new TextualDefinition(project, definition, title, TextualDefinition.DefType.valueOf(type));
+		return new TextualDefinition(definition, title, TextualDefinition.DefType.valueOf(type));
 	}
 
 	private Model importModel(Element modelElement, Project project, Version version) throws DataConversionException {

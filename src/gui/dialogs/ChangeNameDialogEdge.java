@@ -12,6 +12,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,6 +25,7 @@ import action.Action;
 import action.SetConfigAction;
 import gui.control.Selectable;
 import gui.draw.DrawableGraphEdge;
+import gui.window.Window;
 import model.Model;
 import model.Transition;
 import model.graph.GraphEdge;
@@ -48,15 +50,17 @@ public class ChangeNameDialogEdge extends Dialog {
 	
 	public ChangeNameDialogEdge(Model model, Selectable selectable, JFrame parent) {
 		this.model = model;
-//		this.setSizeByScreenSize(0.4);
 		dialog = this;
 		this.drawableEdge = (DrawableGraphEdge) selectable;
 		transitions = new ArrayList<Transition>((ArrayList<Transition>) drawableEdge.getEdge().getAttribute(GraphEdge.ATTRIBUTE_TRANSITIONS));
-		this.setMinimumSize(new Dimension(700,300));
-		this.setPreferredSize(new Dimension(700,300));
 		this.setModal(true);
 		init();
 		this.pack();
+		int width = this.getWidth();
+		if(width < 300) width = 700;
+		this.setMinimumSize(new Dimension(width,300));
+		this.setPreferredSize(new Dimension(width,300));
+		this.setTitle("Manage transitions");
 	}
 	
 	public void init(){
@@ -136,16 +140,17 @@ public class ChangeNameDialogEdge extends Dialog {
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.insets = new Insets(5,10,5,10);
+		gbc.insets = new Insets(5,5,5,5);
 		gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 0.5;
 		gbc.weighty = 0.5;
 		JPanel container = new JPanel(new GridBagLayout());
 		for(int i = 0; i < transitions.size(); i++){
 			Transition t = transitions.get(i);
 			final int index = i;
-			JButton delete = new JButton("Delete");
+			JButton delete = new JButton("");
+			delete.setIcon(new ImageIcon(Window.class.getResource("/icons/cross.png")));
 			delete.addActionListener(new ActionListener(){
 				private final int transitionID = index;
 				@Override
@@ -158,19 +163,19 @@ public class ChangeNameDialogEdge extends Dialog {
 			gbc.gridx++;
 			container.add(new JLabel("Gate:"), gbc);
 			gbc.gridx++;
-			JTextField channelText = new JTextField(t.getChannel(), 13);
+			JTextField channelText = new JTextField(t.getChannel(), 17);
 			channelText.addFocusListener(new TextFocusListener(TextFieldType.CHANNEL, i));
 			container.add(channelText, gbc);
 			gbc.gridx++;
 			container.add(new JLabel("Condition:"), gbc);
 			gbc.gridx++;
-			JTextField conditionText = new JTextField(t.getCondition(), 13);
+			JTextField conditionText = new JTextField(t.getCondition(), 17);
 			conditionText.addFocusListener(new TextFocusListener(TextFieldType.CONDITION, i));
 			container.add(conditionText, gbc);
 			gbc.gridx++;
 			container.add(new JLabel("Action:"), gbc);
 			gbc.gridx++;
-			JTextField actionText = new JTextField(t.getAction(), 13);
+			JTextField actionText = new JTextField(t.getAction(), 17);
 			actionText.addFocusListener(new TextFocusListener(TextFieldType.ACTION, i));
 			container.add(actionText, gbc);
 			gbc.gridy++;

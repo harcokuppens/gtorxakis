@@ -2,9 +2,12 @@ package model;
 
 import gui.draw.GUITextualDefinition;
 
+/**
+ * A textual definition, like PROCDEF, MODELDEF, ...
+ * @author Tobias
+ *
+ */
 public class TextualDefinition extends Definition{
-	
-	private final Project project;
 	
 	private String definition;
 	private String savedText;
@@ -12,6 +15,11 @@ public class TextualDefinition extends Definition{
 	
 	private GUITextualDefinition drawable;
 	
+	/**
+	 * An enumeration for all the textual definitions.
+	 * @author Tobias
+	 *
+	 */
 	public enum DefType{
 		TYPE("TYPE Definition", DEFAULT_TYPE_DEF, "TYPEDEF"),
 		CONST("CONST Definition", DEFAULT_CONST_DEF, "CONSTDEF"),
@@ -50,16 +58,15 @@ public class TextualDefinition extends Definition{
 							   DEFAULT_CNECT_DEF = "CNECTDEF Connect1\n\t::=\n\t\t\n\nENDDEF",
 							   DEFAULT_PROC_DEF = "PROCDEF Proc1\n\t::=\n\t\t\n\nENDDEF";
 	
-	public TextualDefinition(Project project, String definition, String title, DefType type){
+	public TextualDefinition(String definition, String title, DefType type){
 		super(title);
-		this.project = project;
 		this.definition = definition;
 		savedText = definition;
 		this.type = type;
 	}
 	
-	public TextualDefinition(Project project, DefType type){
-		this(project, type.defaultDef, type.name, type);
+	public TextualDefinition(DefType type){
+		this(type.defaultDef, type.name, type);
 	}
 	
 	public void setDrawable(GUITextualDefinition drawable){

@@ -8,7 +8,6 @@ import gui.dialogs.SaveAsDialog;
 import gui.dialogs.TorXakisExportDialog;
 import gui.draw.GraphInterface;
 import gui.window.Window;
-import io.file.FileType;
 import io.file.FileTypeAssociation;
 import io.file.project.importer.ProjectImporter;
 import model.Model;
@@ -22,7 +21,6 @@ import java.awt.event.ComponentListener;
 
 
 
-import java.io.IOException;
 
 import javax.swing.AbstractAction;
 
@@ -30,7 +28,6 @@ import core.Session;
 
 public class WindowActionListener implements ActionListener, ComponentListener {
 	private DrawController dc;
-	private GraphInterface gi;
 	private Window w;
 	
 	public static final String 
@@ -44,7 +41,6 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 			ZOOM_IN = "zoomin",
 			ZOOM_OUT = "zoomout",
 			ZOOM_RESET = "zoomreset",
-			SHOW_GRID = "showgrid",
 			UNDO = "undo",
 			REDO = "redo",
 			CUT = "cut",
@@ -69,7 +65,6 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 	
 	public void setDrawController(DrawController dc) {
 		this.dc = dc;
-		this.gi = dc.getGraphInterface();
 	}
 
 	@Override
@@ -97,7 +92,7 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 							public void run() {
 								p.save();	
 								window.setTitle(p);
-							}
+							} 
 						}).start();
 			break;
 		case SAVE_AS:
@@ -140,11 +135,6 @@ public class WindowActionListener implements ActionListener, ComponentListener {
 		case ZOOM_OUT:
 			dc.zoomOut();
 			w.getStatusBar().setZoomFactor(dc.getZoom());
-			break;
-		case SHOW_GRID:
-//			JCheckBoxMenuItem i = (JCheckBoxMenuItem) e.getSource();
-//			Session.getSession().getSettings().setBooleanSetting(SettingsValue.view_grid, i.getState());
-//			dc.setViewGrid(i.getState());
 			break;
 		default:
 			System.err.println("ActionCommand that we don't use!");

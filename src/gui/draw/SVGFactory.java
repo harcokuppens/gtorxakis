@@ -16,7 +16,9 @@ import org.w3c.dom.svg.SVGDocument;
 public class SVGFactory {
 	private Element defs;
 	private SVGDocument doc;
-	private Element nodeGroup, edgeGroup, commentGroup;
+	private Element stateGroup, 
+					edgeGroup, 
+					commentGroup;
 	
 	public SVGFactory() {
 		
@@ -101,8 +103,8 @@ public class SVGFactory {
 		edgeGroup = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "g");
 		doc.getRootElement().appendChild(edgeGroup);
 		
-		nodeGroup = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "g");
-		doc.getRootElement().appendChild(nodeGroup);
+		stateGroup = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "g");
+		doc.getRootElement().appendChild(stateGroup);
 		
 		
 
@@ -117,8 +119,8 @@ public class SVGFactory {
 		return defs;
 	}
 	
-	public Element getNodeGroup(){
-		return nodeGroup;
+	public Element getStateGroup(){
+		return stateGroup;
 	}
 	
 	public Element getEdgeGroup(){

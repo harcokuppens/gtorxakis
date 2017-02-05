@@ -19,8 +19,7 @@ import util.Vector;
 
 /**
  * 
- * @author Tobias Schroeter
- *
+ * @author Tobias
  */
 
 public class DrawableGraphEdge extends DrawableElement implements Drawable, Selectable, Movable{
@@ -92,8 +91,6 @@ public class DrawableGraphEdge extends DrawableElement implements Drawable, Sele
 		graphEdge = new GraphEdge(from.getState(), null);
 		graphEdge.setDrawable(this);
 		if(from.contains(to)){
-//			The point is on the same state
-//			System.err.println("On state");
 			edgeType = EdgeType.SAME_ROOT;
 		}else{
 			edgeType = EdgeType.NORMAL;

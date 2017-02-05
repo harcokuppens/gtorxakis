@@ -2,16 +2,18 @@ package model;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
-import action.SetConfigAction;
 import core.Session;
 import gui.dialogs.SaveAsDialog;
 import io.file.FileType;
 import io.file.FileTypeAssociation;
 import io.file.project.exporter.ProjectExport;
 
-
+/**
+ * A project that holds all definitions.
+ * @author Tobias
+ *
+ */
 public class Project {
 	private String name;
 	
@@ -85,12 +87,12 @@ public class Project {
 	public static Project newProject() {
 		Project p = new Project("Unnamed");
 		Model m = Model.newModel(p, "Model1");
-		TextualDefinition connect = new TextualDefinition(p, TextualDefinition.DefType.CNECTDEF);
-		TextualDefinition model = new TextualDefinition(p, TextualDefinition.DefType.MODEL);
-		TextualDefinition type = new TextualDefinition(p, TextualDefinition.DefType.TYPE);
-		TextualDefinition constDef = new TextualDefinition(p, TextualDefinition.DefType.CONST);
-		TextualDefinition func = new TextualDefinition(p, TextualDefinition.DefType.FUNC);
-		TextualDefinition proc = new TextualDefinition(p, TextualDefinition.DefType.PROC);
+		TextualDefinition connect = new TextualDefinition(TextualDefinition.DefType.CNECTDEF);
+		TextualDefinition model = new TextualDefinition(TextualDefinition.DefType.MODEL);
+		TextualDefinition type = new TextualDefinition(TextualDefinition.DefType.TYPE);
+		TextualDefinition constDef = new TextualDefinition(TextualDefinition.DefType.CONST);
+		TextualDefinition func = new TextualDefinition(TextualDefinition.DefType.FUNC);
+		TextualDefinition proc = new TextualDefinition(TextualDefinition.DefType.PROC);
 		
 		p.addDefinition(type);
 		p.addDefinition(constDef);

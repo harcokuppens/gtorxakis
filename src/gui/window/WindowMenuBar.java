@@ -11,14 +11,12 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
 import util.Environment;
-import core.Session;
 
 public class WindowMenuBar extends JMenuBar{
 
@@ -120,15 +118,6 @@ public class WindowMenuBar extends JMenuBar{
 		return menuItem;
 	}
 	
-	private JCheckBoxMenuItem addCheckBoxMenuItem(String name, JMenu menu, boolean state, String cmd, ActionListener al){
-		JCheckBoxMenuItem temp = new JCheckBoxMenuItem(name);
-		temp.setState(true);
-		temp.setActionCommand("showgrid");
-		temp.addActionListener(al);
-		menu.add(temp);
-		return temp;
-	}
-
 	private void fillProjectMenu(JMenu projectMenu, Project project) {
 		projectMenu.removeAll();
 		
@@ -153,10 +142,6 @@ public class WindowMenuBar extends JMenuBar{
 				modelMenu.add(deleteModelItem);
 				deleteModelItem.setAction(wat.getDeleteModelAction(m));
 				deleteModelItem.setText("Delete");
-//				JMenuItem duplicateModelItem = new JMenuItem();
-//				modelMenu.add(duplicateModelItem);
-//				duplicateModelItem.setAction(wat.getDuplicateModelAction(m));
-//				duplicateModelItem.setText("Duplicate");
 				projectMenu.add(modelMenu);
 			}
 		}	
@@ -178,9 +163,6 @@ public class WindowMenuBar extends JMenuBar{
 			break;
 		case WindowActionListener.REDO:
 			redo.setEnabled(b);
-			break;
-		case WindowActionListener.SHOW_GRID:
-//			showGrid.setState(true);
 			break;
 		case WindowActionListener.EXPORT_TORXAKIS:
 			exportTorXakis.setEnabled(b);

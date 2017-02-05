@@ -1,5 +1,10 @@
 package model;
 
+/**
+ * Definition of TorXakis
+ * @author Tobias
+ *
+ */
 public abstract class Definition {
 	private String title;
 	

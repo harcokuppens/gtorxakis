@@ -11,7 +11,6 @@ import java.awt.Rectangle;
 import model.graph.GraphComment;
 import model.graph.GraphEdge;
 import model.graph.GraphState;
-import core.Session;
 
 import org.w3c.dom.svg.SVGDocument;
 

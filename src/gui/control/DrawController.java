@@ -31,8 +31,8 @@ public class DrawController {
 
 	private Point dragStart;
 	private Point dragEnd;
-	private DrawableGraphState dragStartNode;
-	private DrawableGraphState dragEndNode;
+	private DrawableGraphState dragStartState;
+	private DrawableGraphState dragEndState;
 	private DrawableGraphEdge tempEdge;
 	private DrawableSelectionBox drawableSelectionBox;
 	
@@ -171,9 +171,9 @@ public class DrawController {
 		
 		Selectable s = gi.getElementAt(vbc.getClickPosition(dragStart));
 		if(s instanceof DrawableGraphState) {
-			dragStartNode = (DrawableGraphState) s;
+			dragStartState = (DrawableGraphState) s;
 		}else{
-			dragStartNode = null;
+			dragStartState = null;
 		}
 	}
 	
@@ -182,9 +182,9 @@ public class DrawController {
 		
 		Selectable s = gi.getElementAt(vbc.getClickPosition(dragEnd));
 		if(s instanceof DrawableGraphState){
-			dragEndNode = (DrawableGraphState) s;
+			dragEndState = (DrawableGraphState) s;
 		}else{
-			dragEndNode = null;
+			dragEndState = null;
 		}
 	}
 	
@@ -280,9 +280,9 @@ public class DrawController {
 	}
 	
 	public void removeTempEdge(boolean isSamePoint) {
-		if(dragEndNode != null){
-			if (!dragStartNode.getState().hasEdgetoNode(dragEndNode.getState()) && !isSamePoint) {
-				gi.addEdge(dragStartNode, dragEndNode);
+		if(dragEndState != null){
+			if (!dragStartState.getState().hasEdgetoNode(dragEndState.getState()) && !isSamePoint) {
+				gi.addEdge(dragStartState, dragEndState);
 			}
 		}
 		ArrayList<DrawableGraphEdge> edgeList = new ArrayList<DrawableGraphEdge>();
@@ -291,7 +291,7 @@ public class DrawController {
 	}
 	
 	public void setTempEdge() {
-		tempEdge = new DrawableGraphEdge(gi.getSVGDocument(), dragStartNode, new Point(vbc.getClickPosition(dragStart)));
+		tempEdge = new DrawableGraphEdge(gi.getSVGDocument(), dragStartState, new Point(vbc.getClickPosition(dragStart)));
 		ArrayList<DrawableGraphEdge> edgeList = new ArrayList<DrawableGraphEdge>();
 		edgeList.add(tempEdge);
 		gi.getDrawableGraph().addEdges(edgeList);

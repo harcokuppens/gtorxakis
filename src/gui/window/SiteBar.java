@@ -31,16 +31,17 @@ import model.Variables.Variable;
 import action.Action;
 import action.SetConfigAction;
 
+/**
+ * A container that holds the gatebar and variablebar.
+ * @author Tobias
+ *
+ */
 public class SiteBar extends JPanel{
 	
-	private Project project;
 	private GateBar gateBar;
 	private VariableBar variableBar;
-	private SiteBar siteBar;
 	
 	public SiteBar (Project project){
-		siteBar = this;
-		this.project = project;
 		this.setLayout(new BorderLayout());
 		this.init();
 	}
@@ -66,13 +67,9 @@ public class SiteBar extends JPanel{
 		if(newDefinition instanceof Model){
 			gateBar.setEnabled(true);
 			variableBar.setEnabled(true);
-//			gateBar.setBackground(Color.cyan);
-//			variableBar.setBackground(Color.cyan);
 			gateBar.initView((Model) newDefinition);
 			variableBar.initView((Model) newDefinition);
 		}else{
-//			gateBar.setBackground(Color.green);
-//			variableBar.setBackground(Color.green);
 			gateBar.setEnabled(false);
 			variableBar.setEnabled(false);
 		}
@@ -86,12 +83,12 @@ public class SiteBar extends JPanel{
 		
 		public GateBar(){
 			gateBar = this;
-//			setBackground(Color.green);
 			this.setBorder(BorderFactory.createTitledBorder("Gates"));
 			setMinimumSize(new Dimension(350, 300));
 			setPreferredSize(new Dimension(350, 300));
 			setLayout(new BorderLayout());
-			addGate = new JButton("Add");
+			addGate = new JButton("");
+			addGate.setIcon(new ImageIcon(Window.class.getResource("/icons/add.png")));
 			addGate.addActionListener(new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -176,7 +173,7 @@ public class SiteBar extends JPanel{
 			gbc.gridy = 0;
 			gbc.weightx = 0.5;
 //			gbc.weighty = 1.0;
-			gbc.fill = GridBagConstraints.HORIZONTAL;
+			gbc.fill = GridBagConstraints.BOTH;
 			gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 			gbc.insets = new Insets(1,1,1,1);
 			container.add(new JLabel("Name:"), gbc);
@@ -187,7 +184,7 @@ public class SiteBar extends JPanel{
 			int id = 0;
 			for(Gate g : gates){
 				JButton delete = new JButton("");
-				delete.setIcon(new ImageIcon(Window.class.getResource("/icons/delete.png")));
+				delete.setIcon(new ImageIcon(Window.class.getResource("/icons/cross.png")));
 				delete.addActionListener(new ActionListener(){
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -243,7 +240,8 @@ public class SiteBar extends JPanel{
 			setMinimumSize(new Dimension(350, 300));
 			setPreferredSize(new Dimension(350, 300));
 			setLayout(new BorderLayout());
-			addVariable = new JButton("Add");
+			addVariable = new JButton("");
+			addVariable.setIcon(new ImageIcon(Window.class.getResource("/icons/add.png")));
 			addVariable.addActionListener(new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -328,7 +326,7 @@ public class SiteBar extends JPanel{
 			gbc.gridx = 1;
 			gbc.gridy = 0;
 			gbc.weightx = 0.5;
-			gbc.fill = GridBagConstraints.HORIZONTAL;
+			gbc.fill = GridBagConstraints.BOTH;
 			gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 			gbc.insets = new Insets(1,1,1,1);
 			container.add(new JLabel("Name:"), gbc);
@@ -341,7 +339,7 @@ public class SiteBar extends JPanel{
 			int id = 0;
 			for(Variable v : variables){
 				JButton delete = new JButton("");
-				delete.setIcon(new ImageIcon(Window.class.getResource("/icons/delete.png")));
+				delete.setIcon(new ImageIcon(Window.class.getResource("/icons/cross.png")));
 				delete.addActionListener(new ActionListener(){
 					@Override
 					public void actionPerformed(ActionEvent e) {

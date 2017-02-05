@@ -2,7 +2,6 @@ package gui.control;
 
 import gui.draw.DrawableComment.ResizeType;
 
-import java.awt.Point;
 
 import util.Vector;
 

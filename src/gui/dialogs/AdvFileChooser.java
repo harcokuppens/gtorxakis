@@ -22,7 +22,6 @@ import javax.swing.JProgressBar;
 import core.Session;
 
 public abstract class AdvFileChooser extends FileDialog {
-	private PropertyChangeListener autochangeExtensionListener;
 	
 	protected FileTypeAssociation association;
 	
@@ -73,14 +72,12 @@ public abstract class AdvFileChooser extends FileDialog {
 
 protected class WaitingDialog extends gui.dialogs.Dialog{
 		
-		private final WaitingDialog dialog;
 		private String title, message;
 		private JProgressBar progressBar;
 		
 		
 		public WaitingDialog(String title, String message){
 			super(Session.getSession().getWindow());
-			dialog = this;
 			this.title = title;
 			this.message = message;
 			start();

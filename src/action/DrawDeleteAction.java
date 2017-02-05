@@ -11,19 +11,19 @@ import gui.draw.GraphInterface;
 import gui.control.DrawController;
 
 public class DrawDeleteAction extends Action {
-	private ArrayList<DrawableGraphState> drawableNodes;
-	private ArrayList<GraphState> nodes;
+	private ArrayList<DrawableGraphState> drawableStates;
+	private ArrayList<GraphState> states;
 	private ArrayList<DrawableGraphEdge> drawableEdges;
 	private ArrayList<GraphEdge> edges;
 	private ArrayList<DrawableComment> drawableComments;
 	private ArrayList<GraphComment> comments;
 	
-	public DrawDeleteAction(ArrayList<DrawableGraphState> drawableNodeList, ArrayList<DrawableGraphEdge> drawableEdgeList,  ArrayList<DrawableComment> drawableCommentList) {
+	public DrawDeleteAction(ArrayList<DrawableGraphState> drawableStateList, ArrayList<DrawableGraphEdge> drawableEdgeList,  ArrayList<DrawableComment> drawableCommentList) {
 		super(true);
-		drawableNodes = new ArrayList<DrawableGraphState>(drawableNodeList);
-		nodes = new ArrayList<GraphState>();
-		for(DrawableGraphState n: drawableNodes) {
-			nodes.add(n.getState());
+		drawableStates = new ArrayList<DrawableGraphState>(drawableStateList);
+		states = new ArrayList<GraphState>();
+		for(DrawableGraphState s: drawableStates) {
+			states.add(s.getState());
 		}
 		drawableEdges = new ArrayList<DrawableGraphEdge>();
 		edges = new ArrayList<GraphEdge>();
@@ -42,13 +42,13 @@ public class DrawDeleteAction extends Action {
 	@Override
 	public void run(DrawController dc) {
 		GraphInterface gi = dc.getGraphInterface();
-		gi.getGraph().removeStates(nodes);
+		gi.getGraph().removeStates(states);
 		gi.getGraph().removeComments(comments);
 		for(GraphEdge e: edges) {
 			e.getFrom().removeOutgoingEdge(e);
 			e.getTo().removeIncomingEdge(e);
 		}
-		gi.getDrawableGraph().removeNodes(drawableNodes);
+		gi.getDrawableGraph().removeNodes(drawableStates);
 		gi.getDrawableGraph().removeEdges(drawableEdges);
 		gi.getDrawableGraph().removeComments(drawableComments);
 		gi.clearSelection();

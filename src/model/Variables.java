@@ -4,7 +4,11 @@ import java.util.ArrayList;
 
 import action.Configurable;
 import gui.control.DrawController;
-
+/**
+ * A container for all variables that will be specified in a stautdef as VARs.
+ * @author Tobias
+ *
+ */
 public class Variables implements Configurable {
 	
 	private ArrayList<Variable> variables;

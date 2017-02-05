@@ -21,7 +21,10 @@ import action.ActionHandler;
 import java.util.ArrayList;
 
 /**
- * A model holding a graph. 
+ * A model holding a graph, the gates and variables belonging to that model.
+ * In GTorXakis a model always will be casted to a STAUTDEF.
+ * @author Tobias
+ *
  */
 public class Model extends Definition {
 	private String name;
@@ -61,26 +64,26 @@ public class Model extends Definition {
 
 	public Model clone(Project p, String name, Graph graph, DrawableGraph drawableGraph) {
 		SVGDocument doc = drawableGraph.getDocument();
-		ArrayList<GraphState> clonedNodes = new ArrayList<GraphState>();
-		ArrayList<DrawableGraphState> clonedDrawableNodes = new ArrayList<DrawableGraphState>();
+		ArrayList<GraphState> clonedStates = new ArrayList<GraphState>();
+		ArrayList<DrawableGraphState> clonedDrawableStates = new ArrayList<DrawableGraphState>();
 		GraphState start = this.graph.getStartState();
 		
-		for(DrawableGraphState n : this.drawableGraph.getNodes()){
+		for(DrawableGraphState n : this.drawableGraph.getStates()){
 			DrawableGraphState dgn = n.clone(doc);
 			if(n.getState().equals(start)) dgn.getState().setAttribute(GraphState.ATTRIBUTE_START_STATE, true);
-			clonedDrawableNodes.add(dgn);
-			clonedNodes.add(dgn.getState());
+			clonedDrawableStates.add(dgn);
+			clonedStates.add(dgn.getState());
 		}
-		graph.addStates(clonedNodes);
+		graph.addStates(clonedStates);
 		
 		for(DrawableGraphEdge dge: this.drawableGraph.getEdges()) {
 			DrawableGraphEdge clonedDge = dge.clone(doc);
 			GraphEdge e = clonedDge.getEdge();
-			int index_from = this.drawableGraph.getNodes().indexOf(e.getFrom().getDrawable());
-			e.setFrom(clonedDrawableNodes.get(index_from).getState());
+			int index_from = this.drawableGraph.getStates().indexOf(e.getFrom().getDrawable());
+			e.setFrom(clonedDrawableStates.get(index_from).getState());
 			e.getFrom().addOutgoingEdge(e);
-			int index_to = this.drawableGraph.getNodes().indexOf(e.getTo().getDrawable());
-			e.setTo(clonedDrawableNodes.get(index_to).getState());
+			int index_to = this.drawableGraph.getStates().indexOf(e.getTo().getDrawable());
+			e.setTo(clonedDrawableStates.get(index_to).getState());
 			e.getTo().addIncomingEdge(e);
 		}
 

@@ -17,7 +17,6 @@ public class FileType {
 			this.importer = null;
 			this.exporter = (Class<? extends Exporter>) porter;
 		} else {
-			System.err.println("Keine porter Klasse gegeben!");
 		}
 		this.description = description;
 		this.extensions = extensions;
@@ -38,10 +37,8 @@ public class FileType {
 		try {
 			return (Exporter) exporter.newInstance();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -51,10 +48,8 @@ public class FileType {
 		try {
 			return (Importer) importer.newInstance();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;

@@ -5,24 +5,20 @@ import gui.draw.DrawableGraphState;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.io.OutputStream;
 import java.util.zip.ZipOutputStream;
 
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import javax.xml.bind.DatatypeConverter;
 
 import model.Definition;
-import model.Gates.Gate;
 import model.Gates;
+import model.Gates.Gate;
 import model.Model;
 import model.Project;
 import model.TextualDefinition;
@@ -39,7 +35,6 @@ import org.jdom2.Text;
 import org.jdom2.output.Format;
 import org.jdom2.output.StAXStreamOutputter;
 
-import util.MemDiag;
 import core.Session;
 
 public class ProjectExporterGTorX implements ProjectExporter {
@@ -69,7 +64,6 @@ public class ProjectExporterGTorX implements ProjectExporter {
 			}
 		}
 
-		// Writes b.length bytes from the specified byte array to this output stream.
 		@Override
 		public void write(byte[] b) throws IOException {
 			try {
@@ -79,7 +73,6 @@ public class ProjectExporterGTorX implements ProjectExporter {
 			}
 		}
 
-		// Writes len bytes from the specified byte array starting at offset off to this output stream.
 		@Override
 		public void write(byte[] b, int off, int len) throws IOException {
 			byte[] dest = new byte[len];
@@ -91,7 +84,6 @@ public class ProjectExporterGTorX implements ProjectExporter {
 			}
 		}
 
-		// Writes the specified byte to this output stream.
 		@Override
 		public void write(int b) throws IOException {
 			try {
@@ -104,8 +96,6 @@ public class ProjectExporterGTorX implements ProjectExporter {
 	
 	@Override
 	public void exportProject(Project project, String path) throws XMLStreamException, FactoryConfigurationError, IOException {
-		MemDiag.diagnose();
-		
 		StAXStreamOutputter streamOutputter = 
 				new StAXStreamOutputter(
 						Format.getRawFormat().
@@ -120,10 +110,7 @@ public class ProjectExporterGTorX implements ProjectExporter {
 		IntermediateStream is = new IntermediateStream(streamOutputter, streamWriter);
 		BufferedOutputStream bis = new BufferedOutputStream(is);
 		ZipOutputStream zout = new ZipOutputStream(bis);
-		BufferedOutputStream bzout = new BufferedOutputStream(zout);
 
-		XMLStreamWriter zipStreamWriter = XMLOutputFactory.newFactory().createXMLStreamWriter(bzout, ENCODING);
-		
 		streamWriter.writeStartDocument();
 		
 			streamOutputter.output(new DocType("xml"), streamWriter);
@@ -217,9 +204,9 @@ public class ProjectExporterGTorX implements ProjectExporter {
 			}
 
 			for (GraphState s : model.getGraphInterface().getGraph().getStates()) {
-				//Create nodeElement
+				//Create StateElement
 				streamWriter.writeStartElement("node");
-					//Start node
+					//Start state
 					streamWriter.writeAttribute("positionX",
 							s.getDrawable().getAttribute(DrawableGraphState.ATTRIBUTE_POSITION_X));
 					streamWriter.writeAttribute("positionY",

@@ -7,6 +7,11 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMap;
 
+/**
+ * TokenManager for the syntax area.
+ * @author Tobias
+ *
+ */
 public class MyTokenMaker extends AbstractTokenMaker {
 
 	private int currentTokenStart,

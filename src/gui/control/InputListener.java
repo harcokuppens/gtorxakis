@@ -43,16 +43,6 @@ import model.Model;
  */
 public class InputListener implements MouseListener, MouseMotionListener, KeyListener, Observer, MouseWheelListener, ActionListener {
 
-	/**
-	 * This enumeration is used to save the current status of the program
-	 * between the calls of the mouseEvent-functions. It contains states the
-	 * program can be in and actions the user can be performing. These states
-	 * and actions can only appear in special orders, eg. it is not possible to
-	 * switch from one action to another without being in a state first.
-	 * Furthermore, some of the actions can only be started in a special state.
-	 * For a full overview of pre- and postconditions, please refer to the
-	 * documentation.
-	 */
 	private enum ControlMethod {
 		NONE, // State: Selection is empty, initial state
 		SELECTED, // State: Selection is not empty
@@ -74,7 +64,6 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 	private boolean finished = true;
 	private int firedMouseButton = 0;
 	
-	// The most recent mouse position
 	private Point pos,
 				  startPos;
 	
@@ -128,7 +117,7 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 			}
 			break;
 		case KeyEvent.VK_TAB:
-			if(keyActionsAllowed())gi.selectNextNode();
+			if(keyActionsAllowed())gi.selectNextState();
 			break;
 		case KeyEvent.VK_UP:
 			up = true;
@@ -317,7 +306,6 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 				default:
 					ControlMethod temp = controlMethod;
 					controlMethod = ControlMethod.NONE;
-//					System.err.println(beginState.name());
 					throw new InputMismatchException("mousePressed fired with controlMethod in action state. State was " + temp.name());
 				}
 				break;
@@ -325,7 +313,6 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 				controlMethod = ControlMethod.PAN;
 				break;
 			}
-//			System.out.println("[InputListener] mousePressed finished with " + controlMethod.name());
 			finished = false;
 		}
 	}
@@ -402,7 +389,7 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 							controlMethod = ControlMethod.SELECTED;							
 						}
 					} else if (beginState == ControlMethod.NONE && clickCount == 2){
-						gi.addNode((int) p.getX(), (int) p.getY());
+						gi.addState((int) p.getX(), (int) p.getY());
 					}
 					break;
 				case SELECTED:
@@ -463,13 +450,11 @@ public class InputListener implements MouseListener, MouseMotionListener, KeyLis
 				}
 				dc.setPastePosition(p);
 				
-				GraphPanel panel = (GraphPanel) e.getComponent();
 				final GraphContextMenu gncm = new GraphContextMenu(gi.getSelection(), p, model);
 				gncm.show(e.getComponent(), e.getX(), e.getY());
 
 				break;
 			}
-//			System.out.println("[InputListener] mouseClicked finished with " + controlMethod.name());
 		}
 	}
 	

@@ -24,7 +24,6 @@ public class OpenDialog extends AdvancedFileChooserOpen {
 	public OpenDialog(Dialog parent, boolean startscreen) {
 		super(parent, association);
 		setDirectory(Session.getSession().DEFAULT_PATH);		
-		
 		showOpenDialog();
 	}
 

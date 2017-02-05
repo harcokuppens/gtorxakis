@@ -101,7 +101,6 @@ public class RunDialog extends Dialog implements WindowListener{
 		add(torxakisPanel, BorderLayout.CENTER);
 		this.pack();
 		this.setModal(true);
-//		this.setResizable(false);
 		this.centerOnScreen();
 	}
 	
@@ -293,26 +292,17 @@ public class RunDialog extends Dialog implements WindowListener{
 	public void startTorxakisServer(int port){
 		String pathToTorXakis = new File(pathField.getText()).getPath();
 		if(Environment.OperatingSystem == Environment.OS.Windows){
-//			try {
-				Runnable r = new Runnable(){
-					@Override
-					public void run() {
-						try {
-							process = Runtime.getRuntime().exec("cmd.exe /c start " + pathToTorXakis + "\\txsserver.exe " + port);
-						} catch (IOException e) {
-							System.out.println("FROM CATCH" + e.toString());
-						}
+			Runnable r = new Runnable(){
+				@Override
+				public void run() {
+					try {
+						process = Runtime.getRuntime().exec("cmd.exe /c start " + pathToTorXakis + "\\txsserver.exe " + port);
+					} catch (IOException e) {
+						System.out.println("FROM CATCH" + e.toString());
 					}
-				};
-				(new Thread(r)).start();;
-//				ProcessBuilder pb = new ProcessBuilder("cmd.exe","/c","start",pathToTorXakis+"\\txsserver.exe " + port);
-//				ProcessBuilder pb = new ProcessBuilder(new String[]{pathToTorXakis+"\\txsserver.exe", port+""});
-//				process = pb.start();
-//				BufferedWriter writeer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-//				writeer.flush();
-//			} catch (IOException e) {
-//				
-//			}
+				}
+			};
+			(new Thread(r)).start();;
 		}else{
 			String[] arguments = new String[] {"java", "-jar", pathToTorXakis +"/Test.jar"};
 			try {
@@ -356,7 +346,6 @@ public class RunDialog extends Dialog implements WindowListener{
 				SessionSettings settings = new SessionSettings(port, iterations, host, model, connection, type, f.getPath());
 				Session.getSession().setSettings(settings);
 				
-//				if(socketIO == null){
 				shutdown();
 					torxakisPanel.clear();
 					startTorxakisServer(port);
@@ -368,7 +357,6 @@ public class RunDialog extends Dialog implements WindowListener{
 						JOptionPane.showMessageDialog(null, "Can not connect to TorXakis. Are you sure that you pick the right directory?");
 						runDialog.shutdown();
 					}
-//				}
 				
 				socketIO.startTorXakis(type, model, connection);
 				
@@ -430,94 +418,6 @@ public class RunDialog extends Dialog implements WindowListener{
 		setButtons();
 		return panel;
 	}
-	
-//	public JPanel getButtonPanel(){
-//		JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-//		JButton save = new JButton("Save & Run");
-//		save.addActionListener(new ActionListener(){
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				int port = (int) portNumber.getValue();
-//				String host = programField.getText();
-//				String model = String.valueOf(modelDefinitions.getSelectedItem());
-//				String connection = String.valueOf(connectDefinitions.getSelectedItem());
-//				int iterations = (int) testNumber.getValue();
-//				TorXakisType type = (TorXakisType) torxakisType.getSelectedItem();
-//				File f = new File(pathField.getText());
-//				SessionSettings settings = new SessionSettings(port, iterations, host, model, connection, type, f.getPath());
-//				Session.getSession().setSettings(settings);
-//				if(socketIO == null){
-//					torxakisPanel.clear();
-//					startTorxakisServer(port);
-//					Session.getSession().getProject().saveAs(Session.TEMP_TXS, FileTypeAssociation.TorXakisExport.getDefaultFileType());
-//					try{
-//						Thread.sleep(2000);
-//						socketIO = new SocketIO(runDialog, port, host);
-//					}catch(Exception socketException){
-//						JOptionPane.showMessageDialog(null, "Can not connect to TorXakis. Are you sure that you pick the right directory?");
-//						runDialog.shutdown();
-//					}
-//				}
-//				try{
-//					if(!socketIO.hasStarted()){
-//						System.err.println("Try to start socketIO");
-//						socketIO.startTorXakis(Session.TEMP_TXS);
-//					}					
-//				}catch(Exception exception){
-//					shutdown();
-//					return;
-//				}
-//				if(socketIO.typeChanged(type)){
-//					socketIO.changeTorXakisType(type, model, connection);
-//				}
-//				socketIO.run(iterations);
-//				
-//				if(!torxakisPanel.isReading()){
-//					Runnable r = new Runnable(){
-//						@Override
-//						public void run() {
-//							try{
-//								torxakisPanel.readLines(socketIO.getReader());
-//							}catch (Exception e){
-//								e.printStackTrace();
-//								if(!stopped){
-//									System.err.println("CATCH FIRED");
-//									runDialog.shutdown();
-//									JOptionPane.showMessageDialog(runDialog, "Possible problems:\n"
-//											+ "\t\t - TorXakis server is closed.\n"
-//											+ "\t\t - The SUT is not running at the specified host/port.\n"
-//											+ "\t\t - Another instance of TorXakis is already running at the same port.", "Communication error", JOptionPane.ERROR_MESSAGE);
-//								}
-//								stopped = false;
-//							}
-//						}
-//						
-//					};
-//					(new Thread(r)).start();
-//				}
-//			}
-//		});
-//		JButton stop = new JButton("Stop");
-//		stop.addActionListener(new ActionListener(){
-//			@Override
-//			public void actionPerformed(ActionEvent arg0) {
-//				shutdown();
-//			}
-//		});
-//		
-//		JButton cancel = new JButton("Close");
-//		cancel.addActionListener(new ActionListener(){
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				shutdown();
-//				runDialog.dispose();
-//			}
-//		});
-//		panel.add(cancel);
-//		panel.add(stop);
-//		panel.add(save);
-//		return panel;
-//	}
 	
 	private void setSettings(){
 		int port = (int) portNumber.getValue();

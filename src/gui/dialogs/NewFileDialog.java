@@ -27,7 +27,6 @@ public class NewFileDialog extends AdvancedFileChooserSave{
 		Project project = Project.newProject();
 		project.saveAs(path, filetype);
 		Session.getSession().setProject(project);
-		System.out.println("[NewFileDialog] Attemp to close startscreen!");
 		Session.getSession().getWindow().invalidate();
 	}
 

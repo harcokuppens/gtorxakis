@@ -7,7 +7,6 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 
 import core.Session;
-import gui.dialogs.OpenDialog;
 import io.file.Importer;
 import model.Project;
 
@@ -46,6 +45,5 @@ public abstract class ProjectImporter implements Importer {
 			title = "Unable to load project";
 		}
 		JOptionPane.showMessageDialog(Session.getSession().getWindow(), message, title, JOptionPane.ERROR_MESSAGE);
-		System.err.println("[ProjectImporter]: " + m + ", Path: " + path);
 	}
 }

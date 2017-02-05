@@ -25,7 +25,6 @@ import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
 public class TorXakisPanel extends JPanel{
-	
 	private RunDialog dialog;
 	
 	private JTextPane textPane;
@@ -102,10 +101,14 @@ public class TorXakisPanel extends JPanel{
 	public void readLines(BufferedReader reader) throws SocketException, IOException{
 		String line;
 		isReading = true;
+		try{
 		while((line = reader.readLine()) != null){
 			addLine(line+"\n");
 			JScrollBar vertical = scrollPane.getVerticalScrollBar();
 			vertical.setValue( vertical.getMaximum() );
+		}}
+		catch(Exception e){
+			
 		}
 	}
 	
@@ -140,7 +143,6 @@ public class TorXakisPanel extends JPanel{
 	public boolean isReading(){
 		return isReading;
 	}
-	
 	 
 	protected void addStylesToDocument(StyledDocument doc) {
 		Style def = StyleContext.getDefaultStyleContext(). getStyle(StyleContext.DEFAULT_STYLE);
@@ -170,6 +172,4 @@ public class TorXakisPanel extends JPanel{
 		s = doc.addStyle("black", bold);
 		StyleConstants.setForeground(s, new Color(0,0,0));
 	}
-
-
 }

@@ -30,10 +30,9 @@ public abstract class AdvancedFileChooserSave extends AdvFileChooser {
 		super.setVisible(true);
 		String filename = super.getFullFile();
 		if(filename == null) {
-			// user chose to cancel
+			//Cancel
 			return;
 		}
-		File file = new File(filename);		
 		FileType filetype = association.getByFilename(filename);
 		if(filetype == null) {
 			// File type was not specified by user

@@ -21,7 +21,6 @@ public abstract class ChangeNameDialog extends Dialog {
 	protected JTextField nameTXT;
 	private JButton closeButton, okButton;
 	private JPanel  bottomPanel, centerPanel;
-	private Selectable selectable;
 	private AbstractAction okAction, cancelAction;
 	
 	public static final String EDGE = "path coefficient",
@@ -29,11 +28,10 @@ public abstract class ChangeNameDialog extends Dialog {
 
 	protected Model model;
 
-	protected ChangeNameDialog(Model model, final Selectable selectable, JFrame parent, String cmd) {
+	protected ChangeNameDialog(Model model, JFrame parent, String cmd) {
 		super(parent);
 		this.model = model;
 		setTitle("Rename " + cmd);
-		this.selectable = selectable;
 		setSize(250,80);
 		centerOnScreen();	
 		setModalityType(Dialog.ModalityType.APPLICATION_MODAL);

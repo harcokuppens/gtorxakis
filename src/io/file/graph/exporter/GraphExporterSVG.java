@@ -1,7 +1,5 @@
 package io.file.graph.exporter;
 
-import gui.draw.GraphInterface;
-
 import java.awt.Rectangle;
 import java.io.BufferedWriter;
 import java.io.File;

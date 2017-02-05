@@ -4,11 +4,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-/**
- * This class represents a handler which can be used to display messages in the statusbar. These messages can either be constantly visible or just for a specific amount of time.
- * @author Lars Bade
- *
- */
 public class StatusBarMessageHandler extends Timer {
 	private StatusBar bar;
 	private TimerTask resetTask;

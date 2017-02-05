@@ -10,7 +10,11 @@ import java.net.Socket;
 import javax.swing.JOptionPane;
 
 import core.Session;
-
+/**
+ * IO-channel to communicate over sockets with TorXakis
+ * @author Tobias
+ *
+ */
 public class SocketIO {
 
 	private int port;

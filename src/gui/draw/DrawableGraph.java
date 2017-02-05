@@ -15,16 +15,16 @@ public class DrawableGraph {
 	private Element definitions;
 	
 	private DrawableGrid grid;
-	private ArrayList<DrawableGraphState> nodes;
+	private ArrayList<DrawableGraphState> states;
 	private ArrayList<DrawableGraphEdge> edges;
 	private ArrayList<DrawableComment> comments;
 	private DrawableSelectionBox selectionBox;
-	private Element nodeGroup, edgeGroup, commentGroup;
+	private Element stateGroup, edgeGroup, commentGroup;
 
 	private DrawController dc;
 	
 	public DrawableGraph() {
-		nodes = new ArrayList<DrawableGraphState>();
+		states = new ArrayList<DrawableGraphState>();
 		edges = new ArrayList<DrawableGraphEdge>();
 		comments = new ArrayList<DrawableComment>();
 		
@@ -32,7 +32,7 @@ public class DrawableGraph {
 		factory.generateDoc();
 		document = factory.getDoc();
 		definitions = factory.getDefs();
-		nodeGroup = factory.getNodeGroup();
+		stateGroup = factory.getStateGroup();
 		edgeGroup = factory.getEdgeGroup();
 		commentGroup = factory.getCommentGroup();
 		
@@ -44,10 +44,10 @@ public class DrawableGraph {
 	}
 
 	/**
-	 * Returns a shallow copy of the DrawableGraphNodes in this DrawableGraph.
+	 * Returns a shallow copy of the DrawableGraphStates in this DrawableGraph.
 	 */
-	public ArrayList<DrawableGraphState> getNodes() {
-		return new ArrayList<DrawableGraphState>(nodes);
+	public ArrayList<DrawableGraphState> getStates() {
+		return new ArrayList<DrawableGraphState>(states);
 	}
 	
 	/**
@@ -76,19 +76,6 @@ public class DrawableGraph {
 		return grid;
 	}
 
-	public Element getNodeGroup() {
-		return nodeGroup;
-	}
-	
-
-	public Element getEdgeGroup(){
-		return edgeGroup;
-	}
-	
-	public Element getCommentGroup(){
-		return commentGroup;
-	}
-	
 	public DrawableSelectionBox getSelectionBox() {
 		return selectionBox;
 	}
@@ -157,32 +144,32 @@ public class DrawableGraph {
 		};
 	}
 		
-	public void addNodes(final ArrayList<DrawableGraphState> newNodes) {
-		for(DrawableGraphState n : newNodes) {
-			nodes.add(n);
+	public void addStates(final ArrayList<DrawableGraphState> newStates) {
+		for(DrawableGraphState n : newStates) {
+			states.add(n);
 		}
 		
 		new SVGRunnable(this.dc, true) {
 			@Override
 			public void run() {
-				for(DrawableGraphState n : newNodes) {
-					nodeGroup.appendChild(n.getElement());
+				for(DrawableGraphState n : newStates) {
+					stateGroup.appendChild(n.getElement());
 					n.invalidate();
 				}
 			}
 		};
 	}
 	
-	public void removeNodes(final ArrayList<DrawableGraphState> oldNodes){
-		for(DrawableGraphState n : oldNodes) {
-			nodes.remove(n);
+	public void removeNodes(final ArrayList<DrawableGraphState> oldStates){
+		for(DrawableGraphState n : oldStates) {
+			states.remove(n);
 		}
 		
 		new SVGRunnable(this.dc, true) {
 			@Override
 			public void run() {
-				for(DrawableGraphState n : oldNodes) {
-					nodeGroup.removeChild(n.getElement());
+				for(DrawableGraphState n : oldStates) {
+					stateGroup.removeChild(n.getElement());
 				}
 			}
 		};

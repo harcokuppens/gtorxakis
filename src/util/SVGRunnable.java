@@ -24,7 +24,6 @@ public abstract class SVGRunnable implements Runnable {
 			isInvoked = true;			
 			dc.addToQueue(this);
 		}
-
 	}
 
 	public void signalCompletion() {

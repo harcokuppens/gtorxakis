@@ -30,9 +30,7 @@ public class TorXakisExportDialog extends AdvancedFileChooserSave{
 		try {
 			exporter.exportProject(project, path);
 		} catch (XMLStreamException | FactoryConfigurationError | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
 }

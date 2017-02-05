@@ -4,8 +4,12 @@ import java.util.ArrayList;
 
 import action.Configurable;
 import gui.control.DrawController;
-import model.Variables.Variable;
 
+/**
+ * Gates that will be specified in TorXakis as channel.
+ * @author Tobias
+ *
+ */
 public class Gates implements Configurable {
 
 	private ArrayList<Gate> gates;

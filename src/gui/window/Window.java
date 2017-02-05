@@ -3,46 +3,45 @@ package gui.window;
 import gui.control.DrawController;
 import gui.control.InputListener;
 import gui.control.WindowActionListener;
-import gui.draw.GraphPanel;
-import gui.draw.GUITextualDefinition;
 import gui.draw.DrawableGraph;
-import gui.window.StatusBarMessageHandler;
+import gui.draw.GUITextualDefinition;
+import gui.draw.GraphPanel;
 
-
-
-import java.util.HashMap;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.event.WindowEvent;
 import java.awt.event.WindowAdapter;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.awt.event.WindowEvent;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JOptionPane;
-import javax.swing.event.ChangeListener;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import util.Environment;
 import model.Definition;
 import model.Model;
 import model.Project;
-import model.graph.Graph;
 import model.TextualDefinition;
+import model.graph.Graph;
+import util.Environment;
 import core.Session;
 
-import javax.swing.SwingUtilities;
-
+/**
+ * A window that is used as container for the drawing area, sitebar, menubar. 
+ * An instance of a window is mostly used as mainframe.
+ * @author Tobias
+ *
+ */
 public class Window extends JFrame implements Observer {
 	private Window window;
-	
 	// Bi-directional map
 	private HashMap<Model, Object> panels;
 	private HashMap<Object, Model> definitions;
@@ -63,7 +62,6 @@ public class Window extends JFrame implements Observer {
 
 	private final Session session;
 
-	
 	public Window(Session session) {
 		window = this;
 		this.session = session;
@@ -404,24 +402,23 @@ public class Window extends JFrame implements Observer {
 	}
 	
 	private void updateButtons(Definition d) {
-		menuBar.setItemEnabled(WindowActionListener.SHOW_GRID, true);
-			if(d != null) {
-				if(d instanceof Model){
-					Model m = (Model) d;
-					boolean canExport = !(m.getGraph().getStates().isEmpty() && m.getGraph().getComments().isEmpty());
-					menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_PNG, canExport);
-					menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_SVG, canExport);
-					menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_JPG, canExport);
-				}
-				menuBar.setItemEnabled(WindowActionListener.REDO, d.canRedo());
-				menuBar.setItemEnabled(WindowActionListener.UNDO, d.canUndo());
-			} else {
-				menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_PNG, false);
-				menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_SVG, false);
-				menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_JPG, false);
-				menuBar.setItemEnabled(WindowActionListener.REDO, false);
-				menuBar.setItemEnabled(WindowActionListener.UNDO, false);
+		if(d != null) {
+			if(d instanceof Model){
+				Model m = (Model) d;
+				boolean canExport = !(m.getGraph().getStates().isEmpty() && m.getGraph().getComments().isEmpty());
+				menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_PNG, canExport);
+				menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_SVG, canExport);
+				menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_JPG, canExport);
 			}
+			menuBar.setItemEnabled(WindowActionListener.REDO, d.canRedo());
+			menuBar.setItemEnabled(WindowActionListener.UNDO, d.canUndo());
+		} else {
+			menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_PNG, false);
+			menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_SVG, false);
+			menuBar.setItemEnabled(WindowActionListener.EXPORT_GRAPH_JPG, false);
+			menuBar.setItemEnabled(WindowActionListener.REDO, false);
+			menuBar.setItemEnabled(WindowActionListener.UNDO, false);
+		}
 	}
 	
 	@Override
@@ -436,16 +433,6 @@ public class Window extends JFrame implements Observer {
 		}
 		updateButtons(currentDefinition);		
 	}
-	
-	public Collection<Integer> castToCollection(int[] varNames){
-		Collection<Integer> cs = new ArrayList<Integer>();
-		for(int i = 0; i < varNames.length;i++){
-			cs.add((Integer)varNames[i]);
-		}
-		return cs;
-	}
-	
-
 	
 	public boolean confirmClose() {
 		if(session.getProject() == null) return true;
